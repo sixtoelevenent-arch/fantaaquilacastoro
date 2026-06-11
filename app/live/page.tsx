@@ -22,5 +22,15 @@ export default function LivePage() {
         <p>In attesa dell'inizio della giornata.</p>
       </Card>
     </main>
+    <div
+  style={{
+    marginTop: "50px",
+    textAlign: "center",
+    color: "#94a3b8",
+    fontSize: "14px",
+  }}
+>
+  FantAquilaCastoro 2026 • Road to New York 🗽
+</div>
   );
 }

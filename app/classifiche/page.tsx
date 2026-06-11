@@ -33,5 +33,15 @@ export default function ClassifichePage() {
         <p>4️⃣ Germania - 0 pt</p>
       </Card>
     </main>
+    <div
+  style={{
+    marginTop: "50px",
+    textAlign: "center",
+    color: "#94a3b8",
+    fontSize: "14px",
+  }}
+>
+  FantAquilaCastoro 2026 • Road to New York 🗽
+</div>
   );
 }

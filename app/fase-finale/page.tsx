@@ -28,5 +28,15 @@ export default function FaseFinalePage() {
         <p>19 Luglio 2026</p>
       </Card>
     </main>
+    <div
+  style={{
+    marginTop: "50px",
+    textAlign: "center",
+    color: "#94a3b8",
+    fontSize: "14px",
+  }}
+>
+  FantAquilaCastoro 2026 • Road to New York 🗽
+</div>
   );
 }

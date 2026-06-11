@@ -49,7 +49,15 @@ export default function Home() {
       >
         Road to New York 🗽
       </p>
-
+<p
+  style={{
+    color: "#fbbf24",
+    fontWeight: "bold",
+    marginTop: "5px",
+  }}
+>
+  FIFA World Cup Fantasy Edition
+</p>
       <p
         style={{
           color: "#cbd5e1",

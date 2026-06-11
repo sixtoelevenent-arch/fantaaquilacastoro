@@ -21,5 +21,15 @@ export default function AlboDOroPage() {
         <h2>❓ Da assegnare</h2>
       </Card>
     </main>
+    <div
+  style={{
+    marginTop: "50px",
+    textAlign: "center",
+    color: "#94a3b8",
+    fontSize: "14px",
+  }}
+>
+  FantAquilaCastoro 2026 • Road to New York 🗽
+</div>
   );
 }
