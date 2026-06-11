@@ -14,7 +14,7 @@ export default function AlboDOroPage() {
 
       <Card title="🏆 Edizione 2022">
         
-        <p>Sirty</p>
+        <h2>Sirty</h2>
       </Card>
 
       <Card title="🏆 Edizione 2026">
