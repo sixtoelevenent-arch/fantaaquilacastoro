@@ -50,6 +50,21 @@ export default function Home() {
         >
           📜 Regolamento
         </a>
+        <a
+  href="/regolamento.pdf"
+  target="_blank"
+  style={{
+    display: "inline-block",
+    padding: "12px 20px",
+    background: "#ea580c",
+    color: "white",
+    textDecoration: "none",
+    borderRadius: "8px",
+    margin: "5px",
+  }}
+>
+  📜 Regolamento
+</a>
       </div>
     </main>
   );
