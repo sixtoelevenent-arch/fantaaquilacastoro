@@ -76,6 +76,13 @@ export default function Home() {
         }}
       >
         ⚽ 12 Fantallenatori • 🌍 12 Nazionali • 🏆 1 Campione
+      </p><p
+        style={{
+          color: "#94a3b8",
+          marginBottom: "6px",
+        }}
+      >
+        🏆 1 Campione
       </p>
 
       <p
