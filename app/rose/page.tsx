@@ -1,32 +1,37 @@
-const squadre = [
-  "Pres",
-  "Andrea S.",
-  "Cristian",
-  "Luigi",
-  "Andrea A.",
-  "Erny",
-  "Martin",
-  "Fava",
-  "Sirty",
-  "Michel",
-  "Fabio",
-  "Bruno",
-];
-
-export default function RosePage() {
+export default function Home() {
   return (
-    <main style={{ padding: 40 }}>
-      <h1>🏆 Rose FantAquilaCastoro 2026</h1>
+    <main
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        background: "#111",
+        color: "white",
+        textAlign: "center",
+        padding: "20px",
+      }}
+    >
+      <h1>🏆 FantAquilaCastoro 2026</h1>
 
-      <ul>
-        {squadre.map((squadra) => (
-          <li key={squadra}>
-            <a href={`/rose/${encodeURIComponent(squadra)}`}>
-              {squadra}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <p>Mondiale Fantasy a 12 squadre</p>
+
+      <div style={{ marginTop: "30px" }}>
+        <a
+          href="/rose-ufficiali.html"
+          style={{
+            padding: "12px 20px",
+            background: "#2563eb",
+            color: "white",
+            textDecoration: "none",
+            borderRadius: "8px",
+            fontWeight: "bold",
+          }}
+        >
+          📋 Rose Ufficiali
+        </a>
+      </div>
     </main>
   );
 }
