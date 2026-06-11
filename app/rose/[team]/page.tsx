@@ -1,3 +1,5 @@
+import { rose } from "@/data/rose";
+
 export default async function TeamPage({
   params,
 }: {
@@ -5,33 +7,35 @@ export default async function TeamPage({
 }) {
   const { team } = await params;
 
-  if (team === "Sirty") {
+  const squadra = rose[team as keyof typeof rose];
+
+  if (!squadra) {
     return (
       <main style={{ padding: 40 }}>
-        <h1>🇫🇷 Sirty - Francia</h1>
-
-        <h2>Portieri</h2>
-        <ul>
-          <li>Fernando Muslera (Uruguay) - 1</li>
-          <li>G. Kobel (Svizzera) - 6</li>
-          <li>Sergio Rochet (Uruguay) - 2</li>
-        </ul>
-
-        <h2>Attaccanti</h2>
-        <ul>
-          <li>Erling Haaland (Norvegia) - 97</li>
-          <li>Mohamed Salah (Egitto) - 8</li>
-          <li>Viktor Gyökeres (Svezia) - 8</li>
-        </ul>
+        <h1>Squadra non trovata</h1>
       </main>
     );
   }
 
   return (
     <main style={{ padding: 40 }}>
-      <h1>{decodeURIComponent(team)}</h1>
+      <h1>
+        {team} - {squadra.nazione}
+      </h1>
 
-      <p>Rosa non ancora caricata.</p>
+      <h2>Portieri</h2>
+      <ul>
+        {squadra.portieri.map((p) => (
+          <li key={p}>{p}</li>
+        ))}
+      </ul>
+
+      <h2>Attaccanti</h2>
+      <ul>
+        {squadra.attaccanti.map((a) => (
+          <li key={a}>{a}</li>
+        ))}
+      </ul>
     </main>
   );
 }
