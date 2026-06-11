@@ -32,6 +32,21 @@ export default function Home() {
           📋 Rose Ufficiali
         </a>
       </div>
+      <div style={{ marginTop: "15px" }}>
+  <a
+    href="/regolamento"
+    style={{
+      padding: "12px 20px",
+      background: "#16a34a",
+      color: "white",
+      textDecoration: "none",
+      borderRadius: "8px",
+      fontWeight: "bold",
+    }}
+  >
+    📜 Regolamento
+  </a>
+</div>
     </main>
   );
 }
