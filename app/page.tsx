@@ -97,7 +97,15 @@ export default function Home() {
           📜 Regolamento
         </a>
       </div>
-
+<a
+  href="/albo-d-oro"
+  style={{
+    ...buttonStyle,
+    background: "#ca8a04",
+  }}
+>
+  🥇 Albo d'Oro
+</a>
       <div
         style={{
           marginTop: "50px",
