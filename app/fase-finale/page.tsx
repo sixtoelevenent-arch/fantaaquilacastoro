@@ -1,27 +1,32 @@
+import Card from "@/components/Card";
+
 export default function FaseFinalePage() {
   return (
-    <main style={{
-      minHeight: "100vh",
-      background: "#18181b",
-      color: "white",
-      padding: "40px",
-    }}>
+    <main
+      style={{
+        minHeight: "100vh",
+        background: "#78350f",
+        color: "white",
+        padding: "40px",
+      }}
+    >
       <h1>⚔️ Fase Finale</h1>
 
-      <h2>Quarti</h2>
+      <Card title="🏆 Quarti di Finale">
+        <p>1° Girone A vs Peggiore Terza</p>
+        <p>1° Girone B vs Migliore Terza</p>
+        <p>1° Girone C vs Peggiore Seconda</p>
+        <p>Seconda Migliore vs Seconda Peggiore</p>
+      </Card>
 
-      <p>1° Girone A vs Peggiore Terza</p>
-      <p>1° Girone B vs Migliore Terza</p>
-      <p>1° Girone C vs Peggiore Seconda</p>
-      <p>Seconda Migliore vs Seconda Peggiore</p>
+      <Card title="🎲 Semifinali">
+        <p>Sorteggio integrale</p>
+      </Card>
 
-      <h2>Semifinali</h2>
-
-      <p>🎲 Sorteggio</p>
-
-      <h2>Finale</h2>
-
-      <p>🗽 MetLife Stadium</p>
+      <Card title="🗽 Finale">
+        <p>MetLife Stadium</p>
+        <p>19 Luglio 2026</p>
+      </Card>
     </main>
   );
 }

@@ -1,61 +1,37 @@
+import Card from "@/components/Card";
+
 export default function GironiPage() {
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "#07111f",
+        background: "#052e16",
         color: "white",
         padding: "40px",
       }}
     >
       <h1>🏆 Gironi</h1>
 
-      <div style={{
-        display: "flex",
-        gap: "20px",
-        flexWrap: "wrap",
-      }}>
+      <Card title="Girone A">
+        <p>🇦🇷 Argentina</p>
+        <p>🇮🇷 Iran</p>
+        <p>🇨🇴 Colombia</p>
+        <p>🇵🇹 Portogallo</p>
+      </Card>
 
-        <div style={{
-          background: "#1e3a8a",
-          padding: "20px",
-          borderRadius: "16px",
-          width: "250px",
-        }}>
-          <h2>Girone A</h2>
-          <p>🇦🇷 Argentina</p>
-          <p>🇮🇷 Iran</p>
-          <p>🇨🇴 Colombia</p>
-          <p>🇵🇹 Portogallo</p>
-        </div>
+      <Card title="Girone B">
+        <p>🇫🇷 Francia</p>
+        <p>🇺🇿 Uzbekistan</p>
+        <p>🇲🇽 Messico</p>
+        <p>🇨🇼 Curaçao</p>
+      </Card>
 
-        <div style={{
-          background: "#166534",
-          padding: "20px",
-          borderRadius: "16px",
-          width: "250px",
-        }}>
-          <h2>Girone B</h2>
-          <p>🇫🇷 Francia</p>
-          <p>🇺🇿 Uzbekistan</p>
-          <p>🇲🇽 Messico</p>
-          <p>🇨🇼 Curaçao</p>
-        </div>
-
-        <div style={{
-          background: "#7c3aed",
-          padding: "20px",
-          borderRadius: "16px",
-          width: "250px",
-        }}>
-          <h2>Girone C</h2>
-          <p>🇬🇭 Ghana</p>
-          <p>🇹🇷 Turchia</p>
-          <p>🇨🇮 Costa d'Avorio</p>
-          <p>🇩🇪 Germania</p>
-        </div>
-
-      </div>
+      <Card title="Girone C">
+        <p>🇬🇭 Ghana</p>
+        <p>🇹🇷 Turchia</p>
+        <p>🇨🇮 Costa d'Avorio</p>
+        <p>🇩🇪 Germania</p>
+      </Card>
     </main>
   );
 }
