@@ -32,7 +32,6 @@ export default function GironiPage() {
         <p>🇨🇮 Costa d'Avorio</p>
         <p>🇩🇪 Germania</p>
       </Card>
-    </main>
     <div
   style={{
     marginTop: "50px",
@@ -43,5 +42,7 @@ export default function GironiPage() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+    </main>
+
   );
 }

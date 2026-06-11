@@ -21,7 +21,7 @@ export default function SvincolatiPage() {
           Apri il PDF degli svincolati
         </a>
       </Card>
-    </main>
+    
     
     <div
   style={{
@@ -33,5 +33,6 @@ export default function SvincolatiPage() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+</main>
   );
 }

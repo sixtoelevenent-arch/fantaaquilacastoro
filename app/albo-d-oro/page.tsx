@@ -20,8 +20,7 @@ export default function AlboDOroPage() {
       <Card title="🏆 Edizione 2026">
         <h2>❓ Da assegnare</h2>
       </Card>
-    </main>
-    <div
+        <div
   style={{
     marginTop: "50px",
     textAlign: "center",
@@ -31,5 +30,6 @@ export default function AlboDOroPage() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+</main>
   );
 }

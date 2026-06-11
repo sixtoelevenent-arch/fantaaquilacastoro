@@ -32,7 +32,7 @@ export default function ClassifichePage() {
         <p>🥉 Costa d'Avorio - 0 pt</p>
         <p>4️⃣ Germania - 0 pt</p>
       </Card>
-    </main>
+   
     <div
   style={{
     marginTop: "50px",
@@ -43,5 +43,6 @@ export default function ClassifichePage() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+</main>
   );
 }

@@ -32,8 +32,7 @@ export default function RegolamentoPage() {
       <p>
         Successiva fase finale ad eliminazione diretta.
       </p>
-    </main>
-    <div
+        <div
   style={{
     marginTop: "50px",
     textAlign: "center",
@@ -43,5 +42,6 @@ export default function RegolamentoPage() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+</main>
   );
 }

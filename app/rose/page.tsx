@@ -47,8 +47,7 @@ export default function Home() {
     📜 Regolamento
   </a>
 </div>
-    </main>
-    <div
+       <div
   style={{
     marginTop: "50px",
     textAlign: "center",
@@ -58,5 +57,6 @@ export default function Home() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+ </main>
   );
 }

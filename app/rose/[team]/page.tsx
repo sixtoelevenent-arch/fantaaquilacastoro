@@ -59,8 +59,7 @@ export default async function TeamPage({
   ))}
 </ul>
 
-    </main>
-    <div
+        <div
   style={{
     marginTop: "50px",
     textAlign: "center",
@@ -70,5 +69,6 @@ export default async function TeamPage({
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+</main>
   );
 }

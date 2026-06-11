@@ -27,8 +27,7 @@ export default function FaseFinalePage() {
         <p>MetLife Stadium</p>
         <p>19 Luglio 2026</p>
       </Card>
-    </main>
-    <div
+        <div
   style={{
     marginTop: "50px",
     textAlign: "center",
@@ -38,5 +37,6 @@ export default function FaseFinalePage() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+</main>
   );
 }

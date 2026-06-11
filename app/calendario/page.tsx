@@ -200,7 +200,7 @@ export default function CalendarioPage() {
         FantAquilaCastoro 2026 • Road to New York 🗽
       </div>
       
-    </main>
+
     <div
   style={{
     marginTop: "50px",
@@ -211,5 +211,6 @@ export default function CalendarioPage() {
 >
   FantAquilaCastoro 2026 • Road to New York 🗽
 </div>
+</main>
   );
 }
