@@ -1,7 +1,7 @@
 export default function Home() {
   const buttonStyle = {
     display: "block",
-    width: "320px",
+    width: "340px",
     padding: "16px",
     borderRadius: "14px",
     textDecoration: "none",
@@ -24,6 +24,7 @@ export default function Home() {
         paddingTop: "60px",
         paddingLeft: "20px",
         paddingRight: "20px",
+        paddingBottom: "60px",
       }}
     >
       <h1
@@ -38,7 +39,7 @@ export default function Home() {
 
       <p
         style={{
-          fontSize: "1.3rem",
+          fontSize: "1.4rem",
           fontWeight: "bold",
           color: "#fbbf24",
           marginTop: 0,
@@ -52,28 +53,68 @@ export default function Home() {
       <p
         style={{
           color: "#cbd5e1",
-          marginBottom: "40px",
-          textAlign: "center",
+          marginBottom: "6px",
         }}
       >
-        USA 🇺🇸 • Canada 🇨🇦 • Messico 🇲🇽
+        11 Giugno → 19 Luglio 2026
+      </p>
+
+      <p
+        style={{
+          color: "#94a3b8",
+          marginBottom: "6px",
+        }}
+      >
+        ⚽ 12 Fantallenatori • 🌍 12 Nazionali • 🏆 1 Campione
+      </p>
+
+      <p
+        style={{
+          color: "#fbbf24",
+          marginBottom: "40px",
+          fontWeight: "bold",
+        }}
+      >
+        Campione in carica: 🇫🇷 Francia (Sirty)
       </p>
 
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "15px",
+          gap: "14px",
         }}
       >
-          <a
+        <a
+          href="/live"
+          style={{
+            ...buttonStyle,
+            background: "#dc2626",
+            fontSize: "20px",
+            boxShadow: "0 0 20px rgba(220,38,38,0.5)",
+          }}
+        >
+          🔴 LIVE GIORNATA
+        </a>
+
+        <a
           href="/rose-ufficiali.html"
+          style={{
+            ...buttonStyle,
+            background: "#2563eb",
+          }}
+        >
+          📋 Rose
+        </a>
+
+        <a
+          href="/gironi"
           style={{
             ...buttonStyle,
             background: "#16a34a",
           }}
         >
-          🌍 Rose Ufficiali Complete
+          🏆 Gironi
         </a>
 
         <a
@@ -87,31 +128,63 @@ export default function Home() {
         </a>
 
         <a
-          href="/regolamento.pdf"
-          target="_blank"
+          href="/classifiche"
+          style={{
+            ...buttonStyle,
+            background: "#0891b2",
+          }}
+        >
+          📊 Classifiche
+        </a>
+
+        <a
+          href="/fase-finale"
           style={{
             ...buttonStyle,
             background: "#ea580c",
           }}
         >
+          ⚔️ Fase Finale
+        </a>
+
+        <a
+          href="/svincolati"
+          style={{
+            ...buttonStyle,
+            background: "#475569",
+          }}
+        >
+          📑 Listone Svincolati
+        </a>
+
+        <a
+          href="/regolamento.pdf"
+          target="_blank"
+          style={{
+            ...buttonStyle,
+            background: "#ca8a04",
+          }}
+        >
           📜 Regolamento
         </a>
+
+        <a
+          href="/albo-d-oro"
+          style={{
+            ...buttonStyle,
+            background: "#b45309",
+          }}
+        >
+          🥇 Albo d'Oro
+        </a>
       </div>
-<a
-  href="/albo-d-oro"
-  style={{
-    ...buttonStyle,
-    background: "#ca8a04",
-  }}
->
-  🥇 Albo d'Oro
-</a>
+
       <div
         style={{
           marginTop: "50px",
-          textAlign: "center",
-          color: "#94a3b8",
+          color: "#64748b",
           fontSize: "14px",
+          textAlign: "center",
         }}
       >
         FantAquilaCastoro • World Cup Edition 2026
