@@ -75,7 +75,7 @@ export default function Home() {
           fontWeight: "bold",
         }}
       >
-        Campione in carica: 🇫🇷 Francia (Sirty)
+        Campione in carica: Sirty
       </p>
 
       <div
