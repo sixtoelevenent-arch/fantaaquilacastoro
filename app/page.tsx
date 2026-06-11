@@ -66,17 +66,7 @@ export default function Home() {
           gap: "15px",
         }}
       >
-        <a
-          href="/rose"
-          style={{
-            ...buttonStyle,
-            background: "#2563eb",
-          }}
-        >
-          📋 Rose Squadre
-        </a>
-
-        <a
+          <a
           href="/rose-ufficiali.html"
           style={{
             ...buttonStyle,
