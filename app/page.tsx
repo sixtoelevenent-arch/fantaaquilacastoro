@@ -29,9 +29,11 @@ export default function Home() {
     >
       <h1
         style={{
-          fontSize: "3rem",
-          marginBottom: "10px",
-          textAlign: "center",
+          fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
+    marginBottom: "10px",
+    textAlign: "center",
+    lineHeight: 1.1,
+    maxWidth: "90vw",
         }}
       >
         🏆 FantAquilaCastoro 2026
