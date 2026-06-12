@@ -3,20 +3,23 @@ export default function Home() {
     display: "block",
     width: "100%",
     maxWidth: "320px",
-    padding: "14px",
-    borderRadius: "12px",
+    padding: "18px",
+    borderRadius: "18px",
     textDecoration: "none",
     color: "white",
-    fontWeight: "bold",
+    fontWeight: "bold" as const,
     fontSize: "18px",
     marginBottom: "12px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
+    textAlign: "center" as const,
   };
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "#111827",
+        background:
+          "linear-gradient(to bottom, #020617 0%, #08122c 50%, #020617 100%)",
         color: "white",
         padding: "20px",
         display: "flex",
@@ -24,27 +27,101 @@ export default function Home() {
         alignItems: "center",
       }}
     >
-      <h1
+      {/* LOGO */}
+      <img
+        src="/Logo.jpg"
+        alt="FantAquilaCastoro 2026"
         style={{
-          fontSize: "clamp(2rem, 7vw, 3.5rem)",
+          width: "150px",
+          height: "150px",
+          objectFit: "contain",
+          marginTop: "10px",
+          marginBottom: "15px",
+          borderRadius: "20px",
+        }}
+      />
+
+      {/* HEADER */}
+      <div
+        style={{
           textAlign: "center",
-          marginTop: "20px",
-          marginBottom: "10px",
+          marginBottom: "35px",
         }}
       >
-        🏆 FantAquilaCastoro 2026
-      </h1>
+        <h1
+          style={{
+            fontSize: "clamp(2.2rem, 8vw, 4rem)",
+            lineHeight: 1.1,
+            marginBottom: "10px",
+            fontWeight: "800",
+          }}
+        >
+          FantAquilaCastoro
+          <br />
+          2026
+        </h1>
 
-      <p
-        style={{
-          color: "#cbd5e1",
-          marginBottom: "40px",
-          textAlign: "center",
-        }}
-      >
-        Mondiale Fantasy a 12 squadre
-      </p>
+        <div
+          style={{
+            color: "#fbbf24",
+            fontSize: "clamp(1.8rem, 6vw, 2.5rem)",
+            fontWeight: "800",
+            marginBottom: "10px",
+          }}
+        >
+          Road to New York 🗽
+        </div>
 
+        <div
+          style={{
+            color: "#fbbf24",
+            fontSize: "1.1rem",
+            fontWeight: "600",
+            marginBottom: "25px",
+          }}
+        >
+          FIFA World Cup Fantasy Edition
+        </div>
+
+        <div
+          style={{
+            color: "#cbd5e1",
+            marginBottom: "15px",
+            fontSize: "1rem",
+          }}
+        >
+          📅 11 Giugno → 19 Luglio 2026
+        </div>
+
+        <div
+          style={{
+            color: "#cbd5e1",
+            marginBottom: "25px",
+            lineHeight: 1.8,
+          }}
+        >
+          ⚽ 12 Fantallenatori • 🌍 12 Nazionali
+          <br />
+          🏆 1 Campione
+        </div>
+
+        <div
+          style={{
+            border: "1px solid rgba(255,255,255,0.15)",
+            background: "rgba(255,255,255,0.04)",
+            borderRadius: "16px",
+            padding: "14px",
+            color: "#fbbf24",
+            fontWeight: "700",
+            maxWidth: "320px",
+            margin: "0 auto",
+          }}
+        >
+          🏆 Campione in carica: Sirty
+        </div>
+      </div>
+
+      {/* MENU */}
       <div
         style={{
           width: "100%",
@@ -56,9 +133,13 @@ export default function Home() {
           style={{
             ...buttonStyle,
             background: "#dc2626",
+            padding: "24px",
+            fontSize: "24px",
+            marginBottom: "24px",
+            boxShadow: "0 0 20px rgba(220,38,38,0.45)",
           }}
         >
-          🔴 Live Giornata
+          🔴 LIVE GIORNATA
         </a>
 
         <a
@@ -79,16 +160,6 @@ export default function Home() {
           }}
         >
           🗓️ Calendario
-        </a>
-
-        <a
-          href="/gironi"
-          style={{
-            ...buttonStyle,
-            background: "#059669",
-          }}
-        >
-          🏆 Gironi
         </a>
 
         <a
