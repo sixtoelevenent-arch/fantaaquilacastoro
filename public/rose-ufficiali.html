@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0297)https://cdn.fbsbx.com/v/t65.102178-21/722635431_1907666113253502_1728759887122628227_n.jpg/rose_fantaquilacastoro_v2_web_artifact_1_6fe2b840e038.html?_nc_ht=cdn.fbsbx.com&_nc_ohc=OLCR45ni29YQ7kNvwESF5lg&sdl=0&ccb=14-4&oh=00_Af-PKObCKwUBgKXzXuDX5tgl8l_uVTawbvGBSxebMaSjDg&oe=6A2CD7A5&_nc_sid=4ee932 -->
+<!-- saved from url=(0297)https://cdn.fbsbx.com/v/t65.102178-21/724097496_3536605829838070_3712851393979156912_n.jpg/rose_fantaquilacastoro_v2_web_artifact_1_4bef83065a9d.html?_nc_ht=cdn.fbsbx.com&_nc_ohc=aa6mZ8MOUcQQ7kNvwHSei_1&sdl=0&ccb=14-4&oh=00_Af-G-yl6N5-7UGdwLSxTkG-cXfRrL2HLH8IiS4M9JF1eyg&oe=6A2DC37C&_nc_sid=4ee932 -->
 <html lang="it" data-darkreader-mode="dynamic" data-darkreader-scheme="dark" data-darkreader-proxy-injected="true"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--user-agent" media="screen">@layer {
 html {
     background-color: var(--darkreader-background-ffffff, #181a1b) !important;
@@ -192,6 +192,7 @@ select:-webkit-autofill {
     grid-template-columns:repeat(auto-fill, minmax(310px, 1fr));
     gap:1.35rem;
     padding:1.2rem 0 2.5rem;
+    align-items:stretch;
   }
   .card{
     background:rgba(255,255,255,.98);
@@ -205,6 +206,7 @@ select:-webkit-autofill {
     opacity:0;
     animation:cardIn .55s cubic-bezier(.2,.8,.2,1) forwards;
     position:relative;
+    min-height:620px;
   }
   @keyframes cardIn{to{transform:translateY(0);opacity:1}}
   .card::after{
@@ -215,6 +217,7 @@ select:-webkit-autofill {
     padding:1rem 1.1rem 1rem 1.05rem;
     display:flex;align-items:center;justify-content:space-between;
     color:#fff;position:relative;overflow:hidden;
+    flex-shrink:0;
   }
   .card-header h2{
     margin:0;font-size:1.18rem;font-weight:900;letter-spacing:.01em;
@@ -237,7 +240,18 @@ select:-webkit-autofill {
   }
   @keyframes shine{to{transform:translateX(220%) skewX(-20deg)}}
 
-  table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem}
+  .card-body{
+    flex:1 1 auto;
+    overflow-y:auto;
+    overflow-x:hidden;
+    min-height:0;
+    scrollbar-width:thin;
+    scrollbar-color:#cbd5e1 transparent;
+  }
+  .card-body::-webkit-scrollbar{width:6px}
+  .card-body::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:6px}
+
+  table{width:100%;border-collapse:separate;border-spacing:0;font-size:.9rem;table-layout:fixed}
   thead th{
     position:sticky;top:0;z-index:1;
     background:#f8fafc;color:#64748b;text-align:left;
@@ -250,11 +264,13 @@ select:-webkit-autofill {
   }
   tbody tr:last-child td{border-bottom:none}
   tbody tr:hover td{background:#f8fafc}
-  .col-r{width:42px;text-align:center}
-  .col-p{width:54px;text-align:right;font-weight:800;color:#0f172a}
-  .col-n{width:68px;color:#64748b;font-size:.82rem}
-  .player{font-weight:650;color:#0f172a;letter-spacing:.01em}
-  .nat{white-space:nowrap}
+  .col-r{width:12%;text-align:center}
+  thead th:nth-child(2), tbody td:nth-child(2){width:48%}
+  .col-n{width:25%;color:#64748b;font-size:.82rem}
+  .col-p{width:15%;text-align:right;font-weight:800;color:#0f172a}
+  
+  .player{font-weight:650;color:#0f172a;letter-spacing:.01em;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .nat{white-space:nowrap;display:block;overflow:hidden;text-overflow:ellipsis}
 
   .role{
     display:inline-flex;align-items:center;justify-content:center;
@@ -310,7 +326,7 @@ select:-webkit-autofill {
   @media (max-width:640px){
     .grid{grid-template-columns:1fr;gap:1rem;padding:.8rem 0 2rem}
     header{padding:2rem 1rem 1.2rem}
-    .card{border-radius:18px}
+    .card{border-radius:18px;min-height:580px}
   }
 
   @media print{
@@ -320,12 +336,13 @@ select:-webkit-autofill {
     .subtitle,.actions,footer{display:none}
     .wrap{padding:0}
     .grid{grid-template-columns:repeat(2,1fr);gap:12px}
-    .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;opacity:1;transform:none;animation:none}
+    .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid;opacity:1;transform:none;animation:none;min-height:auto}
+    .card-body{overflow:visible}
     .card-header::after{display:none}
     tr.highlight td{background:#fff7cc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   }
 </style><style class="darkreader darkreader--sync" media="screen"></style>
-<meta name="darkreader" content="e4f71cef5c894244a85845f2e30d6aa8"><style class="darkreader darkreader--override" media="screen">.vimvixen-hint {
+<meta name="darkreader" content="857290a2a7e5496585d65350abb5f9bf"><style class="darkreader darkreader--override" media="screen">.vimvixen-hint {
     background-color: var(--darkreader-background-ffd76e, #684b00) !important;
     border-color: var(--darkreader-background-c59d00, #9e7e00) !important;
     color: var(--darkreader-text-302505, #d7d4cf) !important;
@@ -563,128 +580,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Bart Verbruggen</span></td>
-          <td class="col-n"><span class="nat">Olanda</span></td>
+          <td><span class="player" title="Bart Verbruggen">Bart Verbruggen</span></td>
+          <td class="col-n"><span class="nat" title="Olanda">Olanda</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Seung-gyu Kim</span></td>
-          <td class="col-n"><span class="nat">Corea del Sud</span></td>
+          <td><span class="player" title="Seung-gyu Kim">Seung-gyu Kim</span></td>
+          <td class="col-n"><span class="nat" title="Corea del Sud">Corea del Sud</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Y. Fofana</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="Y. Fofana">Y. Fofana</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">D. Svensson</span></td>
-          <td class="col-n"><span class="nat">Svezia</span></td>
+          <td><span class="player" title="D. Svensson">D. Svensson</span></td>
+          <td class="col-n"><span class="nat" title="Svezia">Svezia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Evan Ndicka</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="Evan Ndicka">Evan Ndicka</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">G. Doué</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="G. Doué">G. Doué</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Gonçalo Inácio</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Gonçalo Inácio">Gonçalo Inácio</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">N. O'Reilly</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="N. O&#39;Reilly">N. O'Reilly</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Rayan Aït-Nouri</span></td>
-          <td class="col-n"><span class="nat">Algeria</span></td>
+          <td><span class="player" title="Rayan Aït-Nouri">Rayan Aït-Nouri</span></td>
+          <td class="col-n"><span class="nat" title="Algeria">Algeria</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Sergiño Dest</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="Sergiño Dest">Sergiño Dest</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Tae-seok Lee</span></td>
-          <td class="col-n"><span class="nat">Corea del Sud</span></td>
+          <td><span class="player" title="Tae-seok Lee">Tae-seok Lee</span></td>
+          <td class="col-n"><span class="nat" title="Corea del Sud">Corea del Sud</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Matheus Cunha</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Matheus Cunha">Matheus Cunha</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">60</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">F. Wirtz</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="F. Wirtz">F. Wirtz</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">50</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">J. Musiala</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="J. Musiala">J. Musiala</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">50</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Pedri</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Pedri">Pedri</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">30</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">T. Reijnders</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="T. Reijnders">T. Reijnders</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">30</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Francisco Trincão</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Francisco Trincão">Francisco Trincão</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Ismael Saibari</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="Ismael Saibari">Ismael Saibari</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Pavel Šulc</span></td>
-          <td class="col-n"><span class="nat">Repubblica Ceca</span></td>
+          <td><span class="player" title="Pavel Šulc">Pavel Šulc</span></td>
+          <td class="col-n"><span class="nat" title="Repubblica Ceca">Repubblica Ceca</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">M. Olise</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="M. Olise">M. Olise</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">160</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Cristiano Ronaldo</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Cristiano Ronaldo">Cristiano Ronaldo</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">100</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">L. Trossard</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="L. Trossard">L. Trossard</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">B. Saka</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="B. Saka">B. Saka</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Breel Embolo</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="Breel Embolo">Breel Embolo</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">C. Summerville</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="C. Summerville">C. Summerville</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -704,128 +721,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Unai Simón</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Unai Simón">Unai Simón</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">32</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">David Raya</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="David Raya">David Raya</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Joan García</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Joan García">Joan García</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Achraf Hakimi</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="Achraf Hakimi">Achraf Hakimi</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">22</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Josko Gvardiol</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="Josko Gvardiol">Josko Gvardiol</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">15</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Nuno Mendes</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Nuno Mendes">Nuno Mendes</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">14</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">W. Saliba</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="W. Saliba">W. Saliba</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">12</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Marquinhos</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Marquinhos">Marquinhos</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Pau Cubarsí</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Pau Cubarsí">Pau Cubarsí</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">9</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Cristian Romero</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Cristian Romero">Cristian Romero</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">7</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Virgil van Dijk</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="Virgil van Dijk">Virgil van Dijk</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">4</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Bernardo Silva</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Bernardo Silva">Bernardo Silva</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">62</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">D. Rice</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="D. Rice">D. Rice</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">41</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">J. Bellingham</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="J. Bellingham">J. Bellingham</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">36</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Arda Güler</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Arda Güler">Arda Güler</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">28</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">A. Tchouaméni</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="A. Tchouaméni">A. Tchouaméni</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">21</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Bruno Guimarães</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Bruno Guimarães">Bruno Guimarães</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">M. Baturina</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="M. Baturina">M. Baturina</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">9</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Nico Paz</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Nico Paz">Nico Paz</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Lamine Yamal</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Lamine Yamal">Lamine Yamal</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">70</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Nico Williams</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Nico Williams">Nico Williams</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">34</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">J. David</span></td>
-          <td class="col-n"><span class="nat">Canada</span></td>
+          <td><span class="player" title="J. David">J. David</span></td>
+          <td class="col-n"><span class="nat" title="Canada">Canada</span></td>
           <td class="col-p">20</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Endrick</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Endrick">Endrick</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">14</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">A. El Kaabi</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="A. El Kaabi">A. El Kaabi</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">12</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">O. Marmoush</span></td>
-          <td class="col-n"><span class="nat">Egitto</span></td>
+          <td><span class="player" title="O. Marmoush">O. Marmoush</span></td>
+          <td class="col-n"><span class="nat" title="Egitto">Egitto</span></td>
           <td class="col-p">6</td>
         </tr></tbody>
           </table>
@@ -845,128 +862,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Diogo Costa</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Diogo Costa">Diogo Costa</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">22</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Uğurcan Çakır</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Uğurcan Çakır">Uğurcan Çakır</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Matej Kovar</span></td>
-          <td class="col-n"><span class="nat">Repubblica Ceca</span></td>
+          <td><span class="player" title="Matej Kovar">Matej Kovar</span></td>
+          <td class="col-n"><span class="nat" title="Repubblica Ceca">Repubblica Ceca</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Reece James</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="Reece James">Reece James</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">15</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Micky van de Ven</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="Micky van de Ven">Micky van de Ven</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">12</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Nicolás Otamendi</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Nicolás Otamendi">Nicolás Otamendi</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Piero Hincapié</span></td>
-          <td class="col-n"><span class="nat">Ecuador</span></td>
+          <td><span class="player" title="Piero Hincapié">Piero Hincapié</span></td>
+          <td class="col-n"><span class="nat" title="Ecuador">Ecuador</span></td>
           <td class="col-p">6</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Leo Østigård</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="Leo Østigård">Leo Østigård</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">N. Aké</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="N. Aké">N. Aké</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Salah-Eddine</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="Salah-Eddine">Salah-Eddine</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">N. Schlotterbeck</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="N. Schlotterbeck">N. Schlotterbeck</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Fabián Ruiz</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Fabián Ruiz">Fabián Ruiz</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">40</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Kevin De Bruyne</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="Kevin De Bruyne">Kevin De Bruyne</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">26</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">A. Mac Allister</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="A. Mac Allister">A. Mac Allister</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">22</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">E. Eze</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="E. Eze">E. Eze</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">12</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Franck Kessié</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="Franck Kessié">Franck Kessié</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Luka Sucic</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="Luka Sucic">Luka Sucic</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Leandro Paredes</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Leandro Paredes">Leandro Paredes</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Pedro Neto</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Pedro Neto">Pedro Neto</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Gonçalo Ramos</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Gonçalo Ramos">Gonçalo Ramos</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">85</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Mikel Oyarzabal</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Mikel Oyarzabal">Mikel Oyarzabal</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">70</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Thiago Almada</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Thiago Almada">Thiago Almada</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">14</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Andrej Kramaric</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="Andrej Kramaric">Andrej Kramaric</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">9</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">M. Thuram</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="M. Thuram">M. Thuram</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Kerem Aktürkoğlu</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Kerem Aktürkoğlu">Kerem Aktürkoğlu</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">2</td>
         </tr></tbody>
           </table>
@@ -986,128 +1003,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Dominik Livakovic</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="Dominik Livakovic">Dominik Livakovic</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">16</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Luca Zidane</span></td>
-          <td class="col-n"><span class="nat">Algeria</span></td>
+          <td><span class="player" title="Luca Zidane">Luca Zidane</span></td>
+          <td class="col-n"><span class="nat" title="Algeria">Algeria</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Ørjan Nyland</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="Ørjan Nyland">Ørjan Nyland</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Ricardo Rodríguez</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="Ricardo Rodríguez">Ricardo Rodríguez</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Zeki Çelik</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Zeki Çelik">Zeki Çelik</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">6</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">T. Tomiyasu</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="T. Tomiyasu">T. Tomiyasu</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Wan-Bissaka</span></td>
-          <td class="col-n"><span class="nat">Repubblica Democratica del Congo</span></td>
+          <td><span class="player" title="A. Wan-Bissaka">A. Wan-Bissaka</span></td>
+          <td class="col-n"><span class="nat" title="R.D. Congo">R.D. Congo</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">K. Laimer</span></td>
-          <td class="col-n"><span class="nat">Austria</span></td>
+          <td><span class="player" title="K. Laimer">K. Laimer</span></td>
+          <td class="col-n"><span class="nat" title="Austria">Austria</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">M. Talbi</span></td>
-          <td class="col-n"><span class="nat">Tunisia</span></td>
+          <td><span class="player" title="M. Talbi">M. Talbi</span></td>
+          <td class="col-n"><span class="nat" title="Tunisia">Tunisia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Baba</span></td>
-          <td class="col-n"><span class="nat">Ghana</span></td>
+          <td><span class="player" title="A. Baba">A. Baba</span></td>
+          <td class="col-n"><span class="nat" title="Ghana">Ghana</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">J. Gallardo</span></td>
-          <td class="col-n"><span class="nat">Messico</span></td>
+          <td><span class="player" title="J. Gallardo">J. Gallardo</span></td>
+          <td class="col-n"><span class="nat" title="Messico">Messico</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Hakan Çalhanoğlu</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Hakan Çalhanoğlu">Hakan Çalhanoğlu</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">25</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">G. Xhaka</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="G. Xhaka">G. Xhaka</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">12</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Stephen Eustaquio</span></td>
-          <td class="col-n"><span class="nat">Canada</span></td>
+          <td><span class="player" title="Stephen Eustaquio">Stephen Eustaquio</span></td>
+          <td class="col-n"><span class="nat" title="Canada">Canada</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Paquetá</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Paquetá">Paquetá</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Francisco Conceição</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Francisco Conceição">Francisco Conceição</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">A. Ounahi</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="A. Ounahi">A. Ounahi</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">M. Kovacic</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="M. Kovacic">M. Kovacic</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">E. Alajbegovic</span></td>
-          <td class="col-n"><span class="nat">Bosnia</span></td>
+          <td><span class="player" title="E. Alajbegovic">E. Alajbegovic</span></td>
+          <td class="col-n"><span class="nat" title="Bosnia">Bosnia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Harry Kane</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="Harry Kane">Harry Kane</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">301</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Luis Díaz</span></td>
-          <td class="col-n"><span class="nat">Colombia</span></td>
+          <td><span class="player" title="Luis Díaz">Luis Díaz</span></td>
+          <td class="col-n"><span class="nat" title="Colombia">Colombia</span></td>
           <td class="col-p">40</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">F. Balogun</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="F. Balogun">F. Balogun</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">15</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">N. Jackson</span></td>
-          <td class="col-n"><span class="nat">Senegal</span></td>
+          <td><span class="player" title="N. Jackson">N. Jackson</span></td>
+          <td class="col-n"><span class="nat" title="Senegal">Senegal</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">M. Taremi</span></td>
-          <td class="col-n"><span class="nat">Iran</span></td>
+          <td><span class="player" title="M. Taremi">M. Taremi</span></td>
+          <td class="col-n"><span class="nat" title="Iran">Iran</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">A. Bonny</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="A. Bonny">A. Bonny</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -1127,128 +1144,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Manuel Neuer</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="Manuel Neuer">Manuel Neuer</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">12</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">A. Nübel</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="A. Nübel">A. Nübel</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">H. Ramírez</span></td>
-          <td class="col-n"><span class="nat">Ecuador</span></td>
+          <td><span class="player" title="H. Ramírez">H. Ramírez</span></td>
+          <td class="col-n"><span class="nat" title="Ecuador">Ecuador</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">D. Dumfries</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="D. Dumfries">D. Dumfries</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">32</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Cancelo</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Cancelo">Cancelo</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">29</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">J. Ryerson</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="J. Ryerson">J. Ryerson</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Laporte</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="A. Laporte">A. Laporte</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Joel Ordóñez</span></td>
-          <td class="col-n"><span class="nat">Ecuador</span></td>
+          <td><span class="player" title="Joel Ordóñez">Joel Ordóñez</span></td>
+          <td class="col-n"><span class="nat" title="Ecuador">Ecuador</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">K. Koulibaly</span></td>
-          <td class="col-n"><span class="nat">Senegal</span></td>
+          <td><span class="player" title="K. Koulibaly">K. Koulibaly</span></td>
+          <td class="col-n"><span class="nat" title="Senegal">Senegal</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Pedro Porro</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Pedro Porro">Pedro Porro</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">S. Taniguchi</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="S. Taniguchi">S. Taniguchi</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Federico Valverde</span></td>
-          <td class="col-n"><span class="nat">Uruguay</span></td>
+          <td><span class="player" title="Federico Valverde">Federico Valverde</span></td>
+          <td class="col-n"><span class="nat" title="Uruguay">Uruguay</span></td>
           <td class="col-p">50</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Dani Olmo</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Dani Olmo">Dani Olmo</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">35</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">D. Ndoye</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="D. Ndoye">D. Ndoye</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">30</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Enzo Fernández</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Enzo Fernández">Enzo Fernández</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">23</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Antonio Nusa</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="Antonio Nusa">Antonio Nusa</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">13</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Casemiro</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Casemiro">Casemiro</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">A. Bouaddi</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="A. Bouaddi">A. Bouaddi</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Manzambi</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="Manzambi">Manzambi</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Lautaro Martinez</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Lautaro Martinez">Lautaro Martinez</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">196</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">D. Malen</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="D. Malen">D. Malen</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">47</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">L. Sané</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="L. Sané">L. Sané</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">9</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Darwin Núñez</span></td>
-          <td class="col-n"><span class="nat">Uruguay</span></td>
+          <td><span class="player" title="Darwin Núñez">Darwin Núñez</span></td>
+          <td class="col-n"><span class="nat" title="Uruguay">Uruguay</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">N. Woltemade</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="N. Woltemade">N. Woltemade</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Raúl Jiménez</span></td>
-          <td class="col-n"><span class="nat">Messico</span></td>
+          <td><span class="player" title="Raúl Jiménez">Raúl Jiménez</span></td>
+          <td class="col-n"><span class="nat" title="Messico">Messico</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -1268,128 +1285,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">M. Maignan</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="M. Maignan">M. Maignan</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Y. Bounou</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="Y. Bounou">Y. Bounou</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">A. Tagnaouti</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="A. Tagnaouti">A. Tagnaouti</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Theo Hernández</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="Theo Hernández">Theo Hernández</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Willian Pacho</span></td>
-          <td class="col-n"><span class="nat">Ecuador</span></td>
+          <td><span class="player" title="Willian Pacho">Willian Pacho</span></td>
+          <td class="col-n"><span class="nat" title="Ecuador">Ecuador</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Circati</span></td>
-          <td class="col-n"><span class="nat">Australia</span></td>
+          <td><span class="player" title="A. Circati">A. Circati</span></td>
+          <td class="col-n"><span class="nat" title="Australia">Australia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Mendy</span></td>
-          <td class="col-n"><span class="nat">Senegal</span></td>
+          <td><span class="player" title="A. Mendy">A. Mendy</span></td>
+          <td class="col-n"><span class="nat" title="Senegal">Senegal</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">David Alaba</span></td>
-          <td class="col-n"><span class="nat">Austria</span></td>
+          <td><span class="player" title="David Alaba">David Alaba</span></td>
+          <td class="col-n"><span class="nat" title="Austria">Austria</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">I. Hien</span></td>
-          <td class="col-n"><span class="nat">Svezia</span></td>
+          <td><span class="player" title="I. Hien">I. Hien</span></td>
+          <td class="col-n"><span class="nat" title="Svezia">Svezia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Israel Reyes</span></td>
-          <td class="col-n"><span class="nat">Messico</span></td>
+          <td><span class="player" title="Israel Reyes">Israel Reyes</span></td>
+          <td class="col-n"><span class="nat" title="Messico">Messico</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Jhon Lucumí</span></td>
-          <td class="col-n"><span class="nat">Colombia</span></td>
+          <td><span class="player" title="Jhon Lucumí">Jhon Lucumí</span></td>
+          <td class="col-n"><span class="nat" title="Colombia">Colombia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">I. Perišić</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="I. Perišić">I. Perišić</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">M. Pašalić</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="M. Pašalić">M. Pašalić</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Gilberto Mora</span></td>
-          <td class="col-n"><span class="nat">Messico</span></td>
+          <td><span class="player" title="Gilberto Mora">Gilberto Mora</span></td>
+          <td class="col-n"><span class="nat" title="Messico">Messico</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">D. Kamada</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="D. Kamada">D. Kamada</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">J. Hauge</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="J. Hauge">J. Hauge</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">L. Ferguson</span></td>
-          <td class="col-n"><span class="nat">Scozia</span></td>
+          <td><span class="player" title="L. Ferguson">L. Ferguson</span></td>
+          <td class="col-n"><span class="nat" title="Scozia">Scozia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Mahmoud Trezeguet</span></td>
-          <td class="col-n"><span class="nat">Egitto</span></td>
+          <td><span class="player" title="Mahmoud Trezeguet">Mahmoud Trezeguet</span></td>
+          <td class="col-n"><span class="nat" title="Egitto">Egitto</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">J. Lerma</span></td>
-          <td class="col-n"><span class="nat">Colombia</span></td>
+          <td><span class="player" title="J. Lerma">J. Lerma</span></td>
+          <td class="col-n"><span class="nat" title="Colombia">Colombia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Kylian Mbappé</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="Kylian Mbappé">Kylian Mbappé</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">401</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">K. Havertz</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="K. Havertz">K. Havertz</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">M. Rashford</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="M. Rashford">M. Rashford</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Jérémy Doku</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="Jérémy Doku">Jérémy Doku</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">S. Mané</span></td>
-          <td class="col-n"><span class="nat">Senegal</span></td>
+          <td><span class="player" title="S. Mané">S. Mané</span></td>
+          <td class="col-n"><span class="nat" title="Senegal">Senegal</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">P. Schick</span></td>
-          <td class="col-n"><span class="nat">Repubblica Ceca</span></td>
+          <td><span class="player" title="P. Schick">P. Schick</span></td>
+          <td class="col-n"><span class="nat" title="Repubblica Ceca">Repubblica Ceca</span></td>
           <td class="col-p">2</td>
         </tr></tbody>
           </table>
@@ -1409,128 +1426,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">J. Pickford</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="J. Pickford">J. Pickford</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">62</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">José Sá</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="José Sá">José Sá</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Rui Silva</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Rui Silva">Rui Silva</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Ferdi Kadıoğlu</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Ferdi Kadıoğlu">Ferdi Kadıoğlu</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Ruben Dias</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Ruben Dias">Ruben Dias</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">J. Stanisic</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="J. Stanisic">J. Stanisic</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Ronald Araujo</span></td>
-          <td class="col-n"><span class="nat">Uruguay</span></td>
+          <td><span class="player" title="Ronald Araujo">Ronald Araujo</span></td>
+          <td class="col-n"><span class="nat" title="Uruguay">Uruguay</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Rüdiger</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="A. Rüdiger">A. Rüdiger</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Kim Min-Jae</span></td>
-          <td class="col-n"><span class="nat">Corea del Sud</span></td>
+          <td><span class="player" title="Kim Min-Jae">Kim Min-Jae</span></td>
+          <td class="col-n"><span class="nat" title="Corea del Sud">Corea del Sud</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Z. Debast</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="Z. Debast">Z. Debast</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">T. Muharemović</span></td>
-          <td class="col-n"><span class="nat">Bosnia</span></td>
+          <td><span class="player" title="T. Muharemović">T. Muharemović</span></td>
+          <td class="col-n"><span class="nat" title="Bosnia">Bosnia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">João Neves</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="João Neves">João Neves</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">31</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">S. McTominay</span></td>
-          <td class="col-n"><span class="nat">Scozia</span></td>
+          <td><span class="player" title="S. McTominay">S. McTominay</span></td>
+          <td class="col-n"><span class="nat" title="Scozia">Scozia</span></td>
           <td class="col-p">18</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Y. Tielemans</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="Y. Tielemans">Y. Tielemans</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">11</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">C. Baumgartner</span></td>
-          <td class="col-n"><span class="nat">Austria</span></td>
+          <td><span class="player" title="C. Baumgartner">C. Baumgartner</span></td>
+          <td class="col-n"><span class="nat" title="Austria">Austria</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Neymar</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Neymar">Neymar</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">4</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Q. Timber</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="Q. Timber">Q. Timber</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">N. Raskin</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="N. Raskin">N. Raskin</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">R. Gravenberch</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="R. Gravenberch">R. Gravenberch</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Cody Gakpo</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="Cody Gakpo">Cody Gakpo</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">95</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">A. Semenyo</span></td>
-          <td class="col-n"><span class="nat">Ghana</span></td>
+          <td><span class="player" title="A. Semenyo">A. Semenyo</span></td>
+          <td class="col-n"><span class="nat" title="Ghana">Ghana</span></td>
           <td class="col-p">37</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Marko Arnautovic</span></td>
-          <td class="col-n"><span class="nat">Austria</span></td>
+          <td><span class="player" title="Marko Arnautovic">Marko Arnautovic</span></td>
+          <td class="col-n"><span class="nat" title="Austria">Austria</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">A. Isak</span></td>
-          <td class="col-n"><span class="nat">Svezia</span></td>
+          <td><span class="player" title="A. Isak">A. Isak</span></td>
+          <td class="col-n"><span class="nat" title="Svezia">Svezia</span></td>
           <td class="col-p">4</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Chytil</span></td>
-          <td class="col-n"><span class="nat">Repubblica Ceca</span></td>
+          <td><span class="player" title="Chytil">Chytil</span></td>
+          <td class="col-n"><span class="nat" title="Repubblica Ceca">Repubblica Ceca</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">R. Mahrez</span></td>
-          <td class="col-n"><span class="nat">Algeria</span></td>
+          <td><span class="player" title="R. Mahrez">R. Mahrez</span></td>
+          <td class="col-n"><span class="nat" title="Algeria">Algeria</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -1550,128 +1567,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">T. Courtois</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="T. Courtois">T. Courtois</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">20</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">M. Penders</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="M. Penders">M. Penders</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">S. Lammens</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="S. Lammens">S. Lammens</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Marcos Llorente</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Marcos Llorente">Marcos Llorente</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Khusanov</span></td>
-          <td class="col-n"><span class="nat">Uzbekistan</span></td>
+          <td><span class="player" title="A. Khusanov">A. Khusanov</span></td>
+          <td class="col-n"><span class="nat" title="Uzbekistan">Uzbekistan</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Gabriel Magalhães</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Gabriel Magalhães">Gabriel Magalhães</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">J. Koundé</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="J. Koundé">J. Koundé</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Ladislav Krejci</span></td>
-          <td class="col-n"><span class="nat">Repubblica Ceca</span></td>
+          <td><span class="player" title="Ladislav Krejci">Ladislav Krejci</span></td>
+          <td class="col-n"><span class="nat" title="Repubblica Ceca">Repubblica Ceca</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">N. Mazraoui</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="N. Mazraoui">N. Mazraoui</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Pervis Estupiñán</span></td>
-          <td class="col-n"><span class="nat">Ecuador</span></td>
+          <td><span class="player" title="Pervis Estupiñán">Pervis Estupiñán</span></td>
+          <td class="col-n"><span class="nat" title="Ecuador">Ecuador</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Victor Lindelöf</span></td>
-          <td class="col-n"><span class="nat">Svezia</span></td>
+          <td><span class="player" title="Victor Lindelöf">Victor Lindelöf</span></td>
+          <td class="col-n"><span class="nat" title="Svezia">Svezia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">C. De Ketelaere</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="C. De Ketelaere">C. De Ketelaere</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">61</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Rayan Cherki</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="Rayan Cherki">Rayan Cherki</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">51</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Aleksandar Pavlovic</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="Aleksandar Pavlovic">Aleksandar Pavlovic</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">7</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">W. McKennie</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="W. McKennie">W. McKennie</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Ismaël Koné</span></td>
-          <td class="col-n"><span class="nat">Canada</span></td>
+          <td><span class="player" title="Ismaël Koné">Ismaël Koné</span></td>
+          <td class="col-n"><span class="nat" title="Canada">Canada</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Kang-in Lee</span></td>
-          <td class="col-n"><span class="nat">Corea del Sud</span></td>
+          <td><span class="player" title="Kang-in Lee">Kang-in Lee</span></td>
+          <td class="col-n"><span class="nat" title="Corea del Sud">Corea del Sud</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Rodrigo Bentancur</span></td>
-          <td class="col-n"><span class="nat">Uruguay</span></td>
+          <td><span class="player" title="Rodrigo Bentancur">Rodrigo Bentancur</span></td>
+          <td class="col-n"><span class="nat" title="Uruguay">Uruguay</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">K. Thorstvedt</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="K. Thorstvedt">K. Thorstvedt</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Julián Alvarez</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Julián Alvarez">Julián Alvarez</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">151</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Raphinha</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Raphinha">Raphinha</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">110</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Leao</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Leao">Leao</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">66</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">C. Pulisic</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="C. Pulisic">C. Pulisic</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">11</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Ferran Torres</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Ferran Torres">Ferran Torres</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Romelu Lukaku</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="Romelu Lukaku">Romelu Lukaku</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -1691,128 +1708,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">G. Kobel</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="G. Kobel">G. Kobel</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">6</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Sergio Rochet</span></td>
-          <td class="col-n"><span class="nat">Uruguay</span></td>
+          <td><span class="player" title="Sergio Rochet">Sergio Rochet</span></td>
+          <td class="col-n"><span class="nat" title="Uruguay">Uruguay</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Fernando Muslera</span></td>
-          <td class="col-n"><span class="nat">Uruguay</span></td>
+          <td><span class="player" title="Fernando Muslera">Fernando Muslera</span></td>
+          <td class="col-n"><span class="nat" title="Uruguay">Uruguay</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">J. Tah</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="J. Tah">J. Tah</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Manuel Akanji</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="Manuel Akanji">Manuel Akanji</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">R. Bensebaini</span></td>
-          <td class="col-n"><span class="nat">Algeria</span></td>
+          <td><span class="player" title="R. Bensebaini">R. Bensebaini</span></td>
+          <td class="col-n"><span class="nat" title="Algeria">Algeria</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">José María Giménez</span></td>
-          <td class="col-n"><span class="nat">Messico</span></td>
+          <td><span class="player" title="José María Giménez">José María Giménez</span></td>
+          <td class="col-n"><span class="nat" title="Messico">Messico</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">M. Demiral</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="M. Demiral">M. Demiral</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Marc Guéhi</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="Marc Guéhi">Marc Guéhi</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">T. Meunier</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="T. Meunier">T. Meunier</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">W. Singo</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="W. Singo">W. Singo</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Rubén Vargas</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="Rubén Vargas">Rubén Vargas</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">12</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Elliot Anderson</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="Elliot Anderson">Elliot Anderson</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">M. Tillman</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="M. Tillman">M. Tillman</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Y. Diomande</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="Y. Diomande">Y. Diomande</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">7</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Bilal El Khannouss</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="Bilal El Khannouss">Bilal El Khannouss</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Moisés Caicedo</span></td>
-          <td class="col-n"><span class="nat">Ecuador</span></td>
+          <td><span class="player" title="Moisés Caicedo">Moisés Caicedo</span></td>
+          <td class="col-n"><span class="nat" title="Ecuador">Ecuador</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">P. Sarr</span></td>
-          <td class="col-n"><span class="nat">Senegal</span></td>
+          <td><span class="player" title="P. Sarr">P. Sarr</span></td>
+          <td class="col-n"><span class="nat" title="Senegal">Senegal</span></td>
           <td class="col-p">4</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">A. Fayzullaev</span></td>
-          <td class="col-n"><span class="nat">Uzbekistan</span></td>
+          <td><span class="player" title="A. Fayzullaev">A. Fayzullaev</span></td>
+          <td class="col-n"><span class="nat" title="Uzbekistan">Uzbekistan</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Erling Haaland</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="Erling Haaland">Erling Haaland</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">97</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Luiz Henrique</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Luiz Henrique">Luiz Henrique</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">24</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Mohamed Salah</span></td>
-          <td class="col-n"><span class="nat">Egitto</span></td>
+          <td><span class="player" title="Mohamed Salah">Mohamed Salah</span></td>
+          <td class="col-n"><span class="nat" title="Egitto">Egitto</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">V. Gyökeres</span></td>
-          <td class="col-n"><span class="nat">Svezia</span></td>
+          <td><span class="player" title="V. Gyökeres">V. Gyökeres</span></td>
+          <td class="col-n"><span class="nat" title="Svezia">Svezia</span></td>
           <td class="col-p">8</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Memphis Depay</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="Memphis Depay">Memphis Depay</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">4</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">L. Foster</span></td>
-          <td class="col-n"><span class="nat">Sudafrica</span></td>
+          <td><span class="player" title="L. Foster">L. Foster</span></td>
+          <td class="col-n"><span class="nat" title="Sudafrica">Sudafrica</span></td>
           <td class="col-p">3</td>
         </tr></tbody>
           </table>
@@ -1832,128 +1849,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Alisson</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Alisson">Alisson</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">55</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Ederson</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Ederson">Ederson</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Weverton</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Weverton">Weverton</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">D. Raum</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="D. Raum">D. Raum</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">20</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Davies</span></td>
-          <td class="col-n"><span class="nat">Canada</span></td>
+          <td><span class="player" title="A. Davies">A. Davies</span></td>
+          <td class="col-n"><span class="nat" title="Canada">Canada</span></td>
           <td class="col-p">19</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">A. Robertson</span></td>
-          <td class="col-n"><span class="nat">Scozia</span></td>
+          <td><span class="player" title="A. Robertson">A. Robertson</span></td>
+          <td class="col-n"><span class="nat" title="Scozia">Scozia</span></td>
           <td class="col-p">15</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Ognjen Vuković</span></td>
-          <td class="col-n"><span class="nat">Serbia</span></td>
+          <td><span class="player" title="Ognjen Vuković">Ognjen Vuković</span></td>
+          <td class="col-n"><span class="nat" title="Serbia">Serbia</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">D. Santos</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="D. Santos">D. Santos</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">M. De Cuyper</span></td>
-          <td class="col-n"><span class="nat">Belgio</span></td>
+          <td><span class="player" title="M. De Cuyper">M. De Cuyper</span></td>
+          <td class="col-n"><span class="nat" title="Belgio">Belgio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">V. Coufal</span></td>
-          <td class="col-n"><span class="nat">Repubblica Ceca</span></td>
+          <td><span class="player" title="V. Coufal">V. Coufal</span></td>
+          <td class="col-n"><span class="nat" title="Repubblica Ceca">Repubblica Ceca</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">N. Elvedi</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="N. Elvedi">N. Elvedi</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Rodri</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Rodri">Rodri</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">136</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">James Rodríguez</span></td>
-          <td class="col-n"><span class="nat">Colombia</span></td>
+          <td><span class="player" title="James Rodríguez">James Rodríguez</span></td>
+          <td class="col-n"><span class="nat" title="Colombia">Colombia</span></td>
           <td class="col-p">19</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">J. McGinn</span></td>
-          <td class="col-n"><span class="nat">Scozia</span></td>
+          <td><span class="player" title="J. McGinn">J. McGinn</span></td>
+          <td class="col-n"><span class="nat" title="Scozia">Scozia</span></td>
           <td class="col-p">18</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Amad Diallo</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="Amad Diallo">Amad Diallo</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Can Uzun</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Can Uzun">Can Uzun</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">L. Bergvall</span></td>
-          <td class="col-n"><span class="nat">Svezia</span></td>
+          <td><span class="player" title="L. Bergvall">L. Bergvall</span></td>
+          <td class="col-n"><span class="nat" title="Svezia">Svezia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">M. Rogers</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="M. Rogers">M. Rogers</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">F. de Jong</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="F. de Jong">F. de Jong</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">A. Budimir</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="A. Budimir">A. Budimir</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">65</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Alexander Sørloth</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="Alexander Sørloth">Alexander Sørloth</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">50</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Igor Thiago</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Igor Thiago">Igor Thiago</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">45</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Joao Felix</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Joao Felix">Joao Felix</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">35</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">A. Gordon</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="A. Gordon">A. Gordon</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Luis Suárez</span></td>
-          <td class="col-n"><span class="nat">Colombia</span></td>
+          <td><span class="player" title="Luis Suárez">Luis Suárez</span></td>
+          <td class="col-n"><span class="nat" title="Colombia">Colombia</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -1973,128 +1990,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Emiliano Martínez</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Emiliano Martínez">Emiliano Martínez</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">25</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">G. Rulli</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="G. Rulli">G. Rulli</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Juan Musso</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Juan Musso">Juan Musso</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Dayot Upamecano</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="Dayot Upamecano">Dayot Upamecano</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">L. Martínez</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="L. Martínez">L. Martínez</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Marc Cucurella</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Marc Cucurella">Marc Cucurella</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Nicolás Tagliafico</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Nicolás Tagliafico">Nicolás Tagliafico</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Alejandro Grimaldo</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Alejandro Grimaldo">Alejandro Grimaldo</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Diogo Dalot</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Diogo Dalot">Diogo Dalot</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">L. Digne</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="L. Digne">L. Digne</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">M. Sarr</span></td>
-          <td class="col-n"><span class="nat">Senegal</span></td>
+          <td><span class="player" title="M. Sarr">M. Sarr</span></td>
+          <td class="col-n"><span class="nat" title="Senegal">Senegal</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">A. Rabiot</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="A. Rabiot">A. Rabiot</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">35</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Gavi</span></td>
-          <td class="col-n"><span class="nat">Spagna</span></td>
+          <td><span class="player" title="Gavi">Gavi</span></td>
+          <td class="col-n"><span class="nat" title="Spagna">Spagna</span></td>
           <td class="col-p">25</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Warren Zaïre-Emery</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="Warren Zaïre-Emery">Warren Zaïre-Emery</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">7</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Rodrigo De Paul</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Rodrigo De Paul">Rodrigo De Paul</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Vitinha</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Vitinha">Vitinha</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Ardon Jashari</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="Ardon Jashari">Ardon Jashari</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Felix Nmecha</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="Felix Nmecha">Felix Nmecha</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">R. Freuler</span></td>
-          <td class="col-n"><span class="nat">Svizzera</span></td>
+          <td><span class="player" title="R. Freuler">R. Freuler</span></td>
+          <td class="col-n"><span class="nat" title="Svizzera">Svizzera</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">O. Dembélé</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="O. Dembélé">O. Dembélé</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">361</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Kenan Yıldız</span></td>
-          <td class="col-n"><span class="nat">Turchia</span></td>
+          <td><span class="player" title="Kenan Yıldız">Kenan Yıldız</span></td>
+          <td class="col-n"><span class="nat" title="Turchia">Turchia</span></td>
           <td class="col-p">15</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Désiré Doué</span></td>
-          <td class="col-n"><span class="nat">Francia</span></td>
+          <td><span class="player" title="Désiré Doué">Désiré Doué</span></td>
+          <td class="col-n"><span class="nat" title="Francia">Francia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">E. Shomurodov</span></td>
-          <td class="col-n"><span class="nat">Uzbekistan</span></td>
+          <td><span class="player" title="E. Shomurodov">E. Shomurodov</span></td>
+          <td class="col-n"><span class="nat" title="Uzbekistan">Uzbekistan</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">N. Pépé</span></td>
-          <td class="col-n"><span class="nat">Costa d'Avorio</span></td>
+          <td><span class="player" title="N. Pépé">N. Pépé</span></td>
+          <td class="col-n"><span class="nat" title="Costa d&#39;Avorio">Costa d'Avorio</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Wout Weghorst</span></td>
-          <td class="col-n"><span class="nat">Paesi Bassi</span></td>
+          <td><span class="player" title="Wout Weghorst">Wout Weghorst</span></td>
+          <td class="col-n"><span class="nat" title="Paesi Bassi">Paesi Bassi</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -2114,128 +2131,128 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
             </tr></thead>
             <tbody><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">R. Rangel</span></td>
-          <td class="col-n"><span class="nat">Messico</span></td>
+          <td><span class="player" title="R. Rangel">R. Rangel</span></td>
+          <td class="col-n"><span class="nat" title="Messico">Messico</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Z. Suzuki</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="Z. Suzuki">Z. Suzuki</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-P" title="P">P</span></td>
-          <td><span class="player">Matt Freese</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="Matt Freese">Matt Freese</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Joshua Kimmich</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="Joshua Kimmich">Joshua Kimmich</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Nahuel Molina</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Nahuel Molina">Nahuel Molina</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">9</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">J. Stones</span></td>
-          <td class="col-n"><span class="nat">Inghilterra</span></td>
+          <td><span class="player" title="J. Stones">J. Stones</span></td>
+          <td class="col-n"><span class="nat" title="Inghilterra">Inghilterra</span></td>
           <td class="col-p">3</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">C. Richards</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="C. Richards">C. Richards</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">Davinson Sánchez</span></td>
-          <td class="col-n"><span class="nat">Colombia</span></td>
+          <td><span class="player" title="Davinson Sánchez">Davinson Sánchez</span></td>
+          <td class="col-n"><span class="nat" title="Colombia">Colombia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">H. Ito</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="H. Ito">H. Ito</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">K. Itakura</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="K. Itakura">K. Itakura</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-D" title="D">D</span></td>
-          <td><span class="player">M. Pongracic</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="M. Pongracic">M. Pongracic</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Bruno Fernandes</span></td>
-          <td class="col-n"><span class="nat">Portogallo</span></td>
+          <td><span class="player" title="Bruno Fernandes">Bruno Fernandes</span></td>
+          <td class="col-n"><span class="nat" title="Portogallo">Portogallo</span></td>
           <td class="col-p">28</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Martin Ødegaard</span></td>
-          <td class="col-n"><span class="nat">Norvegia</span></td>
+          <td><span class="player" title="Martin Ødegaard">Martin Ødegaard</span></td>
+          <td class="col-n"><span class="nat" title="Norvegia">Norvegia</span></td>
           <td class="col-p">15</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">T. Kubo</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="T. Kubo">T. Kubo</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">11</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Luka Modric</span></td>
-          <td class="col-n"><span class="nat">Croazia</span></td>
+          <td><span class="player" title="Luka Modric">Luka Modric</span></td>
+          <td class="col-n"><span class="nat" title="Croazia">Croazia</span></td>
           <td class="col-p">11</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">R. Doan</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="R. Doan">R. Doan</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">T. Weah</span></td>
-          <td class="col-n"><span class="nat">Stati Uniti</span></td>
+          <td><span class="player" title="T. Weah">T. Weah</span></td>
+          <td class="col-n"><span class="nat" title="Stati Uniti">Stati Uniti</span></td>
           <td class="col-p">2</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">L. Goretzka</span></td>
-          <td class="col-n"><span class="nat">Germania</span></td>
+          <td><span class="player" title="L. Goretzka">L. Goretzka</span></td>
+          <td class="col-n"><span class="nat" title="Germania">Germania</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-C" title="C">C</span></td>
-          <td><span class="player">Richard Ríos</span></td>
-          <td class="col-n"><span class="nat">Colombia</span></td>
+          <td><span class="player" title="Richard Ríos">Richard Ríos</span></td>
+          <td class="col-n"><span class="nat" title="Colombia">Colombia</span></td>
           <td class="col-p">1</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Vinicius Junior</span></td>
-          <td class="col-n"><span class="nat">Brasile</span></td>
+          <td><span class="player" title="Vinicius Junior">Vinicius Junior</span></td>
+          <td class="col-n"><span class="nat" title="Brasile">Brasile</span></td>
           <td class="col-p">230</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Lionel Messi</span></td>
-          <td class="col-n"><span class="nat">Argentina</span></td>
+          <td><span class="player" title="Lionel Messi">Lionel Messi</span></td>
+          <td class="col-n"><span class="nat" title="Argentina">Argentina</span></td>
           <td class="col-p">115</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">A. Ueda</span></td>
-          <td class="col-n"><span class="nat">Giappone</span></td>
+          <td><span class="player" title="A. Ueda">A. Ueda</span></td>
+          <td class="col-n"><span class="nat" title="Giappone">Giappone</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Enner Valencia</span></td>
-          <td class="col-n"><span class="nat">Ecuador</span></td>
+          <td><span class="player" title="Enner Valencia">Enner Valencia</span></td>
+          <td class="col-n"><span class="nat" title="Ecuador">Ecuador</span></td>
           <td class="col-p">10</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Heung-min Son</span></td>
-          <td class="col-n"><span class="nat">Corea del Sud</span></td>
+          <td><span class="player" title="Heung-min Son">Heung-min Son</span></td>
+          <td class="col-n"><span class="nat" title="Corea del Sud">Corea del Sud</span></td>
           <td class="col-p">5</td>
         </tr><tr class="">
           <td class="col-r"><span class="role role-A" title="A">A</span></td>
-          <td><span class="player">Brahim Díaz</span></td>
-          <td class="col-n"><span class="nat">Marocco</span></td>
+          <td><span class="player" title="Brahim Díaz">Brahim Díaz</span></td>
+          <td class="col-n"><span class="nat" title="Marocco">Marocco</span></td>
           <td class="col-p">1</td>
         </tr></tbody>
           </table>
@@ -2247,7 +2264,7 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
     <div>Aggiornamento automatico da rose_modificate_v2.csv</div>
     <div class="badge">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg>
-      <span id="updated">Ultimo aggiornamento: 11 giugno 2026 alle ore 19:52</span>
+      <span id="updated">Ultimo aggiornamento: 12 giugno 2026 alle ore 12:34</span>
     </div>
   </footer>
 
@@ -2285,8 +2302,14 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
     return false;
   }
 
+  function normalizeNation(nation){
+    if(!nation) return '';
+    return nation.replace(/Repubblica Democratica del Congo/gi, 'R.D. Congo')
+                 .replace(/Rep\.? Dem\.? del Congo/gi, 'R.D. Congo')
+                 .replace(/Congo, Rep\. Dem\./gi, 'R.D. Congo');
+  }
+
   function parseCSV(text){
-    // rimuovi BOM
     if(text.charCodeAt(0) === 0xFEFF) text = text.slice(1);
     const lines = text.trim().split(/\r?\n/);
     if(lines.length < 2) return [];
@@ -2302,14 +2325,13 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
     for(let i=1;i<lines.length;i++){
       const line = lines[i].trim();
       if(!line) continue;
-      // split rispettando virgolette semplici
       const parts = line.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g) || [];
       const get = (k) => (parts[idx[k]]||'').replace(/^"|"$/g,'').trim();
       out.push({
         team: get('team'),
         ruolo: get('ruolo'),
         giocatore: get('giocatore'),
-        nazionale: get('nazionale'),
+        nazionale: normalizeNation(get('nazionale')),
         prezzo: get('prezzo')
       });
     }
@@ -2323,7 +2345,6 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
     const text = await res.text();
     const data = parseCSV(text);
 
-    // raggruppa per team
     const teams = {};
     data.forEach(r=>{
       if(!r.team) return;
@@ -2332,9 +2353,7 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
       teams[t].push(r);
     });
 
-    // ordina team per nome per stabilità (mantieni 12)
-    const teamNames = Object.keys(teams).slice(0, 24); // safety
-    // ordine ruoli
+    const teamNames = Object.keys(teams).slice(0, 24);
     const roleOrder = {P:1,D:2,C:3,A:4};
 
     grid.innerHTML = '';
@@ -2362,8 +2381,8 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
         const prezzo = p.prezzo ? Number(p.prezzo).toString() : '0';
         return `<tr class="${hl}">
           <td class="col-r"><span class="role role-${r}" title="${p.ruolo}">${r}</span></td>
-          <td><span class="player">${p.giocatore}</span></td>
-          <td class="col-n"><span class="nat">${p.nazionale||''}</span></td>
+          <td><span class="player" title="${p.giocatore}">${p.giocatore}</span></td>
+          <td class="col-n"><span class="nat" title="${p.nazionale||''}">${p.nazionale||''}</span></td>
           <td class="col-p">${prezzo}</td>
         </tr>`;
       }).join('');
@@ -2387,9 +2406,6 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
       `;
       grid.appendChild(card);
     });
-
-    // se meno di 12, aggiungi placeholder vuoti per mantenere griglia?
-    // no, mostriamo solo quelli presenti
 
     updatedEl.textContent = 'Ultimo aggiornamento: ' + new Date().toLocaleString('it-IT', {day:'2-digit', month:'long', year:'numeric', hour:'2-digit', minute:'2-digit'});
 
