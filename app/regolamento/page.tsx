@@ -48,7 +48,25 @@ export default function RegolamentoPage() {
         >
           Regolamento ufficiale del torneo.
         </p>
-
+<a
+              href="/reg.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                padding: "14px 24px",
+                background: "#2563eb",
+                color: "white",
+                textDecoration: "none",
+                borderRadius: "12px",
+                fontWeight: "700",
+                fontSize: "1rem",
+                boxShadow: "0 4px 12px rgba(37,99,235,0.35)",
+                transition: "all 0.2s ease",
+              }}
+            >            
+          📜 Regolamento
+        </a>
         <div style={cardStyle}>
           <h2
             style={{
