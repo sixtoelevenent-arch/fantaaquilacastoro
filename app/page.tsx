@@ -1,39 +1,35 @@
 export default function Home() {
   const buttonStyle = {
     display: "block",
-    width: "340px",
-    padding: "16px",
-    borderRadius: "14px",
+    width: "100%",
+    maxWidth: "320px",
+    padding: "14px",
+    borderRadius: "12px",
     textDecoration: "none",
     color: "white",
     fontWeight: "bold",
     fontSize: "18px",
-    textAlign: "center" as const,
+    marginBottom: "12px",
   };
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        background:
-          "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+        background: "#111827",
         color: "white",
+        padding: "20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        paddingTop: "60px",
-        paddingLeft: "20px",
-        paddingRight: "20px",
-        paddingBottom: "60px",
       }}
     >
       <h1
         style={{
-          fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
-    marginBottom: "10px",
-    textAlign: "center",
-    lineHeight: 1.1,
-    maxWidth: "90vw",
+          fontSize: "clamp(2rem, 7vw, 3.5rem)",
+          textAlign: "center",
+          marginTop: "20px",
+          marginBottom: "10px",
         }}
       >
         🏆 FantAquilaCastoro 2026
@@ -41,65 +37,18 @@ export default function Home() {
 
       <p
         style={{
-          fontSize: "1.4rem",
-          fontWeight: "bold",
-          color: "#fbbf24",
-          marginTop: 0,
-          marginBottom: "8px",
-          letterSpacing: "1px",
-        }}
-      >
-        Road to New York 🗽
-      </p>
-<p
-  style={{
-    color: "#fbbf24",
-    fontWeight: "bold",
-    marginTop: "5px",
-  }}
->
-  FIFA World Cup Fantasy Edition
-</p>
-      <p
-        style={{
           color: "#cbd5e1",
-          marginBottom: "6px",
-        }}
-      >
-        11 Giugno → 19 Luglio 2026
-      </p>
-
-      <p
-        style={{
-          color: "#94a3b8",
-          marginBottom: "6px",
-        }}
-      >
-        ⚽ 12 Fantallenatori • 🌍 12 Nazionali
-      </p><p
-        style={{
-          color: "#94a3b8",
-          marginBottom: "6px",
-        }}
-      >
-        🏆 1 Campione
-      </p>
-
-      <p
-        style={{
-          color: "#fbbf24",
           marginBottom: "40px",
-          fontWeight: "bold",
+          textAlign: "center",
         }}
       >
-        Campione in carica: Sirty
+        Mondiale Fantasy a 12 squadre
       </p>
 
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "14px",
+          width: "100%",
+          maxWidth: "350px",
         }}
       >
         <a
@@ -107,61 +56,69 @@ export default function Home() {
           style={{
             ...buttonStyle,
             background: "#dc2626",
-            fontSize: "20px",
-            boxShadow: "0 0 20px rgba(220,38,38,0.5)",
           }}
         >
-          🔴 LIVE GIORNATA
-        </a>
-
-        <a
-          href="/rose-ufficiali.html"
-          style={{
-            ...buttonStyle,
-            background: "#2563eb",
-          }}
-        >
-          📋 Rose
-        </a>
-
-        <a
-          href="/gironi"
-          style={{
-            ...buttonStyle,
-            background: "#16a34a",
-          }}
-        >
-          🏆 Gironi
-        </a>
-
-        <a
-          href="/calendario"
-          style={{
-            ...buttonStyle,
-            background: "#9333ea",
-          }}
-        >
-          🗓️ Calendario
+          🔴 Live Giornata
         </a>
 
         <a
           href="/classifiche"
           style={{
             ...buttonStyle,
-            background: "#0891b2",
+            background: "#2563eb",
           }}
         >
           📊 Classifiche
         </a>
 
         <a
+          href="/marcatori"
+          style={{
+            ...buttonStyle,
+            background: "#16a34a",
+          }}
+        >
+          ⚽ Marcatori
+        </a>
+
+        <a
+          href="/calendario"
+          style={{
+            ...buttonStyle,
+            background: "#7c3aed",
+          }}
+        >
+          🗓️ Calendario
+        </a>
+
+        <a
+          href="/gironi"
+          style={{
+            ...buttonStyle,
+            background: "#059669",
+          }}
+        >
+          🏆 Gironi
+        </a>
+
+        <a
           href="/fase-finale"
           style={{
             ...buttonStyle,
-            background: "#ea580c",
+            background: "#b45309",
           }}
         >
           ⚔️ Fase Finale
+        </a>
+
+        <a
+          href="/rose"
+          style={{
+            ...buttonStyle,
+            background: "#0ea5e9",
+          }}
+        >
+          📋 Rose Ufficiali
         </a>
 
         <a
@@ -175,36 +132,45 @@ export default function Home() {
         </a>
 
         <a
-          href="/regolamento.pdf"
-          target="_blank"
+          href="/regolamento"
           style={{
             ...buttonStyle,
-            background: "#ca8a04",
+            background: "#16a34a",
           }}
         >
           📜 Regolamento
         </a>
 
         <a
+          href="/torneo"
+          style={{
+            ...buttonStyle,
+            background: "#1d4ed8",
+          }}
+        >
+          ℹ️ Torneo
+        </a>
+
+        <a
           href="/albo-d-oro"
           style={{
             ...buttonStyle,
-            background: "#b45309",
+            background: "#ca8a04",
           }}
         >
-          🥇 Albo d'Oro
+          🏅 Albo d'Oro
         </a>
       </div>
 
       <div
         style={{
-          marginTop: "50px",
-          color: "#64748b",
-          fontSize: "14px",
+          marginTop: "40px",
           textAlign: "center",
+          color: "#94a3b8",
+          fontSize: "14px",
         }}
       >
-        FantAquilaCastoro • World Cup Edition 2026
+        FantAquilaCastoro 2026 • Road to New York 🗽
       </div>
     </main>
   );
