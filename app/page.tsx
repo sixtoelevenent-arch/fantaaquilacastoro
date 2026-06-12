@@ -2,9 +2,8 @@ export default function Home() {
   const buttonStyle = {
     display: "block",
     width: "100%",
-    maxWidth: "320px",
-    padding: "18px",
-    borderRadius: "18px",
+    padding: "16px",
+    borderRadius: "14px",
     textDecoration: "none",
     color: "white",
     fontWeight: "bold" as const,
@@ -12,6 +11,7 @@ export default function Home() {
     marginBottom: "12px",
     boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
     textAlign: "center" as const,
+    boxSizing: "border-box" as const,
   };
 
   return (
@@ -27,7 +27,6 @@ export default function Home() {
         alignItems: "center",
       }}
     >
-      {/* LOGO */}
       <img
         src="/Logo.jpg"
         alt="FantAquilaCastoro 2026"
@@ -35,12 +34,10 @@ export default function Home() {
           width: "90px",
           height: "90px",
           objectFit: "contain",
-          marginTop: "0",
           marginBottom: "8px",
         }}
       />
 
-      {/* HEADER */}
       <div
         style={{
           textAlign: "center",
@@ -122,11 +119,14 @@ export default function Home() {
         </div>
       </div>
 
-      {/* MENU */}
       <div
         style={{
           width: "100%",
-          maxWidth: "320px",
+          maxWidth: "350px",
+          margin: "0 auto",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <a
@@ -134,10 +134,10 @@ export default function Home() {
           style={{
             ...buttonStyle,
             background: "#dc2626",
-            padding: "20px",
+            padding: "18px",
             fontSize: "20px",
-            marginBottom: "22px",
-            boxShadow: "0 0 20px rgba(220,38,38,0.45)",
+            marginBottom: "20px",
+            boxShadow: "0 0 18px rgba(220,38,38,0.40)",
           }}
         >
           🔴 LIVE GIORNATA
@@ -150,7 +150,7 @@ export default function Home() {
             background: "#2563eb",
           }}
         >
-          📊 Classifiche
+          📊 CLASSIFICHE
         </a>
 
         <a
@@ -160,7 +160,7 @@ export default function Home() {
             background: "#7c3aed",
           }}
         >
-          🗓️ Calendario
+          🗓️ CALENDARIO
         </a>
 
         <a
@@ -170,7 +170,7 @@ export default function Home() {
             background: "#b45309",
           }}
         >
-          ⚔️ Fase Finale
+          ⚔️ FASE FINALE
         </a>
 
         <a
@@ -180,7 +180,7 @@ export default function Home() {
             background: "#0ea5e9",
           }}
         >
-          📋 Rose Ufficiali
+          📋 ROSE UFFICIALI
         </a>
 
         <a
@@ -190,7 +190,7 @@ export default function Home() {
             background: "#475569",
           }}
         >
-          📑 Listone Svincolati
+          📑 LISTONE SVINCOLATI
         </a>
 
         <a
@@ -200,7 +200,7 @@ export default function Home() {
             background: "#16a34a",
           }}
         >
-          📜 Regolamento
+          📜 REGOLAMENTO
         </a>
 
         <a
@@ -210,7 +210,7 @@ export default function Home() {
             background: "#1d4ed8",
           }}
         >
-          ℹ️ Torneo
+          ℹ️ TORNEO
         </a>
 
         <a
@@ -220,7 +220,7 @@ export default function Home() {
             background: "#ca8a04",
           }}
         >
-          🏅 Albo d'Oro
+          🏅 ALBO D'ORO
         </a>
       </div>
 
