@@ -6,67 +6,94 @@ export default function SvincolatiPage() {
     <main
       style={{
         minHeight: "100vh",
-        background: "#1f2937",
+        background: "linear-gradient(to bottom, #1f2937, #0f172a)",
         color: "white",
         padding: "20px",
       }}
     >
-      <BackHome />
-
-      <h1
-        style={{
-          textAlign: "center",
-          fontSize: "clamp(2rem, 6vw, 3rem)",
-          marginBottom: "10px",
-        }}
-      >
-        📑 Listone Svincolati
-      </h1>
-
-      <p
-        style={{
-          textAlign: "center",
-          color: "#cbd5e1",
-          marginBottom: "40px",
-        }}
-      >
-        Elenco ufficiale dei calciatori disponibili sul mercato.
-      </p>
-
-      <Card title="📄 Documento Ufficiale">
-        <div
-          style={{
-            textAlign: "center",
-          }}
-        >
-          <a
-            href="/svincolati.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "inline-block",
-              padding: "12px 20px",
-              background: "#2563eb",
-              color: "white",
-              textDecoration: "none",
-              borderRadius: "10px",
-              fontWeight: "bold",
-            }}
-          >
-            📥 Apri il PDF degli Svincolati
-          </a>
-        </div>
-      </Card>
-
       <div
         style={{
-          marginTop: "50px",
-          textAlign: "center",
-          color: "#94a3b8",
-          fontSize: "14px",
+          maxWidth: "900px",
+          margin: "0 auto",
         }}
       >
-        FantAquilaCastoro 2026 • Road to New York 🗽
+        <BackHome />
+
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "clamp(2.2rem, 6vw, 3.5rem)",
+            marginTop: "10px",
+            marginBottom: "10px",
+            fontWeight: "800",
+          }}
+        >
+          📑 Listone Svincolati
+        </h1>
+
+        <p
+          style={{
+            textAlign: "center",
+            color: "#cbd5e1",
+            marginBottom: "35px",
+            fontSize: "1rem",
+          }}
+        >
+          Elenco ufficiale dei calciatori disponibili sul mercato.
+        </p>
+
+        <Card title="📄 Documento Ufficiale">
+          <div
+            style={{
+              textAlign: "center",
+              padding: "10px 0",
+            }}
+          >
+            <p
+              style={{
+                color: "#cbd5e1",
+                marginBottom: "24px",
+                lineHeight: 1.6,
+              }}
+            >
+              Consulta il listone completo degli svincolati del
+              FantAquilaCastoro 2026.
+            </p>
+
+            <a
+              href="/svincolati.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                padding: "14px 24px",
+                background: "#2563eb",
+                color: "white",
+                textDecoration: "none",
+                borderRadius: "12px",
+                fontWeight: "700",
+                fontSize: "1rem",
+                boxShadow: "0 4px 12px rgba(37,99,235,0.35)",
+                transition: "all 0.2s ease",
+              }}
+            >
+              📥 Apri il PDF degli Svincolati
+            </a>
+          </div>
+        </Card>
+
+        <div
+          style={{
+            marginTop: "50px",
+            paddingTop: "20px",
+            borderTop: "1px solid #374151",
+            textAlign: "center",
+            color: "#94a3b8",
+            fontSize: "14px",
+          }}
+        >
+          FantAquilaCastoro 2026 • Road to New York 🗽
+        </div>
       </div>
     </main>
   );
