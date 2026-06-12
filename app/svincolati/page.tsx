@@ -1,3 +1,4 @@
+import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
 
 export default function SvincolatiPage() {
@@ -7,32 +8,66 @@ export default function SvincolatiPage() {
         minHeight: "100vh",
         background: "#1f2937",
         color: "white",
-        padding: "40px",
+        padding: "20px",
       }}
     >
-      <h1>📑 Listone Svincolati</h1>
+      <BackHome />
+
+      <h1
+        style={{
+          textAlign: "center",
+          fontSize: "clamp(2rem, 6vw, 3rem)",
+          marginBottom: "10px",
+        }}
+      >
+        📑 Listone Svincolati
+      </h1>
+
+      <p
+        style={{
+          textAlign: "center",
+          color: "#cbd5e1",
+          marginBottom: "40px",
+        }}
+      >
+        Elenco ufficiale dei calciatori disponibili sul mercato.
+      </p>
 
       <Card title="📄 Documento Ufficiale">
-        <a
-          href="/svincolati.pdf"
-          target="_blank"
-          style={{ color: "#60a5fa" }}
+        <div
+          style={{
+            textAlign: "center",
+          }}
         >
-          Apri il PDF degli svincolati
-        </a>
+          <a
+            href="/svincolati.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: "inline-block",
+              padding: "12px 20px",
+              background: "#2563eb",
+              color: "white",
+              textDecoration: "none",
+              borderRadius: "10px",
+              fontWeight: "bold",
+            }}
+          >
+            📥 Apri il PDF degli Svincolati
+          </a>
+        </div>
       </Card>
-    
-    
-    <div
-  style={{
-    marginTop: "50px",
-    textAlign: "center",
-    color: "#94a3b8",
-    fontSize: "14px",
-  }}
->
-  FantAquilaCastoro 2026 • Road to New York 🗽
-</div>
-</main>
+
+      <div
+        style={{
+          marginTop: "50px",
+          textAlign: "center",
+          color: "#94a3b8",
+          fontSize: "14px",
+        }}
+      >
+        FantAquilaCastoro 2026 • Road to New York 🗽
+      </div>
+    </main>
   );
 }
