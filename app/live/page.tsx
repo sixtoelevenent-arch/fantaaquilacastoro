@@ -1,46 +1,8 @@
 import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
+import { liveMatches } from "@/data/live";
 
 export default function LivePage() {
-  const matches = [
-    {
-      casa: "🇵🇹 Portogallo",
-      coachCasa: "Andrea A.",
-      trasferta: "🇮🇷 Iran",
-      coachTrasferta: "Pres",
-    },
-    {
-      casa: "🇦🇷 Argentina",
-      coachCasa: "Erny",
-      trasferta: "🇨🇴 Colombia",
-      coachTrasferta: "Luigi",
-    },
-    {
-      casa: "🇫🇷 Francia",
-      coachCasa: "Sirty",
-      trasferta: "🇺🇿 Uzbekistan",
-      coachTrasferta: "Michel",
-    },
-    {
-      casa: "🇲🇽 Messico",
-      coachCasa: "Cristian",
-      trasferta: "🇨🇼 Curaçao",
-      coachTrasferta: "Fava",
-    },
-    {
-      casa: "🇬🇭 Ghana",
-      coachCasa: "Andrea S.",
-      trasferta: "🇹🇷 Turchia",
-      coachTrasferta: "Bruno",
-    },
-    {
-      casa: "🇨🇮 Costa d'Avorio",
-      coachCasa: "Fabio",
-      trasferta: "🇩🇪 Germania",
-      coachTrasferta: "Martin",
-    },
-  ];
-
   return (
     <main
       style={{
@@ -103,7 +65,7 @@ export default function LivePage() {
           </span>
         </div>
 
-        {matches.map((match, index) => (
+        {liveMatches.map((match, index) => (
           <Card
             key={index}
             title={`${match.casa} vs ${match.trasferta}`}
@@ -125,6 +87,7 @@ export default function LivePage() {
               >
                 <div style={{ flex: 1 }}>
                   <div>{match.casa}</div>
+
                   <div
                     style={{
                       fontSize: "0.85rem",
@@ -143,11 +106,12 @@ export default function LivePage() {
                     minWidth: "90px",
                   }}
                 >
-                  0 - 0
+                  {match.golCasa} - {match.golTrasferta}
                 </div>
 
                 <div style={{ flex: 1 }}>
                   <div>{match.trasferta}</div>
+
                   <div
                     style={{
                       fontSize: "0.85rem",

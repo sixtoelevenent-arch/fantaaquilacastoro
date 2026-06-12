@@ -1,27 +1,7 @@
 import BackHome from "@/components/BackHome";
+import { gironeA, gironeB, gironeC } from "@/data/classifiche";
 
 export default function ClassifichePage() {
-  const gironeA = [
-    { squadra: "🇵🇹 Portogallo", allenatore: "Andrea A.", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇮🇷 Iran", allenatore: "Pres", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇦🇷 Argentina", allenatore: "Erny", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇨🇴 Colombia", allenatore: "Luigi", pt: 0, gf: 0, gs: 0, dr: 0 },
-  ];
-
-  const gironeB = [
-    { squadra: "🇫🇷 Francia", allenatore: "Sirty", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇺🇿 Uzbekistan", allenatore: "Michel", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇲🇽 Messico", allenatore: "Cristian", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇨🇼 Curaçao", allenatore: "Fava", pt: 0, gf: 0, gs: 0, dr: 0 },
-  ];
-
-  const gironeC = [
-    { squadra: "🇬🇭 Ghana", allenatore: "Andrea S.", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇹🇷 Turchia", allenatore: "Bruno", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇨🇮 Costa d'Avorio", allenatore: "Fabio", pt: 0, gf: 0, gs: 0, dr: 0 },
-    { squadra: "🇩🇪 Germania", allenatore: "Martin", pt: 0, gf: 0, gs: 0, dr: 0 },
-  ];
-
   const renderTable = (
     titolo: string,
     colore: string,
@@ -59,30 +39,36 @@ export default function ClassifichePage() {
             <th style={thStyle}>Pos</th>
             <th style={thStyle}>Squadra</th>
             <th style={thStyle}>Allenatore</th>
-            <th style={thStyle}>Pt</th>
-            <th style={thStyle}>GF</th>
-            <th style={thStyle}>GS</th>
-            <th style={thStyle}>DR</th>
+            <th style={thCenterStyle}>Pt</th>
+            <th style={thCenterStyle}>GF</th>
+            <th style={thCenterStyle}>GS</th>
+            <th style={thCenterStyle}>DR</th>
           </tr>
         </thead>
 
         <tbody>
-          {dati.map((team, index) => (
-            <tr
-              key={team.squadra}
-              style={{
-                borderTop: "1px solid rgba(255,255,255,0.08)",
-              }}
-            >
-              <td style={tdStyle}>{index + 1}</td>
-              <td style={tdStyle}>{team.squadra}</td>
-              <td style={tdStyle}>{team.allenatore}</td>
-              <td style={tdCenter}>{team.pt}</td>
-              <td style={tdCenter}>{team.gf}</td>
-              <td style={tdCenter}>{team.gs}</td>
-              <td style={tdCenter}>{team.dr}</td>
-            </tr>
-          ))}
+          {[...dati]
+            .sort((a, b) => {
+              if (b.pt !== a.pt) return b.pt - a.pt;
+              if (b.dr !== a.dr) return b.dr - a.dr;
+              return b.gf - a.gf;
+            })
+            .map((team, index) => (
+              <tr
+                key={team.squadra}
+                style={{
+                  borderTop: "1px solid rgba(255,255,255,0.08)",
+                }}
+              >
+                <td style={tdStyle}>{index + 1}</td>
+                <td style={tdStyle}>{team.squadra}</td>
+                <td style={tdStyle}>{team.allenatore}</td>
+                <td style={tdCenter}>{team.pt}</td>
+                <td style={tdCenter}>{team.gf}</td>
+                <td style={tdCenter}>{team.gs}</td>
+                <td style={tdCenter}>{team.dr}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
@@ -151,6 +137,13 @@ export default function ClassifichePage() {
 const thStyle = {
   padding: "12px",
   textAlign: "left" as const,
+  color: "#cbd5e1",
+  fontWeight: "700",
+};
+
+const thCenterStyle = {
+  padding: "12px",
+  textAlign: "center" as const,
   color: "#cbd5e1",
   fontWeight: "700",
 };
