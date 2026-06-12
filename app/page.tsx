@@ -32,8 +32,8 @@ export default function Home() {
         src="/Logo.jpg"
         alt="FantAquilaCastoro 2026"
         style={{
-          width: "100px",
-          height: "100px",
+          width: "90px",
+          height: "90px",
           objectFit: "contain",
           marginTop: "0",
           marginBottom: "8px",
@@ -126,7 +126,7 @@ export default function Home() {
       <div
         style={{
           width: "100%",
-          maxWidth: "350px",
+          maxWidth: "320px",
         }}
       >
         <a
@@ -134,8 +134,8 @@ export default function Home() {
           style={{
             ...buttonStyle,
             background: "#dc2626",
-            padding: "22px",
-            fontSize: "22px",
+            padding: "20px",
+            fontSize: "20px",
             marginBottom: "22px",
             boxShadow: "0 0 20px rgba(220,38,38,0.45)",
           }}
