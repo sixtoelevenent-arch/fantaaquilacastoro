@@ -21,7 +21,7 @@ export default function Home() {
         background:
           "linear-gradient(to bottom, #020617 0%, #08122c 50%, #020617 100%)",
         color: "white",
-        padding: "20px",
+        padding: "12px 20px 20px",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -32,12 +32,11 @@ export default function Home() {
         src="/Logo.jpg"
         alt="FantAquilaCastoro 2026"
         style={{
-          width: "150px",
-          height: "150px",
+          width: "100px",
+          height: "100px",
           objectFit: "contain",
-          marginTop: "10px",
-          marginBottom: "15px",
-          borderRadius: "20px",
+          marginTop: "0",
+          marginBottom: "8px",
         }}
       />
 
@@ -45,14 +44,14 @@ export default function Home() {
       <div
         style={{
           textAlign: "center",
-          marginBottom: "35px",
+          marginBottom: "20px",
         }}
       >
         <h1
           style={{
-            fontSize: "clamp(2.2rem, 8vw, 4rem)",
-            lineHeight: 1.1,
-            marginBottom: "10px",
+            fontSize: "clamp(1.9rem, 7vw, 3rem)",
+            lineHeight: 1.05,
+            marginBottom: "8px",
             fontWeight: "800",
           }}
         >
@@ -64,9 +63,9 @@ export default function Home() {
         <div
           style={{
             color: "#fbbf24",
-            fontSize: "clamp(1.8rem, 6vw, 2.5rem)",
+            fontSize: "clamp(1.5rem, 5vw, 2.2rem)",
             fontWeight: "800",
-            marginBottom: "10px",
+            marginBottom: "6px",
           }}
         >
           Road to New York 🗽
@@ -75,9 +74,9 @@ export default function Home() {
         <div
           style={{
             color: "#fbbf24",
-            fontSize: "1.1rem",
+            fontSize: "1rem",
             fontWeight: "600",
-            marginBottom: "25px",
+            marginBottom: "18px",
           }}
         >
           FIFA World Cup Fantasy Edition
@@ -86,8 +85,8 @@ export default function Home() {
         <div
           style={{
             color: "#cbd5e1",
-            marginBottom: "15px",
-            fontSize: "1rem",
+            marginBottom: "10px",
+            fontSize: "0.95rem",
           }}
         >
           📅 11 Giugno → 19 Luglio 2026
@@ -96,8 +95,9 @@ export default function Home() {
         <div
           style={{
             color: "#cbd5e1",
-            marginBottom: "25px",
-            lineHeight: 1.8,
+            marginBottom: "18px",
+            lineHeight: 1.6,
+            fontSize: "0.95rem",
           }}
         >
           ⚽ 12 Fantallenatori • 🌍 12 Nazionali
@@ -107,12 +107,13 @@ export default function Home() {
 
         <div
           style={{
-            border: "1px solid rgba(255,255,255,0.15)",
-            background: "rgba(255,255,255,0.04)",
-            borderRadius: "16px",
-            padding: "14px",
+            border: "1px solid rgba(255,255,255,0.12)",
+            background: "rgba(255,255,255,0.03)",
+            borderRadius: "14px",
+            padding: "12px",
             color: "#fbbf24",
             fontWeight: "700",
+            fontSize: "1.1rem",
             maxWidth: "320px",
             margin: "0 auto",
           }}
@@ -133,9 +134,9 @@ export default function Home() {
           style={{
             ...buttonStyle,
             background: "#dc2626",
-            padding: "24px",
-            fontSize: "24px",
-            marginBottom: "24px",
+            padding: "22px",
+            fontSize: "22px",
+            marginBottom: "22px",
             boxShadow: "0 0 20px rgba(220,38,38,0.45)",
           }}
         >
@@ -225,10 +226,10 @@ export default function Home() {
 
       <div
         style={{
-          marginTop: "40px",
+          marginTop: "30px",
           textAlign: "center",
           color: "#94a3b8",
-          fontSize: "14px",
+          fontSize: "13px",
         }}
       >
         FantAquilaCastoro 2026 • Road to New York 🗽
