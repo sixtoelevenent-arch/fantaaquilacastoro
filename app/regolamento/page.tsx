@@ -48,7 +48,8 @@ export default function RegolamentoPage() {
         >
           Regolamento ufficiale del torneo.
         </p>
-<a
+        <p
+
               href="/regolamento.pdf"
               target="_blank"
               rel="noopener noreferrer"
@@ -66,7 +67,8 @@ export default function RegolamentoPage() {
               }}
             >            
           📜 Regolamento
-        </a>
+        
+</p>
         <div style={cardStyle}>
           <h2
             style={{
