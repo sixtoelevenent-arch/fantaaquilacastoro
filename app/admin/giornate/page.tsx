@@ -20,39 +20,29 @@ export default function Page() {
   }, []);
 
   async function loadGiornate() {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("matchdays")
       .select("id,nome,attiva,chiusa")
       .order("id");
 
-    console.log("LOAD DATA", data);
-    console.log("LOAD ERROR", error);
-
-    if (!error) {
-      setGiornate(data || []);
-    }
-
+    setGiornate(data || []);
     setLoading(false);
   }
 
   async function riapriGiornata(id: number) {
-    alert(`CLICK SU GIORNATA ${id}`);
-
-    const { data, error } = await supabase
+    await supabase
       .from("matchdays")
       .update({ chiusa: false })
-      .eq("id", id)
-      .select();
+      .eq("id", id);
 
-    console.log("UPDATE DATA", data);
-    console.log("UPDATE ERROR", error);
+    await loadGiornate();
+  }
 
-    if (error) {
-      alert(`ERRORE: ${error.message}`);
-      return;
-    }
-
-    alert("GIORNATA RIAPERTA");
+  async function chiudiGiornata(id: number) {
+    await supabase
+      .from("matchdays")
+      .update({ chiusa: true })
+      .eq("id", id);
 
     await loadGiornate();
   }
@@ -114,22 +104,45 @@ export default function Page() {
                 {giornata.chiusa ? "🔒 Chiusa" : "🔓 Aperta"}
               </div>
 
-              {giornata.chiusa && (
-                <button
-                  onClick={() => riapriGiornata(giornata.id)}
-                  style={{
-                    padding: "10px 14px",
-                    borderRadius: "8px",
-                    border: "none",
-                    background: "#16a34a",
-                    color: "white",
-                    fontWeight: 700,
-                    cursor: "pointer",
-                  }}
-                >
-                  🔓 Riapri
-                </button>
-              )}
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  flexWrap: "wrap",
+                }}
+              >
+                {giornata.chiusa ? (
+                  <button
+                    onClick={() => riapriGiornata(giornata.id)}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: "8px",
+                      border: "none",
+                      background: "#16a34a",
+                      color: "white",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    🔓 Riapri
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => chiudiGiornata(giornata.id)}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: "8px",
+                      border: "none",
+                      background: "#dc2626",
+                      color: "white",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    🔒 Chiudi
+                  </button>
+                )}
+              </div>
             </div>
           ))
         )}
