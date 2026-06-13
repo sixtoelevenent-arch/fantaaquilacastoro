@@ -12,11 +12,12 @@ export default function Page() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        justifyContent: "center",
       }}
     >
       <h1
         style={{
-          fontSize: "2rem",
+          fontSize: "2.2rem",
           marginBottom: "10px",
           textAlign: "center",
         }}
@@ -27,8 +28,9 @@ export default function Page() {
       <p
         style={{
           color: "#cbd5e1",
-          marginBottom: "30px",
+          marginBottom: "35px",
           textAlign: "center",
+          fontSize: "18px",
         }}
       >
         Gestione FantAquilaCastoro 2026
@@ -37,13 +39,18 @@ export default function Page() {
       <div
         style={{
           width: "100%",
-          maxWidth: "350px",
+          maxWidth: "320px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
         }}
       >
         <Link
           href="/admin/formazioni"
           style={{
-            display: "block",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             width: "100%",
             padding: "16px",
             borderRadius: "14px",
@@ -51,8 +58,6 @@ export default function Page() {
             color: "white",
             fontWeight: 700,
             fontSize: "18px",
-            marginBottom: "12px",
-            textAlign: "center",
             background: "#2563eb",
           }}
         >
@@ -62,7 +67,9 @@ export default function Page() {
         <Link
           href="/admin/voti"
           style={{
-            display: "block",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             width: "100%",
             padding: "16px",
             borderRadius: "14px",
@@ -70,18 +77,18 @@ export default function Page() {
             color: "white",
             fontWeight: 700,
             fontSize: "18px",
-            marginBottom: "12px",
-            textAlign: "center",
             background: "#16a34a",
           }}
         >
-          📥 Voti
+          📥 Gestione Voti
         </Link>
 
         <Link
           href="/"
           style={{
-            display: "block",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
             width: "100%",
             padding: "16px",
             borderRadius: "14px",
@@ -89,7 +96,6 @@ export default function Page() {
             color: "white",
             fontWeight: 700,
             fontSize: "18px",
-            textAlign: "center",
             background: "#475569",
           }}
         >
