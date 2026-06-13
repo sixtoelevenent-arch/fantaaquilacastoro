@@ -25,9 +25,10 @@ export default function Page() {
       .select("id,nome,attiva,chiusa")
       .order("id");
 
-    if (error) {
-      console.error(error);
-    } else {
+    console.log("LOAD DATA", data);
+    console.log("LOAD ERROR", error);
+
+    if (!error) {
       setGiornate(data || []);
     }
 
@@ -35,16 +36,23 @@ export default function Page() {
   }
 
   async function riapriGiornata(id: number) {
-    const { error } = await supabase
+    alert(`CLICK SU GIORNATA ${id}`);
+
+    const { data, error } = await supabase
       .from("matchdays")
       .update({ chiusa: false })
-      .eq("id", id);
+      .eq("id", id)
+      .select();
+
+    console.log("UPDATE DATA", data);
+    console.log("UPDATE ERROR", error);
 
     if (error) {
-      alert("Errore durante la riapertura");
-      console.error(error);
+      alert(`ERRORE: ${error.message}`);
       return;
     }
+
+    alert("GIORNATA RIAPERTA");
 
     await loadGiornate();
   }
