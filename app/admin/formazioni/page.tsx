@@ -10,11 +10,31 @@ type Team = {
 };
 
 export default function Page() {
-  const [teams] = useState<Team[]>([]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("SUPABASE TEST", supabase);
+    loadTeams();
   }, []);
+
+  async function loadTeams() {
+    try {
+      const { data, error } = await supabase
+        .from("teams")
+        .select("id,nome,proprietario")
+        .order("nome");
+
+      if (error) {
+        console.error(error);
+      } else {
+        setTeams(data || []);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <main
@@ -26,11 +46,49 @@ export default function Page() {
         padding: "20px",
       }}
     >
-      <h1>⚽ Gestione Formazioni</h1>
+      <h1
+        style={{
+          textAlign: "center",
+          marginBottom: "30px",
+        }}
+      >
+        ⚽ Gestione Formazioni
+      </h1>
 
-      <p>Test Step 3</p>
+      {loading ? (
+        <p>Caricamento...</p>
+      ) : (
+        teams.map((team) => (
+          <div
+            key={team.id}
+            style={{
+              background: "#1f2937",
+              border: "1px solid #374151",
+              borderRadius: "12px",
+              padding: "16px",
+              marginBottom: "12px",
+            }}
+          >
+            <div
+              style={{
+                fontSize: "20px",
+                fontWeight: 700,
+              }}
+            >
+              {team.nome}
+            </div>
 
-      <p>Squadre: {teams.length}</p>
+            <div
+              style={{
+                color: "#cbd5e1",
+                marginTop: "4px",
+              }}
+            >
+              {team.proprietario}
+            </div>
+          </div>
+        ))
+      )}
     </main>
   );
 }
