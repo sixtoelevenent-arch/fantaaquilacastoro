@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 
 type Team = {
@@ -10,7 +9,7 @@ type Team = {
   proprietario: string;
 };
 
-export default function FormazioniPage() {
+export default function Page() {
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,19 +18,22 @@ export default function FormazioniPage() {
   }, []);
 
   async function loadTeams() {
-    const { data, error } = await supabase
-      .from("teams")
-      .select("id,nome,proprietario")
-      .order("nome");
+  const { data, error } = await supabase
+    .from("teams")
+    .select("id,nome,proprietario")
+    .order("nome");
 
-    if (error) {
-      console.error(error);
-      return;
-    }
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
-    setTeams(data || []);
-    setLoading(false);
+  if (error) {
+    console.error(error);
+    return;
   }
+
+  setTeams(data || []);
+  setLoading(false);
+}
 
   return (
     <main
@@ -43,68 +45,49 @@ export default function FormazioniPage() {
         padding: "20px",
       }}
     >
-      <div
+      <h1
         style={{
-          maxWidth: "600px",
-          margin: "0 auto",
+          textAlign: "center",
+          marginBottom: "30px",
         }}
       >
-        <Link
-          href="/admin"
-          style={{
-            display: "inline-block",
-            marginBottom: "20px",
-            color: "#93c5fd",
-            textDecoration: "none",
-          }}
-        >
-          ← Torna ad Admin
-        </Link>
+        ⚽ Gestione Formazioni
+      </h1>
 
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "30px",
-          }}
-        >
-          ⚽ Gestione Formazioni
-        </h1>
-
-        {loading ? (
-          <p style={{ textAlign: "center" }}>Caricamento...</p>
-        ) : (
-          teams.map((team) => (
+      {loading ? (
+        <p>Caricamento...</p>
+      ) : (
+        teams.map((team) => (
+          <div
+            key={team.id}
+            style={{
+              background: "#1f2937",
+              border: "1px solid #374151",
+              borderRadius: "12px",
+              padding: "16px",
+              marginBottom: "12px",
+            }}
+          >
             <div
-              key={team.id}
               style={{
-                background: "#1f2937",
-                border: "1px solid #374151",
-                borderRadius: "14px",
-                padding: "16px",
-                marginBottom: "12px",
+                fontSize: "20px",
+                fontWeight: 700,
               }}
             >
-              <div
-                style={{
-                  fontSize: "20px",
-                  fontWeight: "700",
-                }}
-              >
-                {team.nome}
-              </div>
-
-              <div
-                style={{
-                  color: "#cbd5e1",
-                  marginTop: "4px",
-                }}
-              >
-                {team.proprietario}
-              </div>
+              {team.nome}
             </div>
-          ))
-        )}
-      </div>
+
+            <div
+              style={{
+                color: "#cbd5e1",
+                marginTop: "4px",
+              }}
+            >
+              {team.proprietario}
+            </div>
+          </div>
+        ))
+      )}
     </main>
   );
 }
