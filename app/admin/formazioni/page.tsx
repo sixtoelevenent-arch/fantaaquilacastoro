@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 type Team = {
   id: number;
@@ -12,7 +13,7 @@ export default function Page() {
   const [teams] = useState<Team[]>([]);
 
   useEffect(() => {
-    console.log("Admin Formazioni");
+    console.log("SUPABASE TEST", supabase);
   }, []);
 
   return (
@@ -27,7 +28,7 @@ export default function Page() {
     >
       <h1>⚽ Gestione Formazioni</h1>
 
-      <p>Test Step 2</p>
+      <p>Test Step 3</p>
 
       <p>Squadre: {teams.length}</p>
     </main>
