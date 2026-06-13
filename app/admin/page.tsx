@@ -72,10 +72,10 @@ export default function Page() {
             fontSize: "18px",
             marginBottom: "12px",
             textAlign: "center",
-            background: "#dc2626",
+            background: "#16a34a",
           }}
         >
-          📥 Gestione Voti
+          📥 Voti
         </Link>
 
         <Link

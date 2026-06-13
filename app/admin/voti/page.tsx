@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function AdminVotiPage() {
+export default function Page() {
   return (
     <main
       style={{
@@ -9,87 +9,92 @@ export default function AdminVotiPage() {
           "linear-gradient(to bottom, #020617 0%, #08122c 50%, #020617 100%)",
         color: "white",
         padding: "20px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
       }}
     >
+      <h1
+        style={{
+          fontSize: "2rem",
+          marginBottom: "10px",
+          textAlign: "center",
+        }}
+      >
+        ⚙️ Area Admin
+      </h1>
+
+      <p
+        style={{
+          color: "#cbd5e1",
+          marginBottom: "30px",
+          textAlign: "center",
+        }}
+      >
+        Gestione FantAquilaCastoro 2026
+      </p>
+
       <div
         style={{
-          maxWidth: "700px",
-          margin: "0 auto",
+          width: "100%",
+          maxWidth: "350px",
         }}
       >
         <Link
-          href="/admin"
+          href="/admin/formazioni"
           style={{
-            display: "inline-block",
-            marginBottom: "20px",
-            color: "#93c5fd",
+            display: "block",
+            width: "100%",
+            padding: "16px",
+            borderRadius: "14px",
             textDecoration: "none",
+            color: "white",
+            fontWeight: 700,
+            fontSize: "18px",
+            marginBottom: "12px",
+            textAlign: "center",
+            background: "#2563eb",
           }}
         >
-          ← Torna Admin
+          ⚽ Formazioni
         </Link>
 
-        <h1
+        <Link
+          href="/admin/voti"
           style={{
-            fontSize: "2rem",
-            marginBottom: "10px",
+            display: "block",
+            width: "100%",
+            padding: "16px",
+            borderRadius: "14px",
+            textDecoration: "none",
+            color: "white",
+            fontWeight: 700,
+            fontSize: "18px",
+            marginBottom: "12px",
+            textAlign: "center",
+            background: "#16a34a",
           }}
         >
-          📥 Gestione Voti
-        </h1>
+          📥 Voti
+        </Link>
 
-        <p
+        <Link
+          href="/"
           style={{
-            color: "#cbd5e1",
-            marginBottom: "30px",
+            display: "block",
+            width: "100%",
+            padding: "16px",
+            borderRadius: "14px",
+            textDecoration: "none",
+            color: "white",
+            fontWeight: 700,
+            fontSize: "18px",
+            textAlign: "center",
+            background: "#475569",
           }}
         >
-          Importazione e gestione voti Mondiale 2026
-        </p>
-
-        <div
-          style={{
-            background: "#1e293b",
-            borderRadius: "16px",
-            padding: "24px",
-            marginBottom: "20px",
-          }}
-        >
-          <h2
-            style={{
-              marginTop: 0,
-              marginBottom: "20px",
-            }}
-          >
-            Giornata 1
-          </h2>
-
-          <button
-            style={{
-              width: "100%",
-              padding: "16px",
-              borderRadius: "12px",
-              border: "none",
-              background: "#dc2626",
-              color: "white",
-              fontWeight: 700,
-              fontSize: "16px",
-              cursor: "pointer",
-            }}
-          >
-            📥 Importa Voti
-          </button>
-
-          <p
-            style={{
-              marginTop: "16px",
-              color: "#94a3b8",
-              fontSize: "14px",
-            }}
-          >
-            Nessuna importazione eseguita.
-          </p>
-        </div>
+          🏠 Torna alla Home
+        </Link>
       </div>
     </main>
   );
