@@ -1,0 +1,373 @@
+
+<!-- saved from url=(18263)data:text/plain;base64,RmFudGFxdWlsYWNhc3Rvcm8gMjAyNiDigJQgMTIgUGFydGVjaXBhbnRpICAgIFBhZ2luYSAxIGRpIDcgCiAKIApGQU5UQVFVSUxBQ0FTVE9STyAyMDI2IApSZWdvbGFtZW50byBVZmZpY2lhbGUg4oCUIDEyIFBhcnRlY2lwYW50aSAKVVNBIMK3IENhbmFkYSDCtyBNZXNzaWNvICB8ICAxMSBnaXVnbm8g4oCTIDE5IGx1Z2xpbyAyMDI2IApGb250ZSB2b3RpOiBGYW50YXBpw7kzICB8ICBMaXN0b25lIGdpb2NhdG9yaTogRmFudGFtYXN0ZXIgCjEuIElsIFRvcm5lbyAKSWwgRmFudGFxdWlsYWNhc3Rvcm8gMjAyNiDDqCB1biBnaW9jbyBmYW50YXN5IGJhc2F0byBzdWxsYSBDb3BwYSBkZWwgTW9uZG8gRklGQSBjaGUgc2kgc3ZvbGdlIApkYWxsJzExIGdpdWdubyBhbCAxOSBsdWdsaW8gMjAyNiB0cmEgVVNBLCBDYW5hZGEgZSBNZXNzaWNvLiBQZXIgbGEgcHJpbWEgdm9sdGEgbmVsbGEgc3RvcmlhIApwYXJ0ZWNpcGFubyA0OCBuYXppb25hbGkgc3VkZGl2aXNlIGluIDEyIGdpcm9uaSBkYSA0IHNxdWFkcmUuIAogClN0cnV0dHVyYSBkZWwgTW9uZGlhbGUgcmVhbGUgCuKAoiAKRmFzZSBhIGdpcm9uaTogMTHigJMyNyBnaXVnbm8gKDEyIGdpcm9uaSB4IDQgc3F1YWRyZSkgCuKAoiAKU2VkaWNlc2ltaSBkaSBmaW5hbGU6IDI4IGdpdWdubyDigJMgMyBsdWdsaW8gCuKAoiAKT3R0YXZpIGRpIGZpbmFsZTogNOKAkzcgbHVnbGlvIArigKIgClF1YXJ0aSBkaSBmaW5hbGU6IDnigJMxMSBsdWdsaW8gCuKAoiAKU2VtaWZpbmFsaTogMTTigJMxNSBsdWdsaW8gCuKAoiAKRmluYWxlIHBlciBpbCAzwrAgcG9zdG86IDE4IGx1Z2xpbyAK4oCiIApGSU5BTEU6IDE5IGx1Z2xpbyDigJQgTWV0TGlmZSBTdGFkaXVtLCBOZXcgWW9yay9OZXcgSmVyc2V5IAogCklsIEZhbnRhcXVpbGFjYXN0b3JvIHNlZ3VlIGZlZGVsbWVudGUgcXVlc3RlIGZhc2k6IG9nbmkgdHVybm8gZGVsIHRvcm5lbyByZWFsZSBjb3JyaXNwb25kZSBhIHVuIAp0dXJubyBmYW50YXN5IGluIGN1aSBpIHBhcnRlY2lwYW50aSBhY2N1bXVsYW5vIGkgcHVudGkgZGkgdHV0dGkgaSBwcm9wcmkgY2FsY2lhdG9yaSBjaGUgc2NlbmRvbm8gaW4gCmNhbXBvIGluIHF1ZWxsZSBwYXJ0aXRlLiAKMi4gU3RydXR0dXJhIGRlbCBUb3JuZW8gRmFudGFzeSAKSWwgdG9ybmVvIMOoIGFwZXJ0byBhIDEyIGZhbnRhc3F1YWRyZSwgb3JnYW5penphdGUgaW4gdW5hIGZhc2UgYSBnaXJvbmkgaW5pemlhbGUgc2VndWl0YSBkYSAKZWxpbWluYXppb25lIGRpcmV0dGEgY29uIGFuZGF0YSBlIHJpdG9ybm8gZmlubyBhbGxlIGZpbmFsaS4gCiAKRmFzZSBhIGdpcm9uaSDigJQgMyBnaXJvbmkgZGEgNCBzcXVhZHJlIApMZSAxMiBmYW50YXNxdWFkcmUgc29ubyBzb3J0ZWdnaWF0ZSBpbiAzIGdpcm9uaSBkYSA0IHNxdWFkcmUuIE9nbmkgZ2lyb25lIHNpIHN2b2xnZSBpbiBzb2xhIGFuZGF0YTogCm9nbmkgZmFudGFzcXVhZHJhIGRpc3B1dGEgMyBwYXJ0aXRlIG5lbCBnaXJvbmUsIHVuYSBwZXIgY2lhc2N1bmEgZGVsbGUgMyBnaW9ybmF0ZSBkZWxsYSBmYXNlIGEgZ2lyb25pIApGSUZBICgxMeKAkzI3IGdpdWdubykuIAogClNjb250cmkgZGlyZXR0aSBlIGF0dHJpYnV6aW9uZSBkZWkgcHVudGkuIApPZ25pIGluY29udHJvIGRlbCBnaXJvbmUgc2kgZGlzcHV0YSB0cmEgZHVlIHNxdWFkcmUgZSBpbCByaXN1bHRhdG8gdmllbmUgZGV0ZXJtaW5hdG8gaW4gYmFzZSBhbCAKcHVudGVnZ2lvIGZhbnRhY2FsY2lzdGljbyBvdHRlbnV0byBkYSBjaWFzY3VuYSBzcXVhZHJhLiBMYSBwcmltYSBzb2dsaWEgZ29sIMOoIGZpc3NhdGEgYSA2NiBwdW50aSAKc3F1YWRyYSwgY2hlIGNvcnJpc3BvbmRlIGEgMSBnb2wuIFN1Y2Nlc3NpdmFtZW50ZSwgcGVyIG9nbmkgdWx0ZXJpb3JlIGluY3JlbWVudG8gZGkgNCBwdW50aSB2aWVuZSAKYXNzZWduYXRvIDEgZ29sIGFnZ2l1bnRpdm8gKGFkIGVzZW1waW86IDcwIHB1bnRpIHNxdWFkcmEgPSAyIGdvbCwgNzQgcHVudGkgc3F1YWRyYSA9IDMgZ29sLCA3OCAKcHVudGkgc3F1YWRyYSA9IDQgZ29sIGUgY29zw6wgdmlhKS4gTGEgc3F1YWRyYSBjaGUgcmVhbGl6emEgcGnDuSBnb2wgdmluY2UgbCdpbmNvbnRybyBlIG90dGllbmUgMyBwdW50aSAKaW4gY2xhc3NpZmljYTsgbGEgc3F1YWRyYSBzY29uZml0dGEgb3R0aWVuZSAwIHB1bnRpLiBJbiBjYXNvIGRpIHBhcml0w6AgbmVsIG51bWVybyBkaSBnb2wgc2VnbmF0aSwgCgpGYW50YXF1aWxhY2FzdG9ybyAyMDI2IOKAlCAxMiBQYXJ0ZWNpcGFudGkgICAgUGFnaW5hIDIgZGkgNyAKbCdpbmNvbnRybyB0ZXJtaW5hIGluIHBhcmVnZ2lvIGUgdmVuZ29ubyBhc3NlZ25hdGkgMSBwdW50byBhIGNpYXNjdW5hIHNxdWFkcmEuIExhIGNsYXNzaWZpY2EgZmluYWxlIApkZWwgZ2lyb25lIMOoIGRldGVybWluYXRhIGRhbGxhIHNvbW1hIGRlaSBwdW50aSBjb25xdWlzdGF0aSBkYSBjaWFzY3VuYSBzcXVhZHJhIG5lbGxlIHRyZSBwYXJ0aXRlIApkaXNwdXRhdGUuIAogClF1YWxpZmljYXppb25lIGFpIHF1YXJ0aSBkaSBmaW5hbGUgCkFsIHRlcm1pbmUgZGVsbGUgMyBnaW9ybmF0ZSBkaSBnaXJvbmUgc2kgcXVhbGlmaWNhbm8gYWdsaSBvdHRhdmkgbGUgcHJpbWUgMiBjbGFzc2lmaWNhdGUgZGkgb2duaSBnaXJvbmUgCnBpdSBsZSAyIG1pZ2xpb3JpIHRlcnplIHRyYSBpIDMgZ2lyb25pLCBwZXIgdW4gdG90YWxlIGRpIDggcXVhbGlmaWNhdGkuIAogCkNyaXRlcmkgZGkgY2xhc3NpZmljYSBwZXIgbGUgcHJpbWUgZHVlIGRpIG9nbmkgZ2lyb25lOiAK4oCiIAoxLiBQdW50aSBuZWwgZ2lyb25lICh2aXR0b3JpYSA9IDMgcHQsIHBhcmVnZ2lvID0gMSBwdCwgc2NvbmZpdHRhID0gMCBwdCkgCuKAoiAKMi4gU29tbWEgZGVpIHB1bnRlZ2dpIHNxdWFkcmEgdG90YWxpIGFjY3VtdWxhdGkgbmVsIGdpcm9uZSAK4oCiIAozLiBEaWZmZXJlbnphIHJldGkuIArigKIgCjQuIFNvcnRlZ2dpbyAKIApDcml0ZXJpIGRpIGNsYXNzaWZpY2EgcGVyIGxlIG1pZ2xpb3JpIHRlcnplOiAKUGVyIGNvbmZyb250YXJlIGxlIHRlcnplIGNsYXNzaWZpY2F0ZSBkZWkgMyBnaXJvbmkgdHJhIGxvcm8sIGlsIGNyaXRlcmlvIHByaW5jaXBhbGUgw6ggZGl2ZXJzbyByaXNwZXR0byBhbGxhIApjbGFzc2lmaWNhIGludGVybmEgYWwgZ2lyb25lOiAK4oCiIAoxLiBTb21tYSBkZWkgcHVudGVnZ2kgc3F1YWRyYSB0b3RhbGkgYWNjdW11bGF0aSBuZWwgZ2lyb25lIChjcml0ZXJpbyBwcmluY2lwYWxlKSAK4oCiIAoyLiBQdW50aSBuZWwgZ2lyb25lIArigKIgCjMuIERpZmZlcmVuemEgcmV0aSBkZWkgcHJvcHJpIGNhbGNpYXRvcmkgCuKAoiAKNC4gU29ydGVnZ2lvIAogClF1YXJ0aSBkaSBmaW5hbGUg4oCUIEFuZGF0YSBlIFJpdG9ybm8gCkdsaSA4IHF1YWxpZmljYXRpIHNpIGFmZnJvbnRhbm8gaW4gNCBzZmlkZS4gT2duaSBzZmlkYSBzaSBkaXNwdXRhIGluIGFuZGF0YSBlIHJpdG9ybm86IGwnYW5kYXRhIGFjY3VtdWxhIGkgCnB1bnRpIHN1aSBzZWRpY2VzaW1pIHJlYWxpICgyOCBnaXUg4oCTIDMgbHVnKSwgaWwgcml0b3JubyBzdWdsaSBvdHRhdmkgcmVhbGkgKDTigJM3IGx1ZykuIEF2YW56YSBjaGkgdG90YWxpenphIApwacO5IGdvbCBzZWduYXRpIG5lbGxlIGR1ZSBzZmlkZSwgc2VtcHJlIHNlY29uZG8gaWwgY3JpdGVyaW8gZGkgKzEgZ29sIG9nbmkgNCBwdW50aSBzcXVhZHJhLiBJbiBjYXNvIGRpIApwYXJpdMOgIGF2YW56YSBjaGkgdG90YWxpenphIHBpw7kgcHVudGkgc3F1YWRyYSBuZWxsYSBzb21tYSBkZWxsZSBkdWUgZ2FyZS4gSW4gY2FzbyBkaSB1bHRlcmlvcmUgcGFyaXTDoCAKYXZhbnphIGNoaSBoYSB0b3RhbGl6emF0byBwacO5IHB1bnRpIHNxdWFkcmEgbmVsIGNvcnNvIGRpIHR1dHRhIGxhIGNvbXBldGl6aW9uZSBmaW5vIGEgcXVlbCBtb21lbnRvLiAKIApTZW1pZmluYWxpIOKAlCBBbmRhdGEgZSBSaXRvcm5vIApJIDQgdmluY2l0b3JpIGRlaSBxdWFydGkgc2kgYWZmcm9udGFubyBpbiAyIHNmaWRlLiBBbmRhdGEgc3VpIHF1YXJ0aSByZWFsaSAoOeKAkzExIGx1ZyksIHJpdG9ybm8gc3VsbGUgCnNlbWlmaW5hbGkgcmVhbGkgKDE04oCTMTUgbHVnKS4gQXZhbnphIGNoaSB0b3RhbGl6emEgcGnDuSBnb2wgc2VnbmF0aSBuZWxsZSBkdWUgc2ZpZGUsIHNlbXByZSBzZWNvbmRvIGlsIApjcml0ZXJpbyBkaSArMSBnb2wgb2duaSA0IHB1bnRpIHNxdWFkcmEuIEluIGNhc28gZGkgcGFyaXTDoCBhdmFuemEgY2hpIHRvdGFsaXp6YSBwacO5IHB1bnRpIHNxdWFkcmEgbmVsbGEgCnNvbW1hIGRlbGxlIGR1ZSBnYXJlLiBJbiBjYXNvIGRpIHVsdGVyaW9yZSBwYXJpdMOgIGF2YW56YSBjaGkgaGEgdG90YWxpenphdG8gcGnDuSBwdW50aSBzcXVhZHJhIG5lbCAKY29yc28gZGkgdHV0dGEgbGEgY29tcGV0aXppb25lIGZpbm8gYSBxdWVsIG1vbWVudG8uIApBVFRFTlpJT05FIC0gTk9UQSBCRU5FOiBTb2xvIHBlciBsYSBzZW1pZmluYWxlIGRpIHJpdG9ybm8sIGVzc2VuZG8gNCBzcXVhZHJlIGZhbnRhc3kgY29uIDQgCnNxdWFkcmUgcmVhbGksIHR1dHRpIGkgdGl0b2xhcmkgUy5WLiBwcmVuZGVyYW5ubyBjb21lIHB1bnRlZ2dpbyBpbCA1IHBvbGl0aWNvLiAKIApGaW5hbGUg4oCUIEdhcmEgc2VjY2EgCkxhIGZpbmFsZSBzaSBkaXNwdXRhIGluIGdhcmEgdW5pY2Egc3VpIHB1bnRpIGRlbGxhIEZpbmFsZSBwZXIgaWwgM8KwIHBvc3RvIEZJRkEgKDE4IGx1ZyksIGUgZGVsbGEgRmluYWxlIApGSUZBICgxOSBsdWcpLiBOb24gYydlIGFuZGF0YSBlIHJpdG9ybm86IHZpbmNlIGNoaSBmYSBwacO5IHB1bnRpIGluIHF1ZWxsYSBzaW5nb2xhIGdhcmEuIEluIGNhc28gZGkgCnBlcmZldHRhIHBhcml0w6AgdmluY2UgY2hpIGhhIHRvdGFsaXp6YXRvIHBpw7kgcHVudGkgc3F1YWRyYSBjb21wbGVzc2l2aSBuZWwgY29yc28gZGkgdHV0dGEgbGEgCmNvbXBldGl6aW9uZS4gCiAKIAoKRmFudGFxdWlsYWNhc3Rvcm8gMjAyNiDigJQgMTIgUGFydGVjaXBhbnRpICAgIFBhZ2luYSAzIGRpIDcgCkNyaXRlcmkgZGkgcGFyaXTDoCBuZWxsZSBmYXNpIGEgZWxpbWluYXppb25lIGRpcmV0dGEgCuKAoiAKMS4gU29tbWEgZGVpIHB1bnRlZ2dpIHNxdWFkcmEgdG90YWxpIG5lbGxhIGRvcHBpYSBzZmlkYSAoYW5kYXRhICsgcml0b3JubykgCuKAoiAKMi4gU29tbWEgZGVpIHB1bnRlZ2dpIHNxdWFkcmEgdG90YWxpIGFjY3VtdWxhdGkgaW4gdHV0dG8gaWwgdG9ybmVvIArigKIgCjMuIFNvcnRlZ2dpbyAKIApQZXIgbGEgZmluYWxlIGluIGdhcmEgc2VjY2E6IGluIGNhc28gZGkgcGFyaXTDoCBzaSB1c2EgZGlyZXR0YW1lbnRlIGlsIHRvdGFsZSBwdW50aSBuZWwgdG9ybmVvLCBwb2kgCnNvcnRlZ2dpby4gCiAKTm90YSBzdSBzdXBwbGVtZW50YXJpIGUgcmlnb3JpIApJIGJvbnVzIGUgbWFsdXMgbWF0dXJhdGkgZHVyYW50ZSBpIHN1cHBsZW1lbnRhcmkgc29ubyB2YWxpZGkgZSB2ZW5nb25vIGNvbnRlZ2dpYXRpIApub3JtYWxtZW50ZS4gCkkgcmlnb3JpIGRlbGxhIGxvdHRlcmlhIGZpbmFsZSAoY2FsY2kgZGkgcmlnb3JlKSBub24gdmVuZ29ubyBjb250ZWdnaWF0aTogbmUgaWwgcmlnb3JlIHBhcmF0byAKbmUgaWwgcmlnb3JlIHNiYWdsaWF0byBpbiBxdWVsbGEgZmFzZSBkYW5ubyBvIHRvbGdvbm8gcHVudGkuIAogClN0cnV0dHVyYSBjb21wbGV0YSBkZWwgdG9ybmVvIOKAlCBTY2hlbWEgcmlhc3N1bnRpdm8gCkZhc2UgRmFudGFzeSAKTi4gCkZvcm1hdG8gClR1cm5vIHJlYWxlIGRlbCBNb25kaWFsZSAKR2lvcm5hdGEgMSBnaXJvbmkgCjEyIApUdXR0aSB2cyB0dXR0aSBuZWwgZ2lyb25lIChzb2xvIAphbmRhdGEpIAoxYSBnaW9ybmF0YSBGSUZBICgxMS0xNiBnaXUpIApHaW9ybmF0YSAyIGdpcm9uaSAKMTIgClR1dHRpIHZzIHR1dHRpIG5lbCBnaXJvbmUgKHNvbG8gCmFuZGF0YSkgCjJhIGdpb3JuYXRhIEZJRkEgKDE3LTIyIGdpdSkgCkdpb3JuYXRhIDMgZ2lyb25pIAoxMiAKVHV0dGkgdnMgdHV0dGkgbmVsIGdpcm9uZSAoc29sbyAKYW5kYXRhKSAKM2EgZ2lvcm5hdGEgRklGQSAoMjMtMjcgZ2l1KSAKUXVhcnRpIOKAlCBBbmRhdGEgCjggCjQgc2ZpZGUgMXYxIApTZWRpY2VzaW1pIEZJRkEgKDI4IGdpdSDigJMgMyBsdWcpIApRdWFydGkg4oCUIFJpdG9ybm8gCjggCjQgc2ZpZGUgMXYxIChzdGVzc2kgCmFjY29wcGlhbWVudGkpIApPdHRhdmkgRklGQSAoNC03IGx1ZykgClNlbWlmaW5hbGkg4oCUIApBbmRhdGEgCjQgCjIgc2ZpZGUgMXYxIApRdWFydGkgRklGQSAoOS0xMSBsdWcpIApTZW1pZmluYWxpIOKAlCAKUml0b3JubyAKNCAKMiBzZmlkZSAxdjEgKHN0ZXNzaSAKYWNjb3BwaWFtZW50aSkgClNlbWlmaW5hbGkgRklGQSAoMTQtMTUgbHVnKSAKRklOQUxFIAoyIApHYXJhIHNlY2NhIApGaW5hbGUgM8KwIHBvc3RvIEZJRkEgKDE4IGx1ZykgZSAKRmluYWxlIEZJRkEgKDE5IGx1ZykgCjMuIE1vZGFsaXTDoCBkaSBHaW9jbyAKTGEgbW9kYWxpdMOgIGRpIGdpb2NvIGFkb3R0YXRhIMOoIHF1ZWxsYSBDbGFzc2ljLCBsYSBwaXUgZGlmZnVzYSBuZWwgZmFudGFjYWxjaW8gaXRhbGlhbm8sIGJhc2F0YSBzdWkgdm90aSAKcHViYmxpY2F0aSBkYSBGYW50YWNhbGNpby5pdCBkb3BvIG9nbmkgcGFydGl0YSByZWFsZS4gCiAKRm9udGUgZGVpIHZvdGkgCkZvbnRlIHVmZmljaWFsZTogRmFudGFjYWxjaW8uaXQgCkkgdm90aSBkaSBGYW50YWNhbGNpby5pdCBzb25vIGwndW5pY28gcmlmZXJpbWVudG8gcGVyIGlsIGNhbGNvbG8gZGVpIHB1bnRpLiBJbiBjYXNvIGRpIGFzc2VuemEgZGVsIHZvdG8gCnBlciB1biBnaW9jYXRvcmUgKHBlciBxdWFsc2lhc2kgbW90aXZvKSwgaWwgZ2lvY2F0b3JlIHZpZW5lIGNvbnNpZGVyYXRvIGNvbWUgbm9uIHNjZXNvIGluIGNhbXBvIGUgCmlsIHN1byBwb3N0byBwYXNzYSBhbGxhIHByaW1hIHJpc2VydmEgZGlzcG9uaWJpbGUuIAogCgpGYW50YXF1aWxhY2FzdG9ybyAyMDI2IOKAlCAxMiBQYXJ0ZWNpcGFudGkgICAgUGFnaW5hIDQgZGkgNyAKTW9kdWxpIGNvbnNlbnRpdGkgCk9nbmkgZmFudGFsbGVuYXRvcmUgZGV2ZSBzY2hpZXJhcmUgMTEgdGl0b2xhcmkgcGnDuSAxNSByaXNlcnZlLiBMYSBmb3JtYXppb25lIGRldmUgcmlzcGV0dGFyZSB1bm8gZGVpIApzZWd1ZW50aSBtb2R1bGkgdWZmaWNpYWxpOiAK4oCiIAozLTQtMyAK4oCiIAozLTUtMiAK4oCiIAo0LTQtMiAK4oCiIAo0LTMtMyAK4oCiIAo0LTUtMSAK4oCiIAo1LTMtMiAK4oCiIAo1LTQtMSAKIApHZXN0aW9uZSBkZWxsZSByaXNlcnZlIApQcmltYSBkaSBvZ25pIHR1cm5vIG9nbmkgZmFudGFsbGVuYXRvcmUgaW5kaWNhLCBvbHRyZSBhZ2xpIDExIHRpdG9sYXJpLCAxNCByaXNlcnZlIGluIG9yZGluZSBkaSBwcmlvcml0w6AgCihkYWxsYSAxYSBhbGxhIDE0YSkuIExhIGZvcm1hemlvbmUgdmEgY29tdW5pY2F0YSBjb24gbWVzc2FnZ2lvIHRlc3R1YWxlIGVudHJvIDEgbWludXRvIHByaW1hIApkZWxsYSBwcmltYSBwYXJ0aXRhIGRlbCB0dXJuby4gU2UgdW4gdGl0b2xhcmUgbm9uIGdpb2NhLCBlbnRyYSBhdXRvbWF0aWNhbWVudGUgbGEgcHJpbWEgcmlzZXJ2YSAKZGlzcG9uaWJpbGUgZGVsIHJ1b2xvIGNvcnJldHRvIGNvbXBhdGliaWxlIGNvbiBpbCBtb2R1bG8gc2NlbHRvLiBOb24gw6ggcHJldmlzdG8gaWwgY2FtYmlvIGRpIG1vZHVsby4gIApFc2VtcGlvIHByYXRpY286ICAKLSAKaW4gY2FzbyBkaSBwYW5jaGluYSBQUEREREREQ0NDQ0FBQSwgc2Ugbm9uIGdpb2Nhbm8gNiB0aXRvbGFyaSwgbGEgcHJpb3JpdMOgIGRpIHN1YmVudHJvIAp2ZXJyw6AgZGF0YSBwcmltYSBhaSBwb3J0aWVyaSwgcG9pIGFpIGRpZmVuc29yaSwgcG9pIGFpIGNlbnRyb2NhbXBpc3RpIGUgaW5maW5lIGFnbGkgYXR0YWNjYW50aS4gCi0gCmluIGNhc28gZGkgcGFuY2hpbmEgQUFBQ0NDQ0REREREUFAgKG9wemlvbmUgY29uc2lnbGlhdGEpLCBzZSBub24gZ2lvY2FubyA2IHRpdG9sYXJpLCAKbGEgcHJpb3JpdMOgIGRpIHN1YmVudHJvIHZlcnLDoCBkYXRhIHByaW1hIGFnbGkgYXR0YWNjYW50aSwgIHBvaSBhaSBjZW50cm9jYW1waXN0aSwgcG9pIGFpIGRpZmVuc29yaSAKZSBpbmZpbmUgYWkgcG9ydGllcmkuIApGb3JtYXppb25lIG5vbiBpbnZpYXRhIApTZSB1biBmYW50YWxsZW5hdG9yZSBub24gaW52aWEgbGEgZm9ybWF6aW9uZSBlbnRybyBpbCB0ZXJtaW5lIHN0YWJpbGl0bywgdmllbmUgdXRpbGl6emF0YSBsJ3VsdGltYSAKZm9ybWF6aW9uZSBpbnZpYXRhIGluIHByZWNlZGVuemEuIAo0LiBTaXN0ZW1hIGRpIFB1bnRlZ2dpbyAKSSBwdW50aSBzaSBjYWxjb2xhbm8gc3Ugb2duaSBwYXJ0aXRhIGdpb2NhdGEgZGFpIHByb3ByaSBjYWxjaWF0b3JpIGR1cmFudGUgaWwgdHVybm8gZmFudGFzeSBhdHRpdm8sIApzb21tYW5kbyB0dXR0aSBnbGkgZXZlbnRpIGNoZSBsaSByaWd1YXJkYW5vLiBMYSBtb2RhbGl0w6Agw6ggQ2xhc3NpYzogc2kgcGFydGUgZGFsIHZvdG8gYmFzZSBkaSAKRmFudGFjYWxjaW8uaXQgYSBjdWkgc2kgYWdnaXVuZ29ubyBpIGJvbnVzIGUgc2kgc290dHJhZ2dvbm8gaSBtYWx1cy4gCiAKQm9udXMgZSBNYWx1cyAKRXZlbnRvIApQdW50aSAKR29sIHNlZ25hdG8gCiszIHB0IApBc3Npc3QgCisxIHB0IApSaWdvcmUgcGFyYXRvIChQb3J0aWVyZSkgCiszIHB0IApQb3J0YSBpbnZpb2xhdGEgKENsZWFuIHNoZWV0KSAKKzEgcHQgCkdvbCBzdWJpdG8gCi0xIHB0IApBbW1vbml6aW9uZSAKLTAuNSBwdCAKRXNwdWxzaW9uZSAKLTEgcHQgClJpZ29yZSBzYmFnbGlhdG8gCi0zIHB0IApBdXRvZ29sIAotMiBwdCAKCkZhbnRhcXVpbGFjYXN0b3JvIDIwMjYg4oCUIDEyIFBhcnRlY2lwYW50aSAgICBQYWdpbmEgNSBkaSA3IAogClN1cHBsZW1lbnRhcmk6IGkgYm9udXMgZSBtYWx1cyBtYXR1cmF0aSBuZWkgdGVtcGkgc3VwcGxlbWVudGFyaSBzb25vIHZhbGlkaSBlIGNvbnRlZ2dpYXRpIApub3JtYWxtZW50ZS4gCkNhbGNpIGRpIHJpZ29yZSBmaW5hbGk6IGkgcmlnb3JpIGRlbGxhIGxvdHRlcmlhIChyaWdvcmUgcGFyYXRvLCByaWdvcmUgc2JhZ2xpYXRvKSBub24gdmVuZ29ubyAKY29udGVnZ2lhdGkuIAo1LiBSb3NhIGUgQXN0YSAKUHJpbWEgZGVsbCdpbml6aW8gZGVsIHRvcm5lbyB0dXR0aSBpIGZhbnRhbGxlbmF0b3JpIGZvcm1hbm8gbGEgcHJvcHJpYSByb3NhIGF0dHJhdmVyc28gdW4nYXN0YSBhIGJ1c3RlLiAKTGEgcm9zYSDDqCBjb21wb3N0YSBkYSAyNSBnaW9jYXRvcmkuIAogCkNvbXBvc2l6aW9uZSBkZWxsYSByb3NhICgyNSBnaW9jYXRvcmkpIArigKIgCjMgUG9ydGllcmkgCuKAoiAKOCBEaWZlbnNvcmkgCuKAoiAKOCBDZW50cm9jYW1waXN0aSAK4oCiIAo2IEF0dGFjY2FudGkgCiAKTGlzdG9uZSBkZWkgZ2lvY2F0b3JpIApGb250ZTogRmFudGFtYXN0ZXIuIApJbCBsaXN0b25lIHVmZmljaWFsZSBkYSBjdWkgYXR0aW5nZXJlIHBlciBjb3N0cnVpcmUgbGEgcm9zYSDDqCBxdWVsbG8gZGkgRmFudGFtYXN0ZXIuIE9nbmkgZ2lvY2F0b3JlIGhhIAp1biB2YWxvcmUgZGkgcmlmZXJpbWVudG8gY2hlIGluZGljYSBpbCBjb3N0byBtaW5pbW8gY29uc2lnbGlhdG8uIExhIHB1bnRhdGEgbWluaW1hIHBlciBvZ25pIApjYWxjaWF0b3JlIGluIGJ1c3RhIMOoIDEgbWlsaW9uZS4gCiAKQXN0YSBhIGJ1c3RlIOKAlCBSZWdvbGUgCkwnYXN0YSBzaSBzdm9sZ2UgY29uIGlsIG1lY2NhbmlzbW8gZGVsbGUgYnVzdGUgY2hpdXNlOiBvZ25pIHBhcnRlY2lwYW50ZSBwcmVwYXJhIGluIHByaXZhdG8gbGEgCnByb3ByaWEgbGlzdGEgZGkgMjUgZ2lvY2F0b3JpIGNvbiBpbCByZWxhdGl2byB2YWxvcmUgZGkgYWNxdWlzdG8gb2ZmZXJ0byBwZXIgY2lhc2N1bm8sIHJpc3BldHRhbmRvIHVuIApidWRnZXQgY29tcGxlc3Npdm8gZGkgNTAwIG1pbGlvbmkgZGkgY3JlZGl0aS4gCiAK4oCiIApQcmVwYXJhcmUgdW5hIGxpc3RhIGRpIDI1IGdpb2NhdG9yaSAoM1AsIDhELCA4QywgNkEpIGNvbiBpbCB2YWxvcmUgZGkgYWNxdWlzdG8gb2ZmZXJ0byBwZXIgCm9nbnVubyAK4oCiIApJbCB2YWxvcmUgb2ZmZXJ0byBwZXIgb2duaSBnaW9jYXRvcmUgZGV2ZSBlc3NlcmUgYWxtZW5vIDEgbWlsaW9uZSAK4oCiIApMYSBzb21tYSBkaSB0dXR0aSBpIHZhbG9yaSBvZmZlcnRpIG5vbiBkZXZlIHN1cGVyYXJlIGlsIGJ1ZGdldCBkaSA1MDAgbWlsaW9uaSAK4oCiIApMYSBsaXN0YSB2YSBjb25zZWduYXRhIGluIHByaXZhdG8gZW50cm8gbWFydGVkw6wgOSBnaXVnbm8gb3JlIDIwOjMwIGEgdW5vIGRlaSAyIFByZXNpZGVudGkgCihDYXJlIG8gU2lydHkpIArigKIgCkkgZHVlIFByZXNpZGVudGkgbmVsIHBvbWVyaWdnaW8gc2NhbWJpZXJhbm5vIGxlIGxpc3RlIHRyYSBkaSBsb3JvIAogCklsIGNhbGNpYXRvcmUgdmVycsOgIGFzc2VnbmF0byBhbGxhIHNxdWFkcmEgY2hlIGF2csOgIHByZXNlbnRhdG8gbCdvZmZlcnRhIHBpw7kgYWx0YS4gSW4gY2FzbyBkaSBvZmZlcnRlIAp1Z3VhbGksIGF2csOgIGxhIHByZWNlZGVuemEgY2hpIGF2csOgIGluc2VyaXRvIHF1ZWwgY2FsY2lhdG9yZSBwacO5IGluIGFsdG8gbmVsbGEgcHJvcHJpYSBsaXN0YSBkaSBzY2VsdGEuIApBZCBlc2VtcGlvLCBzZSBkdWUgc3F1YWRyZSBvZmZyb25vIDUwIG1pbGlvbmkgcGVyIEllbW1lbGxvIGUgdW5hIGxvIGhhIGluZGljYXRvIGNvbWUgMsKwIAphdHRhY2NhbnRlIG1lbnRyZSBsJ2FsdHJhIGNvbWUgM8KwIGF0dGFjY2FudGUsIGlsIGdpb2NhdG9yZSBzYXLDoCBhc3NlZ25hdG8gYWxsYSBzcXVhZHJhIGNoZSBsbyBoYSAKaW5zZXJpdG8gY29tZSAywrAgYXR0YWNjYW50ZS4gClNlIGFuY2hlIGxhIHBvc2l6aW9uZSBuZWxsYSBsaXN0YSBkb3Zlc3NlIGVzc2VyZSBsYSBzdGVzc2EsIGwnYXNzZWduYXppb25lIHZlcnLDoCBkZWNpc2EgdHJhbWl0ZSAKdW5hIG1pbmkgYXN0YSB0cmEgbGUgc3F1YWRyZSBpbnRlcmVzc2F0ZS4gCkFsIHRlcm1pbmUgZGVsbGEgcHJpbWEgYXNzZWduYXppb25lIHZlcnJhbm5vIGVmZmV0dHVhdGkgdWx0ZXJpb3JpIHR1cm5pIGRpIGJ1c3RlIGNoaXVzZSBjb24gbGUgc3Rlc3NlIAptb2RhbGl0w6AsIGZpbm8gYWwgY29tcGxldGFtZW50byBkaSB0dXR0ZSBsZSByb3NlLiAKIAoKRmFudGFxdWlsYWNhc3Rvcm8gMjAyNiDigJQgMTIgUGFydGVjaXBhbnRpICAgIFBhZ2luYSA2IGRpIDcgCiAKVGVybWluZSBjb25zZWduYSBsaXN0ZTogbWFydGVkw6wgOSBnaXVnbm8gb3JlIDIwOjMwIApCdWRnZXQ6IDUwMCBtaWxpb25pIGRpIGNyZWRpdGkgCkEgY2hpIGNvbnNlZ25hcmU6IGluIHByaXZhdG8gYSBDYXJlIG9wcHVyZSBhIFNpcnR5IAo2LiBNZXJjYXRvIGUgU3ZpbmNvbGkgCkRvcG8gb2duaSBmYXNlIGRlbCB0b3JuZW8gc2kgYXByZSB1bmEgZmluZXN0cmEgZGkgbWVyY2F0byBpbiBjdWkgb2duaSBmYW50YWxsZW5hdG9yZSBwdW8gc3ZpbmNvbGFyZSBpIApjYWxjaWF0b3JpIGRlbGxlIG5hemlvbmFsaSBlbGltaW5hdGUgZGFsIE1vbmRpYWxlIHJlYWxlIGUgYWNxdWlzdGFybmUgZGkgbnVvdmkgdHJhIHF1ZWxsaSBhbmNvcmEgaW4gCmNvcnNhLCBtYW50ZW5lbmRvIGNvc2kgbGEgcm9zYSBhdHRpdmEgZSBjb21wZXRpdGl2YS4gCiAKQ3JlZGl0aSBib251cyBwZXIgbGUgc2Vzc2lvbmkgZGkgbWVyY2F0byAgCkFsIHRlcm1pbmUgZGVsbGEgZmFzZSBhIGdpcm9uaSBzaSBzdm9sZ2Vyw6AgdW5hIG51b3ZhIHNlc3Npb25lIGRpIGJ1c3RlLiBUdXR0aSBpIGNhbGNpYXRvcmkgYXBwYXJ0ZW5lbnRpIAphIG5hemlvbmFsaSBlbGltaW5hdGUgZGFsIE1vbmRpYWxlIHNhcmFubm8gYXV0b21hdGljYW1lbnRlIHN2aW5jb2xhdGkgZSBvZ25pIHNxdWFkcmEgcmVjdXBlcmVyw6AgCmlsIDUwJSBkZWwgbG9ybyBwcmV6em8gZGkgYWNxdWlzdG8gKGFycm90b25kYXRvIHBlciBlY2Nlc3NvOiBzZSBhY3F1aXN0YXRvIGEgMSBzaSByZWN1cGVyYSAxLCBzZSAKYWNxdWlzdGF0byBhIDIzIHNpIHJlY3VwZXJhIDEyKS4gRHVyYW50ZSBxdWVzdGEgc2Vzc2lvbmUgc2Fyw6AgaW5vbHRyZSBwb3NzaWJpbGUgZWZmZXR0dWFyZSB1bHRlcmlvcmkgCnN2aW5jb2xpIHZvbG9udGFyaS4gClBlciBwcmVtaWFyZSBpbCByZW5kaW1lbnRvIG5lbGxhIGZhc2UgYSBnaXJvbmksIHZlcnLDoCBhc3NlZ25hdG8gdW4gYm9udXMgYnVkZ2V0IGRpIDEwMCBtaWxpb25pIGFsbGUgCnNxdWFkcmUgY2xhc3NpZmljYXRlIGFsIDHCsCBwb3N0byBkZWwgcHJvcHJpbyBnaXJvbmUgZSBkaSA1MCBtaWxpb25pIGFsbGUgc3F1YWRyZSBjbGFzc2lmaWNhdGUgYWwgMsKwIApwb3N0by4gCkFsIHRlcm1pbmUgZGkgb2duaSBzdWNjZXNzaXZhIGZhc2UgYSBlbGltaW5hemlvbmUgZGlyZXR0YSBkZWwgTW9uZGlhbGUgdmVycsOgIGVmZmV0dHVhdGEgdW5hIG51b3ZhIApzZXNzaW9uZSBkaSBidXN0ZSBjb24gbGUgc3Rlc3NlIG1vZGFsaXTDoDogaSBnaW9jYXRvcmkgZGVsbGUgbmF6aW9uYWxpIGVsaW1pbmF0ZSBzYXJhbm5vIHN2aW5jb2xhdGkgZSAKc2Fyw6AgcG9zc2liaWxlIGVmZmV0dHVhcmUgdWx0ZXJpb3JpIG9wZXJhemlvbmkgZGkgbWVyY2F0by4gSW4gcXVlc3RlIHNlc3Npb25pLCBwZXLDsiwgbm9uIHNhcmFubm8gCnByZXZpc3RpIHVsdGVyaW9yaSBib251cyBidWRnZXQuIAogCkNhbGVuZGFyaW8gZGVsbGUgZmluZXN0cmUgZGkgbWVyY2F0byAKQXBlcnR1cmEgbWVyY2F0byAKRGF0YSAKTmF6aW9uYWxpIGxpYmVyYXRlIApEdXJhdGEgCkRvcG8gaSBnaXJvbmkgKDFhIApmaW5lc3RyYSkgCjI4IGdpdWdubyAKMTYgbmF6aW9uYWxpIGVsaW1pbmF0ZSBkYWkgZ2lyb25pIApGSUZBIAoyNGggCkRvcG8gaSBRdWFydGkgKGFuZGF0YSkgCjUgbHVnbGlvIAoxNiBuYXppb25hbGkgZWxpbWluYXRlIAooc2VkaWNlc2ltaSBGSUZBKSAKMjRoIApEb3BvIGkgUXVhcnRpIChyaXRvcm5vKSAKOCBsdWdsaW8gCjggbmF6aW9uYWxpIGVsaW1pbmF0ZSAob3R0YXZpIApGSUZBKSAKMjRoIApEb3BvIGxlIFNlbWlmaW5hbGkgCihhbmRhdGEpIAoxMyBsdWdsaW8gCjQgbmF6aW9uYWxpIGVsaW1pbmF0ZSAocXVhcnRpIApGSUZBKSAKMjRoIAogCiAKQXN0YSBsYW1wbyBwZXIgZ2xpIGFjcXVpc3RpIApJIGNhbGNpYXRvcmkgc3ZpbmNvbGF0aSBlbnRyYW5vIGluIHVuIHBvb2wgY29tdW5lLiBPZ25pIGZhbnRhbGxlbmF0b3JlIGZhIHVuJ29mZmVydGEgaW4gcHJpdmF0byAKYWxsJ2FyYml0cm8gZGVsIHRvcm5lbyBlbnRybyAxMiBvcmUgZGFsbCdhcGVydHVyYSBkZWxsYSBmaW5lc3RyYS4gQ2hpIG9mZnJlIGRpIHBpw7kgc2kgYWdnaXVkaWNhIGlsIApjYWxjaWF0b3JlLiBJbiBjYXNvIGRpIHBhcml0YSBwYXNzYSBjaGkgaGEgbWVubyBwdW50aSBpbiBjbGFzc2lmaWNhIGZhbnRhc3kgKG1lY2NhbmlzbW8gZGkgCmJpbGFuY2lhbWVudG8pLiAKIAoKRmFudGFxdWlsYWNhc3Rvcm8gMjAyNiDigJQgMTIgUGFydGVjaXBhbnRpICAgIFBhZ2luYSA3IGRpIDcgCjcuIFByZW1pIApMYSBxdW90YSBkaSBpc2NyaXppb25lIGUgZGkgMjUgZXVybyBhIHRlc3RhLCBwZXIgdW4gdG90YWxlIHZlcnNhdG8gZGkgMzAwIGV1cm8gKDEyIHBhcnRlY2lwYW50aSB4IDI1IApldXJvKS4gCiAKRGlzdHJpYnV6aW9uZSBkZWkgcHJlbWkgCuKAoiAKMcKwIGNsYXNzaWZpY2F0bzogMjAwIGV1cm8gCuKAoiAKMsKwIGNsYXNzaWZpY2F0bzogMTAwIGV1cm8gCiAKTGUgcXVvdGUgZGkgaXNjcml6aW9uZSB2YW5ubyB2ZXJzYXRlIEFOREFORFUgVklERU5EVSAKIAogCkZhbnRhcXVpbGFjYXN0b3JvIDIwMjYg4oCUIFJlZ29sYW1lbnRvIDEyIFBhcnRlY2lwYW50aSAgfCAgVmVyc2lvbmUgMi4wIAoK -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"><meta name="color-scheme" content="light dark"></head><body><pre style="word-wrap: break-word; white-space: pre-wrap;">Fantaquilacastoro 2026 — 12 Partecipanti    Pagina 1 di 7 
+ 
+ 
+FANTAQUILACASTORO 2026 
+Regolamento Ufficiale — 12 Partecipanti 
+USA · Canada · Messico  |  11 giugno – 19 luglio 2026 
+Fonte voti: Fantapiù3  |  Listone giocatori: Fantamaster 
+1. Il Torneo 
+Il Fantaquilacastoro 2026 è un gioco fantasy basato sulla Coppa del Mondo FIFA che si svolge 
+dall'11 giugno al 19 luglio 2026 tra USA, Canada e Messico. Per la prima volta nella storia 
+partecipano 48 nazionali suddivise in 12 gironi da 4 squadre. 
+ 
+Struttura del Mondiale reale 
+• 
+Fase a gironi: 11–27 giugno (12 gironi x 4 squadre) 
+• 
+Sedicesimi di finale: 28 giugno – 3 luglio 
+• 
+Ottavi di finale: 4–7 luglio 
+• 
+Quarti di finale: 9–11 luglio 
+• 
+Semifinali: 14–15 luglio 
+• 
+Finale per il 3° posto: 18 luglio 
+• 
+FINALE: 19 luglio — MetLife Stadium, New York/New Jersey 
+ 
+Il Fantaquilacastoro segue fedelmente queste fasi: ogni turno del torneo reale corrisponde a un 
+turno fantasy in cui i partecipanti accumulano i punti di tutti i propri calciatori che scendono in 
+campo in quelle partite. 
+2. Struttura del Torneo Fantasy 
+Il torneo è aperto a 12 fantasquadre, organizzate in una fase a gironi iniziale seguita da 
+eliminazione diretta con andata e ritorno fino alle finali. 
+ 
+Fase a gironi — 3 gironi da 4 squadre 
+Le 12 fantasquadre sono sorteggiate in 3 gironi da 4 squadre. Ogni girone si svolge in sola andata: 
+ogni fantasquadra disputa 3 partite nel girone, una per ciascuna delle 3 giornate della fase a gironi 
+FIFA (11–27 giugno). 
+ 
+Scontri diretti e attribuzione dei punti. 
+Ogni incontro del girone si disputa tra due squadre e il risultato viene determinato in base al 
+punteggio fantacalcistico ottenuto da ciascuna squadra. La prima soglia gol è fissata a 66 punti 
+squadra, che corrisponde a 1 gol. Successivamente, per ogni ulteriore incremento di 4 punti viene 
+assegnato 1 gol aggiuntivo (ad esempio: 70 punti squadra = 2 gol, 74 punti squadra = 3 gol, 78 
+punti squadra = 4 gol e così via). La squadra che realizza più gol vince l'incontro e ottiene 3 punti 
+in classifica; la squadra sconfitta ottiene 0 punti. In caso di parit�&nbsp; nel numero di gol segnati, 
+
+Fantaquilacastoro 2026 — 12 Partecipanti    Pagina 2 di 7 
+l'incontro termina in pareggio e vengono assegnati 1 punto a ciascuna squadra. La classifica finale 
+del girone è determinata dalla somma dei punti conquistati da ciascuna squadra nelle tre partite 
+disputate. 
+ 
+Qualificazione ai quarti di finale 
+Al termine delle 3 giornate di girone si qualificano agli ottavi le prime 2 classificate di ogni girone 
+piu le 2 migliori terze tra i 3 gironi, per un totale di 8 qualificati. 
+ 
+Criteri di classifica per le prime due di ogni girone: 
+• 
+1. Punti nel girone (vittoria = 3 pt, pareggio = 1 pt, sconfitta = 0 pt) 
+• 
+2. Somma dei punteggi squadra totali accumulati nel girone 
+• 
+3. Differenza reti. 
+• 
+4. Sorteggio 
+ 
+Criteri di classifica per le migliori terze: 
+Per confrontare le terze classificate dei 3 gironi tra loro, il criterio principale è diverso rispetto alla 
+classifica interna al girone: 
+• 
+1. Somma dei punteggi squadra totali accumulati nel girone (criterio principale) 
+• 
+2. Punti nel girone 
+• 
+3. Differenza reti dei propri calciatori 
+• 
+4. Sorteggio 
+ 
+Quarti di finale — Andata e Ritorno 
+Gli 8 qualificati si affrontano in 4 sfide. Ogni sfida si disputa in andata e ritorno: l'andata accumula i 
+punti sui sedicesimi reali (28 giu – 3 lug), il ritorno sugli ottavi reali (4–7 lug). Avanza chi totalizza 
+più gol segnati nelle due sfide, sempre secondo il criterio di +1 gol ogni 4 punti squadra. In caso di 
+parit�&nbsp; avanza chi totalizza più punti squadra nella somma delle due gare. In caso di ulteriore parit�&nbsp; 
+avanza chi ha totalizzato più punti squadra nel corso di tutta la competizione fino a quel momento. 
+ 
+Semifinali — Andata e Ritorno 
+I 4 vincitori dei quarti si affrontano in 2 sfide. Andata sui quarti reali (9–11 lug), ritorno sulle 
+semifinali reali (14–15 lug). Avanza chi totalizza più gol segnati nelle due sfide, sempre secondo il 
+criterio di +1 gol ogni 4 punti squadra. In caso di parit�&nbsp; avanza chi totalizza più punti squadra nella 
+somma delle due gare. In caso di ulteriore parit�&nbsp; avanza chi ha totalizzato più punti squadra nel 
+corso di tutta la competizione fino a quel momento. 
+ATTENZIONE - NOTA BENE: Solo per la semifinale di ritorno, essendo 4 squadre fantasy con 4 
+squadre reali, tutti i titolari S.V. prenderanno come punteggio il 5 politico. 
+ 
+Finale — Gara secca 
+La finale si disputa in gara unica sui punti della Finale per il 3° posto FIFA (18 lug), e della Finale 
+FIFA (19 lug). Non c'e andata e ritorno: vince chi fa più punti in quella singola gara. In caso di 
+perfetta parit�&nbsp; vince chi ha totalizzato più punti squadra complessivi nel corso di tutta la 
+competizione. 
+ 
+ 
+
+Fantaquilacastoro 2026 — 12 Partecipanti    Pagina 3 di 7 
+Criteri di parit�&nbsp; nelle fasi a eliminazione diretta 
+• 
+1. Somma dei punteggi squadra totali nella doppia sfida (andata + ritorno) 
+• 
+2. Somma dei punteggi squadra totali accumulati in tutto il torneo 
+• 
+3. Sorteggio 
+ 
+Per la finale in gara secca: in caso di parit�&nbsp; si usa direttamente il totale punti nel torneo, poi 
+sorteggio. 
+ 
+Nota su supplementari e rigori 
+I bonus e malus maturati durante i supplementari sono validi e vengono conteggiati 
+normalmente. 
+I rigori della lotteria finale (calci di rigore) non vengono conteggiati: ne il rigore parato 
+ne il rigore sbagliato in quella fase danno o tolgono punti. 
+ 
+Struttura completa del torneo — Schema riassuntivo 
+Fase Fantasy 
+N. 
+Formato 
+Turno reale del Mondiale 
+Giornata 1 gironi 
+12 
+Tutti vs tutti nel girone (solo 
+andata) 
+1a giornata FIFA (11-16 giu) 
+Giornata 2 gironi 
+12 
+Tutti vs tutti nel girone (solo 
+andata) 
+2a giornata FIFA (17-22 giu) 
+Giornata 3 gironi 
+12 
+Tutti vs tutti nel girone (solo 
+andata) 
+3a giornata FIFA (23-27 giu) 
+Quarti — Andata 
+8 
+4 sfide 1v1 
+Sedicesimi FIFA (28 giu – 3 lug) 
+Quarti — Ritorno 
+8 
+4 sfide 1v1 (stessi 
+accoppiamenti) 
+Ottavi FIFA (4-7 lug) 
+Semifinali — 
+Andata 
+4 
+2 sfide 1v1 
+Quarti FIFA (9-11 lug) 
+Semifinali — 
+Ritorno 
+4 
+2 sfide 1v1 (stessi 
+accoppiamenti) 
+Semifinali FIFA (14-15 lug) 
+FINALE 
+2 
+Gara secca 
+Finale 3° posto FIFA (18 lug) e 
+Finale FIFA (19 lug) 
+3. Modalit�&nbsp; di Gioco 
+La modalit�&nbsp; di gioco adottata è quella Classic, la piu diffusa nel fantacalcio italiano, basata sui voti 
+pubblicati da Fantacalcio.it dopo ogni partita reale. 
+ 
+Fonte dei voti 
+Fonte ufficiale: Fantacalcio.it 
+I voti di Fantacalcio.it sono l'unico riferimento per il calcolo dei punti. In caso di assenza del voto 
+per un giocatore (per qualsiasi motivo), il giocatore viene considerato come non sceso in campo e 
+il suo posto passa alla prima riserva disponibile. 
+ 
+
+Fantaquilacastoro 2026 — 12 Partecipanti    Pagina 4 di 7 
+Moduli consentiti 
+Ogni fantallenatore deve schierare 11 titolari più 15 riserve. La formazione deve rispettare uno dei 
+seguenti moduli ufficiali: 
+• 
+3-4-3 
+• 
+3-5-2 
+• 
+4-4-2 
+• 
+4-3-3 
+• 
+4-5-1 
+• 
+5-3-2 
+• 
+5-4-1 
+ 
+Gestione delle riserve 
+Prima di ogni turno ogni fantallenatore indica, oltre agli 11 titolari, 14 riserve in ordine di priorit�&nbsp; 
+(dalla 1a alla 14a). La formazione va comunicata con messaggio testuale entro 1 minuto prima 
+della prima partita del turno. Se un titolare non gioca, entra automaticamente la prima riserva 
+disponibile del ruolo corretto compatibile con il modulo scelto. Non è previsto il cambio di modulo.  
+Esempio pratico:  
+- 
+in caso di panchina PPDDDDDCCCCAAA, se non giocano 6 titolari, la priorit�&nbsp; di subentro 
+verr�&nbsp; data prima ai portieri, poi ai difensori, poi ai centrocampisti e infine agli attaccanti. 
+- 
+in caso di panchina AAACCCCDDDDDPP (opzione consigliata), se non giocano 6 titolari, 
+la priorit�&nbsp; di subentro verr�&nbsp; data prima agli attaccanti,  poi ai centrocampisti, poi ai difensori 
+e infine ai portieri. 
+Formazione non inviata 
+Se un fantallenatore non invia la formazione entro il termine stabilito, viene utilizzata l'ultima 
+formazione inviata in precedenza. 
+4. Sistema di Punteggio 
+I punti si calcolano su ogni partita giocata dai propri calciatori durante il turno fantasy attivo, 
+sommando tutti gli eventi che li riguardano. La modalit�&nbsp; è Classic: si parte dal voto base di 
+Fantacalcio.it a cui si aggiungono i bonus e si sottraggono i malus. 
+ 
+Bonus e Malus 
+Evento 
+Punti 
+Gol segnato 
++3 pt 
+Assist 
++1 pt 
+Rigore parato (Portiere) 
++3 pt 
+Porta inviolata (Clean sheet) 
++1 pt 
+Gol subito 
+-1 pt 
+Ammonizione 
+-0.5 pt 
+Espulsione 
+-1 pt 
+Rigore sbagliato 
+-3 pt 
+Autogol 
+-2 pt 
+
+Fantaquilacastoro 2026 — 12 Partecipanti    Pagina 5 di 7 
+ 
+Supplementari: i bonus e malus maturati nei tempi supplementari sono validi e conteggiati 
+normalmente. 
+Calci di rigore finali: i rigori della lotteria (rigore parato, rigore sbagliato) non vengono 
+conteggiati. 
+5. Rosa e Asta 
+Prima dell'inizio del torneo tutti i fantallenatori formano la propria rosa attraverso un'asta a buste. 
+La rosa è composta da 25 giocatori. 
+ 
+Composizione della rosa (25 giocatori) 
+• 
+3 Portieri 
+• 
+8 Difensori 
+• 
+8 Centrocampisti 
+• 
+6 Attaccanti 
+ 
+Listone dei giocatori 
+Fonte: Fantamaster. 
+Il listone ufficiale da cui attingere per costruire la rosa è quello di Fantamaster. Ogni giocatore ha 
+un valore di riferimento che indica il costo minimo consigliato. La puntata minima per ogni 
+calciatore in busta è 1 milione. 
+ 
+Asta a buste — Regole 
+L'asta si svolge con il meccanismo delle buste chiuse: ogni partecipante prepara in privato la 
+propria lista di 25 giocatori con il relativo valore di acquisto offerto per ciascuno, rispettando un 
+budget complessivo di 500 milioni di crediti. 
+ 
+• 
+Preparare una lista di 25 giocatori (3P, 8D, 8C, 6A) con il valore di acquisto offerto per 
+ognuno 
+• 
+Il valore offerto per ogni giocatore deve essere almeno 1 milione 
+• 
+La somma di tutti i valori offerti non deve superare il budget di 500 milioni 
+• 
+La lista va consegnata in privato entro martedì 9 giugno ore 20:30 a uno dei 2 Presidenti 
+(Care o Sirty) 
+• 
+I due Presidenti nel pomeriggio scambieranno le liste tra di loro 
+ 
+Il calciatore verr�&nbsp; assegnato alla squadra che avr�&nbsp; presentato l'offerta più alta. In caso di offerte 
+uguali, avr�&nbsp; la precedenza chi avr�&nbsp; inserito quel calciatore più in alto nella propria lista di scelta. 
+Ad esempio, se due squadre offrono 50 milioni per Iemmello e una lo ha indicato come 2° 
+attaccante mentre l'altra come 3° attaccante, il giocatore sar�&nbsp; assegnato alla squadra che lo ha 
+inserito come 2° attaccante. 
+Se anche la posizione nella lista dovesse essere la stessa, l'assegnazione verr�&nbsp; decisa tramite 
+una mini asta tra le squadre interessate. 
+Al termine della prima assegnazione verranno effettuati ulteriori turni di buste chiuse con le stesse 
+modalit�&nbsp;, fino al completamento di tutte le rose. 
+ 
+
+Fantaquilacastoro 2026 — 12 Partecipanti    Pagina 6 di 7 
+ 
+Termine consegna liste: martedì 9 giugno ore 20:30 
+Budget: 500 milioni di crediti 
+A chi consegnare: in privato a Care oppure a Sirty 
+6. Mercato e Svincoli 
+Dopo ogni fase del torneo si apre una finestra di mercato in cui ogni fantallenatore puo svincolare i 
+calciatori delle nazionali eliminate dal Mondiale reale e acquistarne di nuovi tra quelli ancora in 
+corsa, mantenendo cosi la rosa attiva e competitiva. 
+ 
+Crediti bonus per le sessioni di mercato  
+Al termine della fase a gironi si svolger�&nbsp; una nuova sessione di buste. Tutti i calciatori appartenenti 
+a nazionali eliminate dal Mondiale saranno automaticamente svincolati e ogni squadra recuperer�&nbsp; 
+il 50% del loro prezzo di acquisto (arrotondato per eccesso: se acquistato a 1 si recupera 1, se 
+acquistato a 23 si recupera 12). Durante questa sessione sar�&nbsp; inoltre possibile effettuare ulteriori 
+svincoli volontari. 
+Per premiare il rendimento nella fase a gironi, verr�&nbsp; assegnato un bonus budget di 100 milioni alle 
+squadre classificate al 1° posto del proprio girone e di 50 milioni alle squadre classificate al 2° 
+posto. 
+Al termine di ogni successiva fase a eliminazione diretta del Mondiale verr�&nbsp; effettuata una nuova 
+sessione di buste con le stesse modalit�&nbsp;: i giocatori delle nazionali eliminate saranno svincolati e 
+sar�&nbsp; possibile effettuare ulteriori operazioni di mercato. In queste sessioni, però, non saranno 
+previsti ulteriori bonus budget. 
+ 
+Calendario delle finestre di mercato 
+Apertura mercato 
+Data 
+Nazionali liberate 
+Durata 
+Dopo i gironi (1a 
+finestra) 
+28 giugno 
+16 nazionali eliminate dai gironi 
+FIFA 
+24h 
+Dopo i Quarti (andata) 
+5 luglio 
+16 nazionali eliminate 
+(sedicesimi FIFA) 
+24h 
+Dopo i Quarti (ritorno) 
+8 luglio 
+8 nazionali eliminate (ottavi 
+FIFA) 
+24h 
+Dopo le Semifinali 
+(andata) 
+13 luglio 
+4 nazionali eliminate (quarti 
+FIFA) 
+24h 
+ 
+ 
+Asta lampo per gli acquisti 
+I calciatori svincolati entrano in un pool comune. Ogni fantallenatore fa un'offerta in privato 
+all'arbitro del torneo entro 12 ore dall'apertura della finestra. Chi offre di più si aggiudica il 
+calciatore. In caso di parita passa chi ha meno punti in classifica fantasy (meccanismo di 
+bilanciamento). 
+ 
+
+Fantaquilacastoro 2026 — 12 Partecipanti    Pagina 7 di 7 
+7. Premi 
+La quota di iscrizione e di 25 euro a testa, per un totale versato di 300 euro (12 partecipanti x 25 
+euro). 
+ 
+Distribuzione dei premi 
+• 
+1° classificato: 200 euro 
+• 
+2° classificato: 100 euro 
+ 
+Le quote di iscrizione vanno versate ANDANDU VIDENDU 
+ 
+ 
+Fantaquilacastoro 2026 — Regolamento 12 Partecipanti  |  Versione 2.0 
+
+</pre></body></html>

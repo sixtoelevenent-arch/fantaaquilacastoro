@@ -65,6 +65,25 @@ export default function Page() {
         </Link>
 
         <Link
+          href="/admin/giornate"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            padding: "16px",
+            borderRadius: "14px",
+            textDecoration: "none",
+            color: "white",
+            fontWeight: 700,
+            fontSize: "18px",
+            background: "#f59e0b",
+          }}
+        >
+          📅 Gestione Giornate
+        </Link>
+
+        <Link
           href="/admin/voti"
           style={{
             display: "flex",
