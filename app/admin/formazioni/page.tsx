@@ -1,17 +1,35 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+type Team = {
+  id: number;
+  nome: string;
+  proprietario: string;
+};
+
 export default function Page() {
+  const [teams] = useState<Team[]>([]);
+
+  useEffect(() => {
+    console.log("Admin Formazioni");
+  }, []);
+
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "#020617",
+        background:
+          "linear-gradient(to bottom, #020617 0%, #08122c 50%, #020617 100%)",
         color: "white",
         padding: "20px",
       }}
     >
       <h1>⚽ Gestione Formazioni</h1>
-      <p>TEST VERCEL</p>
+
+      <p>Test Step 2</p>
+
+      <p>Squadre: {teams.length}</p>
     </main>
   );
 }
