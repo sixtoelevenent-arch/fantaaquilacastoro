@@ -47,6 +47,30 @@ export default function Page() {
     await loadGiornate();
   }
 
+  async function chiudiEPassa(id: number) {
+    const prossima = giornate.find((g) => g.id === id + 1);
+
+    await supabase
+      .from("matchdays")
+      .update({
+        chiusa: true,
+        attiva: false,
+      })
+      .eq("id", id);
+
+    if (prossima) {
+      await supabase
+        .from("matchdays")
+        .update({
+          chiusa: false,
+          attiva: true,
+        })
+        .eq("id", prossima.id);
+    }
+
+    await loadGiornate();
+  }
+
   return (
     <main
       style={{
@@ -142,6 +166,23 @@ export default function Page() {
                     🔒 Chiudi
                   </button>
                 )}
+
+                {giornata.attiva && (
+                  <button
+                    onClick={() => chiudiEPassa(giornata.id)}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: "8px",
+                      border: "none",
+                      background: "#f59e0b",
+                      color: "white",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    ⭐ Chiudi e passa alla successiva
+                  </button>
+                )}
               </div>
             </div>
           ))
@@ -163,3 +204,4 @@ export default function Page() {
     </main>
   );
 }
+
