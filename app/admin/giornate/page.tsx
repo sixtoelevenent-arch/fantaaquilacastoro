@@ -34,6 +34,21 @@ export default function Page() {
     setLoading(false);
   }
 
+  async function riapriGiornata(id: number) {
+    const { error } = await supabase
+      .from("matchdays")
+      .update({ chiusa: false })
+      .eq("id", id);
+
+    if (error) {
+      alert("Errore durante la riapertura");
+      console.error(error);
+      return;
+    }
+
+    await loadGiornate();
+  }
+
   return (
     <main
       style={{
@@ -87,9 +102,26 @@ export default function Page() {
                 {giornata.attiva ? "⭐ Attiva" : "⚪ Non attiva"}
               </div>
 
-              <div>
+              <div style={{ marginBottom: "12px" }}>
                 {giornata.chiusa ? "🔒 Chiusa" : "🔓 Aperta"}
               </div>
+
+              {giornata.chiusa && (
+                <button
+                  onClick={() => riapriGiornata(giornata.id)}
+                  style={{
+                    padding: "10px 14px",
+                    borderRadius: "8px",
+                    border: "none",
+                    background: "#16a34a",
+                    color: "white",
+                    fontWeight: 700,
+                    cursor: "pointer",
+                  }}
+                >
+                  🔓 Riapri
+                </button>
+              )}
             </div>
           ))
         )}
