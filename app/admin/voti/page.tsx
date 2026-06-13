@@ -1,6 +1,39 @@
-import Link from "next/link";
+"use client";
 
-export default function Page() {
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { supabase } from "@/lib/supabase";
+
+type Matchday = {
+  id: number;
+  nome: string;
+};
+
+export default function AdminVotiPage() {
+  const [testo, setTesto] = useState("");
+  const [matchday, setMatchday] = useState<Matchday | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadMatchday();
+  }, []);
+
+  async function loadMatchday() {
+    const { data, error } = await supabase
+      .from("matchdays")
+      .select("id,nome")
+      .eq("chiusa", false)
+      .single();
+
+    if (error) {
+      console.error(error);
+    } else {
+      setMatchday(data);
+    }
+
+    setLoading(false);
+  }
+
   return (
     <main
       style={{
@@ -9,91 +42,80 @@ export default function Page() {
           "linear-gradient(to bottom, #020617 0%, #08122c 50%, #020617 100%)",
         color: "white",
         padding: "20px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
       }}
     >
-      <h1
-        style={{
-          fontSize: "2rem",
-          marginBottom: "10px",
-          textAlign: "center",
-        }}
-      >
-        ⚙️ Area Admin
-      </h1>
-
-      <p
-        style={{
-          color: "#cbd5e1",
-          marginBottom: "30px",
-          textAlign: "center",
-        }}
-      >
-        Gestione FantAquilaCastoro 2026
-      </p>
-
       <div
         style={{
-          width: "100%",
-          maxWidth: "350px",
+          maxWidth: "900px",
+          margin: "0 auto",
         }}
       >
-        <Link
-          href="/admin/formazioni"
+        <h1
           style={{
-            display: "block",
-            width: "100%",
-            padding: "16px",
-            borderRadius: "14px",
-            textDecoration: "none",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "18px",
-            marginBottom: "12px",
             textAlign: "center",
-            background: "#2563eb",
+            marginBottom: "10px",
           }}
         >
-          ⚽ Formazioni
-        </Link>
+          📥 Gestione Voti
+        </h1>
 
-        <Link
-          href="/admin/voti"
+        <p
           style={{
-            display: "block",
+            textAlign: "center",
+            color: "#cbd5e1",
+            marginBottom: "25px",
+          }}
+        >
+          {loading
+            ? "Caricamento giornata..."
+            : `Giornata attiva: ${matchday?.nome ?? "Nessuna giornata attiva"}`}
+        </p>
+
+        <textarea
+          value={testo}
+          onChange={(e) => setTesto(e.target.value)}
+          placeholder="Incolla qui i voti..."
+          style={{
+            width: "100%",
+            minHeight: "400px",
+            padding: "16px",
+            borderRadius: "12px",
+            border: "1px solid #334155",
+            background: "#111827",
+            color: "white",
+            fontSize: "14px",
+            resize: "vertical",
+          }}
+        />
+
+        <button
+          style={{
+            marginTop: "20px",
             width: "100%",
             padding: "16px",
-            borderRadius: "14px",
-            textDecoration: "none",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "18px",
-            marginBottom: "12px",
-            textAlign: "center",
+            borderRadius: "12px",
+            border: "none",
             background: "#16a34a",
-          }}
-        >
-          📥 Voti
-        </Link>
-
-        <Link
-          href="/"
-          style={{
-            display: "block",
-            width: "100%",
-            padding: "16px",
-            borderRadius: "14px",
-            textDecoration: "none",
             color: "white",
             fontWeight: 700,
             fontSize: "18px",
-            textAlign: "center",
-            background: "#475569",
+            cursor: "pointer",
           }}
         >
-          🏠 Torna alla Home
+          📥 Importa Voti
+        </button>
+
+        <Link
+          href="/admin"
+          style={{
+            display: "block",
+            marginTop: "20px",
+            textAlign: "center",
+            color: "#cbd5e1",
+            textDecoration: "none",
+          }}
+        >
+          ← Torna all'Area Admin
         </Link>
       </div>
     </main>
