@@ -38,6 +38,23 @@ export default function Page() {
     await loadGiornate();
   }
 
+  async function impostaAttiva(id: number) {
+    await supabase
+      .from("matchdays")
+      .update({ attiva: false })
+      .neq("id", 0);
+
+    await supabase
+      .from("matchdays")
+      .update({
+        attiva: true,
+        chiusa: false,
+      })
+      .eq("id", id);
+
+    await loadGiornate();
+  }
+
   async function chiudiGiornata(id: number) {
     await supabase
       .from("matchdays")
@@ -167,6 +184,23 @@ export default function Page() {
                   </button>
                 )}
 
+                {!giornata.attiva && (
+                  <button
+                    onClick={() => impostaAttiva(giornata.id)}
+                    style={{
+                      padding: "10px 14px",
+                      borderRadius: "8px",
+                      border: "none",
+                      background: "#2563eb",
+                      color: "white",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    ⭐ Imposta come attiva
+                  </button>
+                )}
+
                 {giornata.attiva && (
                   <button
                     onClick={() => chiudiEPassa(giornata.id)}
@@ -204,4 +238,3 @@ export default function Page() {
     </main>
   );
 }
-
