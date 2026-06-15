@@ -24,6 +24,17 @@ function normalize(str: string) {
     .toUpperCase();
 }
 
+function normalizeNation(nation: string) {
+  const n = normalize(nation);
+
+  const map: Record<string, string> = {
+    OLANDA: "PAESI BASSI",
+    USA: "STATI UNITI",
+  };
+
+  return map[n] || n;
+}
+
 function lastName(nome: string) {
   const clean = normalize(nome);
   const parts = clean.split(" ");
@@ -48,12 +59,18 @@ async function main() {
 
   if (playersError) throw playersError;
 
-  const playerMap = new Map<string, any>();
+  const exactMap = new Map<string, any>();
 
-  for (const p of players || []) {
-    const key = `${lastName(p.nome)}|${normalize(p.nazionale)}`;
-    playerMap.set(key, p);
-  }
+for (const p of players || []) {
+  const nation = normalizeNation(p.nazionale);
+
+  exactMap.set(
+    `${normalize(p.fantapiu3_name || "")}|${nation}`,
+    p
+  );
+}
+
+console.log("EXACT MAP:", exactMap.size);
 
   let importati = 0;
   let nonTrovati = 0;
@@ -75,32 +92,160 @@ async function main() {
       .split("-")[0]
       .trim();
 
-    const key = `${normalize(nome)}|${normalize(nazioneFantapiu)}`;
+      if (!nazioneFantapiu) continue;
 
-    const player = playerMap.get(key);
+if (
+  normalize(nome) === normalize(nazioneFantapiu)
+) {
+  continue;
+}
 
+    const key =
+  `${normalize(nome)}|${normalizeNation(nazioneFantapiu)}`;
+
+let player = exactMap.get(key);
     if (!player) {
-      nonTrovati++;
-      console.log("NON TROVATO:", key);
-      continue;
-    }
+  nonTrovati++;
+
+  console.log(
+    "NON TROVATO:",
+    nome,
+    "|",
+    nazioneFantapiu,
+    "| KEY:",
+    key
+  );
+
+  continue;
+}
 
     const valori = row
-      .find(".table-text.bold")
-      .map((_, el) => $(el).text().trim())
-      .get();
+  .find(".table-text.bold")
+  .map((_, el) => $(el).text().trim())
+  .get();
 
-    if (valori.length < 10) continue;
+if (
+  nome.toUpperCase().includes("EMBOLO") ||
+  nome.toUpperCase().includes("MUSIALA")
+) {
+  console.log(nome);
+  console.log(valori);
+}
 
-    const voto = parseFloat(valori[1].replace(",", "."));
+if (valori.length < 10) continue;
 
-    const golSubiti = parseInt(valori[2]) || 0;
-    const golSegnati = parseInt(valori[3]) || 0;
-    const ammonizione = Number(valori[4]) < 0;
-    const espulsione = Number(valori[5]) < 0;
-    const rigori = parseInt(valori[6]) || 0;
-    const autogol = parseInt(valori[7]) || 0;
-    const assist = parseInt(valori[8]) || 0;
+const voto = parseFloat(
+  valori[1].replace(",", ".")
+);
+
+// =====================
+// GOL FATTI / SUBITI
+// =====================
+
+const valoreGol =
+  parseInt(valori[2]) || 0;
+
+// Fantapiù3 usa:
+// +3 = 1 gol
+// +6 = 2 gol
+// +9 = 3 gol
+
+const golSegnati =
+  valoreGol > 0
+    ? Math.floor(valoreGol / 3)
+    : 0;
+
+// Portieri:
+// -1 = 1 gol subito
+// -2 = 2 gol subiti
+
+const golSubiti =
+  valoreGol < 0
+    ? Math.abs(valoreGol)
+    : 0;
+
+// =====================
+// GOL SU RIGORE
+// =====================
+
+// +3 = 1 rigore segnato
+
+const golRigoreValue =
+  parseInt(valori[3]) || 0;
+
+const golRigore =
+  golRigoreValue > 0
+    ? Math.floor(golRigoreValue / 3)
+    : 0;
+
+// =====================
+// AMMONIZIONE
+// =====================
+
+// -0.5
+
+const ammonizioneValue =
+  parseFloat(valori[4].replace(",", ".")) || 0;
+
+const ammonizione =
+  ammonizioneValue < 0;
+
+// =====================
+// ESPULSIONE
+// =====================
+
+// -1
+
+const espulsioneValue =
+  parseFloat(valori[5].replace(",", ".")) || 0;
+
+const espulsione =
+  espulsioneValue < 0;
+
+// =====================
+// RIGORI PARATI / SBAGLIATI
+// =====================
+
+// +3 = rigore parato
+// -3 = rigore sbagliato
+
+const rigoriValue =
+  parseInt(valori[6]) || 0;
+
+const rigoriParati =
+  rigoriValue > 0
+    ? Math.floor(rigoriValue / 3)
+    : 0;
+
+const rigoriSbagliati =
+  rigoriValue < 0
+    ? Math.floor(Math.abs(rigoriValue) / 3)
+    : 0;
+
+// =====================
+// AUTOGOL
+// =====================
+
+// -2 = 1 autogol
+
+const autogolValue =
+  parseInt(valori[7]) || 0;
+
+const autogol =
+  autogolValue < 0
+    ? Math.floor(Math.abs(autogolValue) / 2)
+    : 0;
+
+// =====================
+// ASSIST
+// =====================
+
+// +1 = 1 assist
+
+const assistValue =
+  parseInt(valori[8]) || 0;
+
+const assist = assistValue;
 
     const { error } = await supabase
       .from("player_votes")
@@ -109,13 +254,13 @@ async function main() {
           matchday_id: 1,
           player_id: player.id,
           voto,
-          gol: golSegnati,
+          gol: golSegnati + (golRigore > 0 ? 1 : 0),
           assist,
           ammonizione,
           espulsione,
           autogol,
-          rigori_parati: rigori > 0 ? rigori : 0,
-          rigori_sbagliati: 0,
+          rigori_parati: rigoriParati,
+          rigori_sbagliati: rigoriSbagliati,
           gol_subiti: Math.abs(golSubiti),
           clean_sheet: golSubiti === 0,
           sv: false,

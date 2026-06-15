@@ -1,5 +1,6 @@
 "use client";
-
+// import { calculateTeam } from "@/lib/fantacalcio";
+import { calculateTeam } from "@/lib/fantacalcio";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
@@ -34,21 +35,55 @@ type PlayerRow = {
   nazionale: string;
 
   titolare: boolean;
+
   posizione: number | null;
   ordine_panchina: number | null;
+
+  voto?: number | null;
+
+  sv?: boolean;
+  hasVoteRow?: boolean;
 };
 
 export default function LiveMatchPage() {
-  const params = useParams();
+const params = useParams();
 
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
 
-  const [match, setMatch] = useState<MatchData | null>(null);
+const [match, setMatch] = useState<MatchData | null>(null);
 
-  const [homePlayers, setHomePlayers] = useState<PlayerRow[]>([]);
-  const [awayPlayers, setAwayPlayers] = useState<PlayerRow[]>([]);
+const [homePlayers, setHomePlayers] = useState<PlayerRow[]>([]);
+const [awayPlayers, setAwayPlayers] = useState<PlayerRow[]>([]);
 
-  async function loadMatch() {
+const [homeVotes, setHomeVotes] = useState(0);
+
+const [homeBonus, setHomeBonus] = useState(0);
+
+const [homeFP, setHomeFP] = useState(0);
+
+const [homeGoals, setHomeGoals] = useState(0);
+
+const [awayVotes, setAwayVotes] = useState(0);
+
+const [awayBonus, setAwayBonus] = useState(0);
+
+const [awayFP, setAwayFP] = useState(0);
+
+const [awayGoals, setAwayGoals] = useState(0);
+
+const [homeProjectedGoals, setHomeProjectedGoals] =
+  useState(0);
+
+const [awayProjectedGoals, setAwayProjectedGoals] =
+  useState(0);
+
+  const [homeIsFinal, setHomeIsFinal] =
+  useState(false);
+
+const [awayIsFinal, setAwayIsFinal] =
+  useState(false);
+
+    async function loadMatch() {
     const matchId = Number(params.id);
     console.log("MATCH ID", matchId);
 
@@ -58,18 +93,7 @@ export default function LiveMatchPage() {
   .eq("id", matchId)
   .single();
 
-alert(
-  JSON.stringify(
-    {
-      matchId,
-      matchData,
-      matchError,
-    },
-    null,
-    2
-  )
-);
-
+// alert (ops!)
 if (!matchData) {
   setLoading(false);
   return;
@@ -107,10 +131,11 @@ console.log("AWAY FORMATION", awayFormation);
     const { data: homeRows } = await supabase
   .from("formation_players")
   .select(`
+    player_id,
     titolare,
     posizione,
     ordine_panchina,
-    players (
+    players!formation_players_player_id_fkey (
       nome,
       ruolo,
       nazionale
@@ -118,13 +143,14 @@ console.log("AWAY FORMATION", awayFormation);
   `)
   .eq("formation_id", homeFormation?.id);
 
-const { data: awayRows } = await supabase
+  const { data: awayRows } = await supabase
   .from("formation_players")
   .select(`
+    player_id,
     titolare,
     posizione,
     ordine_panchina,
-    players (
+    players!formation_players_player_id_fkey (
       nome,
       ruolo,
       nazionale
@@ -132,26 +158,112 @@ const { data: awayRows } = await supabase
   `)
   .eq("formation_id", awayFormation?.id);
 
-console.log("HOME ROWS", homeRows);
-console.log("AWAY ROWS", awayRows);
-      
-console.log("AWAY ROWS", awayRows);
-    console.log("HOME ROWS RAW", homeRows);
-console.log("AWAY ROWS RAW", awayRows);
+    const { data: votes } = await supabase
+  .from("player_votes")
+  .select("*")
+  .eq("matchday_id", matchData.matchday_id);
+
+  const votesMap = new Map();
+
+  
+(votes || []).forEach((v) => {
+  votesMap.set(v.player_id, v);
+});
+
+console.log(homeRows?.[0]);
 
 const normalize = (rows: any[]) =>
-  (rows || []).map((r) => ({
-    nome: r.players?.nome ?? "",
-    ruolo: r.players?.ruolo ?? "",
-    nazionale: r.players?.nazionale ?? "",
+  (rows || []).map((r) => {
 
-    titolare: r.titolare,
-    posizione: r.posizione,
-    ordine_panchina: r.ordine_panchina,
-  }));
+    const voteData = votesMap.get(r.player_id);
 
-    setHomePlayers(normalize(homeRows || []));
-    setAwayPlayers(normalize(awayRows || []));
+    return {
+
+      player_id: r.player_id,
+
+      nome: r.players?.nome ?? "",
+      ruolo: r.players?.ruolo ?? "",
+      nazionale: r.players?.nazionale ?? "",
+
+      titolare: r.titolare,
+      posizione: r.posizione,
+      ordine_panchina: r.ordine_panchina,
+
+      hasVoteRow: !!voteData,
+
+      voto: voteData?.voto ?? null,
+      sv: voteData?.sv ?? null,
+
+      gol: voteData?.gol ?? 0,
+      assist: voteData?.assist ?? 0,
+
+      ammonizione:
+        voteData?.ammonizione ?? false,
+
+      espulsione:
+        voteData?.espulsione ?? false,
+
+      autogol:
+        voteData?.autogol ?? 0,
+
+      rigori_parati:
+        voteData?.rigori_parati ?? 0,
+
+      rigori_sbagliati:
+        voteData?.rigori_sbagliati ?? 0,
+
+      gol_subiti:
+        voteData?.gol_subiti ?? 0,
+
+      clean_sheet:
+        voteData?.clean_sheet ?? false,
+    };
+  });
+
+const homePlayersNorm = normalize(homeRows || []);
+const awayPlayersNorm = normalize(awayRows || []);
+
+const homeCalc = calculateTeam(
+  homePlayersNorm.filter((p) => p.titolare),
+  homePlayersNorm.filter((p) => !p.titolare),
+  votesMap,
+  false
+);
+
+const awayCalc = calculateTeam(
+  awayPlayersNorm.filter((p) => p.titolare),
+  awayPlayersNorm.filter((p) => !p.titolare),
+  votesMap,
+  false
+);
+
+setHomePlayers([
+  ...homeCalc.players,
+  ...homePlayersNorm.filter((p) => !p.titolare),
+]);
+
+setAwayPlayers([
+  ...awayCalc.players,
+  ...awayPlayersNorm.filter((p) => !p.titolare),
+]);
+
+setHomeVotes(homeCalc.votesTotal);
+setHomeBonus(homeCalc.bonusTotal);
+setHomeFP(homeCalc.fantapoints);
+setHomeGoals(homeCalc.goals);
+setHomeProjectedGoals(
+  homeCalc.projectedGoals
+);
+setHomeIsFinal(homeCalc.isFinal)
+
+setAwayVotes(awayCalc.votesTotal);
+setAwayBonus(awayCalc.bonusTotal);
+setAwayFP(awayCalc.fantapoints);
+setAwayGoals(awayCalc.goals);
+setAwayProjectedGoals(
+  awayCalc.projectedGoals
+);
+setAwayIsFinal(awayCalc.isFinal);
 
     setMatch({
       id: matchData.id,
@@ -180,6 +292,31 @@ const normalize = (rows: any[]) =>
       loadMatch();
     }
   }, [params]);
+
+function playerIcons(player: any) {
+  let icons = "";
+
+  icons += "⚽".repeat(player.gol || 0);
+  icons += "🅰️".repeat(player.assist || 0);
+
+  if (player.ammonizione) icons += "🟨";
+  if (player.espulsione) icons += "🟥";
+
+  icons += "🧤".repeat(player.rigori_parati || 0);
+  icons += "❌".repeat(player.rigori_sbagliati || 0);
+
+  icons += "🥅".repeat(player.gol_subiti || 0);
+  icons += "💥".repeat(player.autogol || 0);
+
+  if (
+    player.ruolo === "P" &&
+    player.clean_sheet
+  ) {
+    icons += "✨";
+  }
+
+  return icons;
+}
 
   function renderTeam(
     title: string,
@@ -224,26 +361,49 @@ const normalize = (rows: any[]) =>
         </div>
 
         {titolari.map((player) => (
-          <div
-            key={`${player.nome}-${player.posizione}`}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "7px 0",
-              borderBottom:
-                "1px solid rgba(255,255,255,0.06)",
-            }}
-          >
-            <span>
-              {player.ruolo}{" "}
-              {livePlayerName(player.nome)}
-            </span>
 
-            <strong>
-              {getNationalCode(player.nazionale)}
-            </strong>
-          </div>
-        ))}
+  <div
+    key={`${player.nome}-${player.posizione}`}
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      padding: "7px 0",
+      borderBottom: "1px solid rgba(255,255,255,0.06)",
+    }}
+  >
+
+    <span>
+      {player.ruolo} {livePlayerName(player.nome)}
+    </span>
+
+    <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    minWidth: 70,
+    justifyContent: "flex-end",
+  }}
+
+    >
+      <span>{getNationalCode(player.nazionale)}</span>
+
+  <strong>
+  {!player.hasVoteRow
+    ? ""
+    : player.voto === null
+      ? `⏳ ${playerIcons(player)}`
+      : player.sv
+        ? `SV ${playerIcons(player)}`
+        : `${player.voto} ${playerIcons(player)}`}
+</strong>
+
+
+  </div>
+
+</div>
+
+))}
 
         <Collapsible
           title={`📋 Panchina (${panchina.length})`}
@@ -320,10 +480,35 @@ const normalize = (rows: any[]) =>
 
         <h2>
           {match.home_name}{" "}
-          {match.gol_home ?? 0}
-          {" - "}
-          {match.gol_away ?? 0}{" "}
-          {match.away_name}
+<span
+  style={{
+    color:
+      homeGoals > 0
+        ? "#22c55e"
+        : "#facc15",
+  }}
+>
+  {homeGoals > 0
+    ? homeGoals
+    : homeProjectedGoals}
+</span>
+
+{" - "}
+
+<span
+  style={{
+    color:
+      awayGoals > 0
+        ? "#22c55e"
+        : "#facc15",
+  }}
+>
+  {awayGoals > 0
+    ? awayGoals
+    : awayProjectedGoals}
+</span>
+{" "}
+{match.away_name}
         </h2>
 
         <div
@@ -340,9 +525,10 @@ const normalize = (rows: any[]) =>
             fontWeight: 700,
           }}
         >
-          FP {(match.fp_home ?? 0).toFixed(1)}
-          {" - "}
-          {(match.fp_away ?? 0).toFixed(1)}
+          {homeFP.toFixed(1)}
+{" - "}
+{awayFP.toFixed(1)}
+
         </div>
       </div>
 

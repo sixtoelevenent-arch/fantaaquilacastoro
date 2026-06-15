@@ -1,0 +1,252 @@
+export function calcBonusMalus(player: any) {
+  let bonus = 0;
+
+  bonus += (player.gol || 0) * 3;
+  bonus += (player.assist || 0) * 1;
+
+  bonus += (player.rigori_parati || 0) * 3;
+  bonus -= (player.rigori_sbagliati || 0) * 3;
+
+  bonus -= (player.autogol || 0) * 2;
+
+  if (player.ammonizione) bonus -= 0.5;
+  if (player.espulsione) bonus -= 1;
+
+  if (player.ruolo === "P") {
+    bonus -= player.gol_subiti || 0;
+
+    if ((player.gol_subiti || 0) === 0) {
+      bonus += 1;
+    }
+  }
+
+  return bonus;
+}
+export function calcPlayerScore(
+  vote: any,
+  ruolo: string
+) {
+  if (!vote) {
+    return null;
+  }
+
+  if (vote.voto === null || vote.voto === undefined) {
+  return {
+    sv: false,
+    voto: null,
+    bonus: calcBonusMalus({
+      ...vote,
+      ruolo,
+    }),
+    totale: null,
+  };
+}
+
+let votoBase = Number(vote.voto);
+
+  if (vote.sv) {
+    const hasBonus =
+      (vote.gol || 0) > 0 ||
+      (vote.assist || 0) > 0 ||
+      (vote.rigori_parati || 0) > 0 ||
+      (vote.rigori_sbagliati || 0) > 0 ||
+      (vote.autogol || 0) > 0 ||
+      vote.ammonizione ||
+      vote.espulsione ||
+      (vote.gol_subiti || 0) > 0;
+
+    if (!hasBonus) {
+      return {
+        sv: true,
+        voto: null,
+        bonus: 0,
+        totale: null,
+      };
+    }
+
+    votoBase = 6;
+  }
+
+  const bonus = calcBonusMalus({
+    ...vote,
+    ruolo,
+  });
+
+  return {
+    sv: false,
+    voto: votoBase,
+    bonus,
+    totale: votoBase + bonus,
+  };
+}
+export function fantasyGoals(fp: number) {
+  if (fp < 66) return 0;
+
+  return Math.floor((fp - 66) / 4) + 1;
+}
+export function calculateTeam(
+  titolari: any[],
+  panchina: any[],
+  votesMap: Map<number, any>,
+  allFinished: boolean
+) {
+  let votesTotal = 0;
+  let bonusTotal = 0;
+
+  let substitutions = 0;
+
+  const usedBench = new Set<number>();
+
+  const processedPlayers = [];
+
+  for (const starter of titolari) {
+    const vote = votesMap.get(starter.player_id);
+
+    const result = calcPlayerScore(
+      vote,
+      starter.ruolo
+    );
+
+    // voto normale
+    if (
+      result &&
+      !result.sv &&
+      result.totale !== null
+    ) {
+      votesTotal += result.voto;
+      bonusTotal += result.bonus;
+
+      processedPlayers.push({
+        ...starter,
+        ...result,
+      });
+
+      continue;
+    }
+
+    // LIVE → ancora nessuna sostituzione
+    if (!allFinished) {
+      processedPlayers.push({
+        ...starter,
+        sv: true,
+      });
+
+      continue;
+    }
+
+    // giornata finita → cerca sostituto
+    let replacement = null;
+
+    for (const bench of panchina) {
+      if (usedBench.has(bench.player_id))
+        continue;
+
+      if (bench.ruolo !== starter.ruolo)
+        continue;
+
+      const benchVote = votesMap.get(
+        bench.player_id
+      );
+
+      const benchResult = calcPlayerScore(
+        benchVote,
+        bench.ruolo
+      );
+
+      if (
+        !benchResult ||
+        benchResult.sv ||
+        benchResult.totale === null
+      ) {
+        continue;
+      }
+
+      replacement = {
+        player: bench,
+        result: benchResult,
+      };
+
+      break;
+    }
+
+    if (
+      replacement &&
+      substitutions < 5
+    ) {
+      usedBench.add(
+        replacement.player.player_id
+      );
+
+      substitutions++;
+
+      votesTotal += replacement.result.voto;
+      bonusTotal += replacement.result.bonus;
+
+      processedPlayers.push({
+        ...starter,
+        replacedBy:
+          replacement.player.player_id,
+        ...replacement.result,
+      });
+
+      continue;
+    }
+
+    // nessun sostituto
+    processedPlayers.push({
+      ...starter,
+      sv: true,
+    });
+  }
+
+  const fantapoints =
+  votesTotal + bonusTotal;
+
+const playersWithVote =
+  processedPlayers.filter(
+    (p) =>
+      p.hasVoteRow &&
+      p.voto !== null
+  ).length;
+
+const projectedFP =
+  playersWithVote > 0
+    ? (fantapoints / playersWithVote) * 11
+    : 0;
+
+const projectedGoals =
+  fantasyGoals(projectedFP);
+
+  return {
+  players: processedPlayers,
+
+  substitutions,
+
+  votesTotal:
+    Math.round(votesTotal * 10) / 10,
+
+  bonusTotal:
+    Math.round(bonusTotal * 10) / 10,
+
+  fantapoints:
+    Math.round(fantapoints * 10) / 10,
+
+  goals: fantasyGoals(fantapoints),
+
+  projectedGoals,
+
+  isFinal: allFinished,
+};
+
+}
+export function allMatchesFinished(
+  nationalStatuses: string[]
+) {
+  return nationalStatuses.every(
+    (s) =>
+      s === "FINISHED" ||
+      s === "FT" ||
+      s === "AET" ||
+      s === "PEN"
+  );
+}
