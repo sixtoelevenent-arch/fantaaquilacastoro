@@ -194,12 +194,13 @@ const { data: loadedPlayers } =
 
 const loadedNationals = new Set<string>();
 
-(votes || []).forEach((v: any) => {
-  const nazionale = v.players?.nazionale;
-
-  if (nazionale) {
-    loadedNationals.add(
-      nazionale.trim().toUpperCase()
+(loadedPlayers || []).forEach(
+  (p: any) => {
+    if (p.nazionale) {
+      loadedNationals.add(
+        p.nazionale
+          .trim()
+          .toUpperCase()
     );
   }
 });
