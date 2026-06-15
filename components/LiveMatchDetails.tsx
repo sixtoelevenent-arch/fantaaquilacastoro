@@ -187,7 +187,6 @@ const { data: loadedPlayers } =
  
   const votesMap = new Map();
 
-const votesMap = new Map();
 
 (votes || []).forEach((v: any) => {
   votesMap.set(v.player_id, v);
@@ -473,20 +472,48 @@ function roleStyle(role: string) {
   previousRole = player.ruolo;
 
   const roleInfo = roleStyle(player.ruolo);
+  const playerIsSv =
+  (player.hasVoteRow && player.sv) ||
+  (!player.hasVoteRow && player.nationalLoaded);
 
+let replacement = null;
+
+if (playerIsSv) {
+  const sameRoleBench = panchina.filter(
+    (b) => b.ruolo === player.ruolo
+  );
+
+  for (const benchPlayer of sameRoleBench) {
+    const benchIsSv =
+      (benchPlayer.hasVoteRow && benchPlayer.sv) ||
+      (!benchPlayer.hasVoteRow &&
+        benchPlayer.nationalLoaded);
+
+    if (!benchIsSv) {
+      replacement = benchPlayer;
+      break;
+    }
+  }
+
+  if (!replacement && sameRoleBench.length > 0) {
+    replacement =
+      sameRoleBench[sameRoleBench.length - 1];
+  }
+}
   return (
   <div
     key={`${player.nome}-${player.posizione}`}
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "6px 0",
-      borderBottom:
-        "1px solid rgba(255,255,255,0.05)",
-    }}
   >
-
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "6px 0",
+        borderBottom:
+          "1px solid rgba(255,255,255,0.05)",
+      }}
+    >
       {roleChanged && (
         <div
           style={{
@@ -497,74 +524,89 @@ function roleStyle(role: string) {
       )}
 
       <div
-  style={{
-    display: "flex",
-    flex: 1,
-    alignItems: "center",
-  }}
->
-  <span
-    style={{
-      width: 32,
-      fontWeight: 800,
-      fontSize: "1rem",
-      color: roleInfo.color,
-    }}
-  >
-    {player.ruolo}
-  </span>
+        style={{
+          display: "flex",
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        <span
+          style={{
+            width: 32,
+            fontWeight: 800,
+            fontSize: "1rem",
+            color: roleInfo.color,
+          }}
+        >
+          {player.ruolo}
+        </span>
 
-  <span
-    style={{
-      fontSize: "0.9rem",
-      fontWeight: 600,
-    }}
-  >
-    {livePlayerName(player.nome)}
-  </span>
-</div>
-    <span
-  style={{
-    width: 32,
-    textAlign: "center",
-    color: "#94a3b8",
-    fontSize: "0.9rem",
-  }}
->
-  {getNationalCode(player.nazionale)}
-</span>
+        <span
+          style={{
+            fontSize: "0.9rem",
+            fontWeight: 600,
+          }}
+        >
+          {livePlayerName(player.nome)}
+        </span>
+      </div>
 
-<span
-  style={{
-    width: 40,
-    textAlign: "right",
-    fontWeight: 700,
-  }}
->
-  {!player.hasVoteRow
-  ? player.nationalLoaded
-    ? "SV"
-    : ""
-  : player.voto === null
-  ? "⏳"
-  : player.sv
-  ? "SV"
-  : player.voto}
-</span>
+      <span
+        style={{
+          width: 32,
+          textAlign: "center",
+          color: "#94a3b8",
+          fontSize: "0.9rem",
+        }}
+      >
+        {getNationalCode(player.nazionale)}
+      </span>
 
-<span
-  style={{
-    width: 55,
-    fontSize: "1.15rem",
-    textAlign: "center",
-    whiteSpace: "nowrap",
-  }}
->
-  {playerIcons(player)}
-</span>
+      <span
+        style={{
+          width: 55,
+          textAlign: "right",
+          fontWeight: 700,
+        }}
+      >
+        {!player.hasVoteRow
+          ? player.nationalLoaded
+            ? "SV 🔄"
+            : ""
+          : player.voto === null
+          ? "⏳"
+          : player.sv
+          ? "SV 🔄"
+          : player.voto}
+      </span>
 
+      <span
+        style={{
+          width: 55,
+          fontSize: "1.15rem",
+          textAlign: "center",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {playerIcons(player)}
+      </span>
+    </div>
+
+    {replacement && (
+      <div
+        style={{
+          paddingLeft: 42,
+          paddingBottom: 6,
+          color: "#94a3b8",
+          fontSize: "0.85rem",
+        }}
+      >
+        ↳ {livePlayerName(replacement.nome)}
+      </div>
+    )}
   </div>
 );
+
 })}
 
         <Collapsible

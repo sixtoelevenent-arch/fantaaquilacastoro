@@ -28,11 +28,11 @@ function normalizeNation(nation: string) {
   const n = normalize(nation);
 
   const map: Record<string, string> = {
-  OLANDA: "PAESI BASSI",
-  USA: "STATI UNITI",
-  IVORY COAST: "COSTA D'AVORIO",
-  SOUTH KOREA: "COREA DEL SUD",
-  CZECH REPUBLIC: "REPUBBLICA CECA",
+  "OLANDA": "PAESI BASSI",
+  "USA": "STATI UNITI",
+  "IVORY COAST": "COSTA D'AVORIO",
+  "SOUTH KOREA": "COREA DEL SUD",
+  "CZECH REPUBLIC": "REPUBBLICA CECA",
 };
 
   return map[n] || n;
