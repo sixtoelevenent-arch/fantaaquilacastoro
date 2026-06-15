@@ -286,6 +286,29 @@ const normalize = (rows: any[]) =>
 const homePlayersNorm = normalize(homeRows || []);
 const awayPlayersNorm = normalize(awayRows || []);
 
+const neymar =
+  homePlayersNorm.find((p) =>
+    p.nome.toUpperCase().includes("NEYMAR")
+  ) ||
+  awayPlayersNorm.find((p) =>
+    p.nome.toUpperCase().includes("NEYMAR")
+  );
+
+if (neymar) {
+  alert(
+    JSON.stringify(
+      {
+        nome: neymar.nome,
+        hasVoteRow: neymar.hasVoteRow,
+        nationalLoaded:
+          neymar.nationalLoaded,
+      },
+      null,
+      2
+    )
+  );
+}
+
 const homeCalc = calculateTeam(
   homePlayersNorm.filter((p) => p.titolare),
   homePlayersNorm.filter((p) => !p.titolare),
