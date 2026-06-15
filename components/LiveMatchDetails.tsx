@@ -217,6 +217,22 @@ const normalize = (rows: any[]) =>
     r.players?.nazionale ?? ""
   );
 
+
+  if (
+  (r.players?.nome || "").includes("Neymar")
+) {
+  console.log("NEYMAR", {
+    nome: r.players?.nome,
+    nazionale: r.players?.nazionale,
+    hasVoteRow: !!voteData,
+    nationalLoaded:
+      loadedNationals.has(
+        (r.players?.nazionale || "")
+          .trim()
+          .toUpperCase()
+      ),
+  });
+}
     return {
 
       player_id: r.player_id,
