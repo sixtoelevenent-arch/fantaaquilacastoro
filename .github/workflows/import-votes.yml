@@ -1,0 +1,17 @@
+name: Import Votes
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+
+  workflow_dispatch:
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call Import Endpoint
+        run: |
+          curl -L \
+          https://fantaaquilacastoro.vercel.app/api/import-votes
