@@ -28,6 +28,8 @@ type MatchData = {
 };
 
 type PlayerRow = {
+  player_id?: number;
+
   nome: string;
   ruolo: string;
   nazionale: string;
@@ -40,9 +42,21 @@ type PlayerRow = {
   voto?: number | null;
 
   sv?: boolean;
+
   hasVoteRow?: boolean;
+
   nationalExists?: boolean;
-nationalFinalized?: boolean;
+  nationalFinalized?: boolean;
+
+  gol?: number;
+  assist?: number;
+  ammonizione?: boolean;
+  espulsione?: boolean;
+  autogol?: number;
+  rigori_parati?: number;
+  rigori_sbagliati?: number;
+  gol_subiti?: number;
+  clean_sheet?: boolean;
 };
 
 
@@ -585,7 +599,7 @@ if (playerIsSv) {
 
       <span
         style={{
-          width: 55,
+          width: 70,
           textAlign: "right",
           fontWeight: 700,
         }}
@@ -605,7 +619,7 @@ if (playerIsSv) {
 
       <span
         style={{
-          width: 55,
+          width: 70,
           fontSize: "1.15rem",
           textAlign: "center",
           whiteSpace: "nowrap",
@@ -615,18 +629,26 @@ if (playerIsSv) {
       </span>
     </div>
 
-    {replacement && (
-      <div
-        style={{
-          paddingLeft: 42,
-          paddingBottom: 6,
-          color: "#94a3b8",
-          fontSize: "0.85rem",
-        }}
-      >
-        ↳ {livePlayerName(replacement.nome)}
-      </div>
-    )}
+   {replacement && (
+  <div
+    style={{
+      paddingLeft: 42,
+      paddingBottom: 6,
+      color: "#94a3b8",
+      fontSize: "0.85rem",
+      display: "flex",
+      justifyContent: "space-between",
+    }}
+  >
+    <span>
+      ↳ {livePlayerName(replacement.nome)}
+    </span>
+
+    <span>
+      {replacement.voto ?? "SV"}
+    </span>
+  </div>
+)}
   </div>
 );
 
