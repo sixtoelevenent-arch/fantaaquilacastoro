@@ -41,7 +41,8 @@ type PlayerRow = {
 
   sv?: boolean;
   hasVoteRow?: boolean;
-  nationalLoaded?: boolean;
+  nationalExists?: boolean;
+nationalFinalized?: boolean;
 };
 
 
@@ -192,16 +193,27 @@ const { data: loadedPlayers } =
   votesMap.set(v.player_id, v);
 });
 
-const loadedNationals = new Set<string>();
+const nationalExists = new Set<string>();
+const nationalFinalized = new Set<string>();
 
-(loadedPlayers || []).forEach(
-  (p: any) => {
-    if (p.nazionale) {
-      loadedNationals.add(
-        p.nazionale
-          .trim()
-          .toUpperCase()
-    );
+(votes || []).forEach((v: any) => {
+  const player = (loadedPlayers || []).find(
+    (p: any) => p.id === v.player_id
+  );
+
+  const nation = player?.nazionale
+    ?.trim()
+    ?.toUpperCase();
+
+  if (!nation) return;
+
+  nationalExists.add(nation);
+
+  if (
+    v.voto !== null ||
+    v.sv === true
+  ) {
+    nationalFinalized.add(nation);
   }
 });
 
@@ -212,28 +224,19 @@ const normalize = (rows: any[]) =>
 
     const voteData = votesMap.get(r.player_id);
 
-    const nationalLoaded =
-  loadedNationals.has(
-    r.players?.nazionale ?? ""
-  );
+    const nation =
+  (r.players?.nazionale || "")
+    .trim()
+    .toUpperCase();
+
+const exists =
+  nationalExists.has(nation);
+
+const finalized =
+  nationalFinalized.has(nation);
 
 
-  if (
-  (r.players?.nome || "").includes("Neymar")
-) {
-  console.log("NEYMAR", {
-    nome: r.players?.nome,
-    nazionale: r.players?.nazionale,
-    hasVoteRow: !!voteData,
-    nationalLoaded:
-      loadedNationals.has(
-        (r.players?.nazionale || "")
-          .trim()
-          .toUpperCase()
-      ),
-  });
-}
-    return {
+      return {
 
       player_id: r.player_id,
 
@@ -247,12 +250,8 @@ const normalize = (rows: any[]) =>
 
       hasVoteRow: !!voteData,
 
-      nationalLoaded:
-  loadedNationals.has(
-    (r.nazionale || "")
-      .trim()
-      .toUpperCase()
-  ),
+      nationalExists: exists,
+nationalFinalized: finalized,
 
       voto: voteData?.voto ?? null,
       sv: voteData?.sv ?? null,
@@ -285,29 +284,6 @@ const normalize = (rows: any[]) =>
 
 const homePlayersNorm = normalize(homeRows || []);
 const awayPlayersNorm = normalize(awayRows || []);
-
-const neymar =
-  homePlayersNorm.find((p) =>
-    p.nome.toUpperCase().includes("NEYMAR")
-  ) ||
-  awayPlayersNorm.find((p) =>
-    p.nome.toUpperCase().includes("NEYMAR")
-  );
-
-if (neymar) {
-  alert(
-    JSON.stringify(
-      {
-        nome: neymar.nome,
-        hasVoteRow: neymar.hasVoteRow,
-        nationalLoaded:
-          neymar.nationalLoaded,
-      },
-      null,
-      2
-    )
-  );
-}
 
 const homeCalc = calculateTeam(
   homePlayersNorm.filter((p) => p.titolare),
@@ -514,7 +490,10 @@ function roleStyle(role: string) {
   const roleInfo = roleStyle(player.ruolo);
   const playerIsSv =
   (player.hasVoteRow && player.sv) ||
-  (!player.hasVoteRow && player.nationalLoaded);
+  (
+    !player.hasVoteRow &&
+    player.nationalFinalized
+  );
 
 let replacement = null;
 
@@ -610,14 +589,16 @@ if (playerIsSv) {
         }}
       >
         {!player.hasVoteRow
-          ? player.nationalLoaded
-            ? "SV 🔄"
-            : ""
-          : player.voto === null
-          ? "⏳"
-          : player.sv
-          ? "SV 🔄"
-          : player.voto}
+  ? player.nationalFinalized
+    ? "SV 🔄"
+    : player.nationalExists
+    ? "⏳"
+    : ""
+  : player.voto === null
+  ? "⏳"
+  : player.sv
+  ? "SV 🔄"
+  : player.voto}
       </span>
 
       <span

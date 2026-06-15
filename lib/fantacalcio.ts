@@ -135,30 +135,21 @@ export function calculateTeam(
   ) {
     liveBonusWithoutVote += result.bonus;
   }
-  console.log(
-  starter.nome,
-  {
-    hasVoteRow: starter.hasVoteRow,
-    nationalLoaded: starter.nationalLoaded,
-    sv: result?.sv,
-    voto: result?.voto,
-  }
-);
-  processedPlayers.push({
-    ...starter,
+  
+processedPlayers.push({
+  ...starter,
 
-    sv: result?.sv ?? false,
+  sv:
+    result?.sv === true ||
+    (
+      !starter.hasVoteRow &&
+      starter.nationalFinalized
+    ),
 
-    voto: result?.voto ?? null,
-  });
-
+  voto: result?.voto ?? null,
+});
   continue;
 }
-console.log(
-  starter.nome,
-  result?.sv,
-  result?.voto
-);
 
     // giornata finita → cerca sostituto
     let replacement = null;
