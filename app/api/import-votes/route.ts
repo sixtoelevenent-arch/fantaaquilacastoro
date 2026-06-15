@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { exec } from "child_process";
 
-export async function GET() {
-  return new Promise((resolve) => {
+export async function GET(): Promise<Response> {
+  return await new Promise<Response>((resolve) => {
     exec(
       "npx tsx scripts/import-votes.ts",
       (error, stdout, stderr) => {
