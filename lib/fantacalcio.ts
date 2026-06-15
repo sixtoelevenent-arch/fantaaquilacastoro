@@ -126,7 +126,7 @@ export function calculateTeam(
     }
 
     // LIVE → ancora nessuna sostituzione
-    if (!allFinished) {
+    iif (!allFinished) {
 
   if (
     result &&
@@ -138,11 +138,19 @@ export function calculateTeam(
 
   processedPlayers.push({
     ...starter,
-    sv: true,
+
+    sv: result?.sv ?? false,
+
+    voto: result?.voto ?? null,
   });
 
   continue;
 }
+console.log(
+  starter.nome,
+  result?.sv,
+  result?.voto
+);
 
     // giornata finita → cerca sostituto
     let replacement = null;
