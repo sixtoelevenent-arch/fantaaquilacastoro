@@ -41,6 +41,7 @@ type PlayerRow = {
 
   sv?: boolean;
   hasVoteRow?: boolean;
+  nationalLoaded?: boolean;
 };
 
 
@@ -170,15 +171,35 @@ console.log("AWAY FORMATION", awayFormation);
 
     const { data: votes } = await supabase
   .from("player_votes")
-  .select("*")
+  .select(`
+    *,
+    players (
+      nazionale
+    )
+  `)
   .eq("matchday_id", matchData.matchday_id);
 
   const votesMap = new Map();
 
-  
-(votes || []).forEach((v) => {
+const loadedNationals = new Set<string>();
+
+(votes || []).forEach((v: any) => {
+
   votesMap.set(v.player_id, v);
+
+  const nazionale =
+    v.players?.nazionale;
+
+  if (nazionale) {
+    loadedNationals.add(nazionale);
+  }
+
 });
+
+console.log(
+  "LOADED NATIONALS",
+  [...loadedNationals]
+);
 
 console.log(homeRows?.[0]);
 
@@ -186,6 +207,11 @@ const normalize = (rows: any[]) =>
   (rows || []).map((r) => {
 
     const voteData = votesMap.get(r.player_id);
+
+    const nationalLoaded =
+  loadedNationals.has(
+    r.players?.nazionale ?? ""
+  );
 
     return {
 
@@ -200,6 +226,8 @@ const normalize = (rows: any[]) =>
       ordine_panchina: r.ordine_panchina,
 
       hasVoteRow: !!voteData,
+
+      nationalLoaded,
 
       voto: voteData?.voto ?? null,
       sv: voteData?.sv ?? null,
@@ -505,12 +533,14 @@ function roleStyle(role: string) {
   }}
 >
   {!player.hasVoteRow
-    ? ""
-    : player.voto === null
-    ? "⏳"
-    : player.sv
+  ? player.nationalLoaded
     ? "SV"
-    : player.voto}
+    : ""
+  : player.voto === null
+  ? "⏳"
+  : player.sv
+  ? "SV"
+  : player.voto}
 </span>
 
 <span
