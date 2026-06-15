@@ -1,4 +1,8 @@
+import BackHome from "@/components/BackHome";
+import { useState } from "react";
 export default function Home() {
+  const [search, setSearch] = useState("");
+
   const buttonStyle = {
     display: "block",
     width: "100%",
@@ -26,6 +30,33 @@ export default function Home() {
         alignItems: "center",
       }}
     >
+
+      <BackHome />
+
+<div
+  style={{
+    marginTop: 15,
+    marginBottom: 20,
+  }}
+>
+  <input
+    type="text"
+    placeholder="🔍 Cerca squadra o giocatore..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    style={{
+      width: "100%",
+      padding: "12px 16px",
+      borderRadius: 12,
+      border: "1px solid rgba(255,255,255,0.15)",
+      background: "rgba(255,255,255,0.08)",
+      color: "white",
+      fontSize: "1rem",
+      outline: "none",
+    }}
+  />
+</div>
+
       <div
         style={{
           width: "100%",

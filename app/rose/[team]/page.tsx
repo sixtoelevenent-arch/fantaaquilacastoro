@@ -1,14 +1,14 @@
-import BackHome from "@/components/BackHome";
-import { rose } from "@/data/rose";
+"use client";
 
-export default async function TeamPage({
-  params,
-}: {
-  params: Promise<{ team: string }>;
-}) {
-  const { team } = await params;
+import { useParams } from "next/navigation";
+
+export default function TeamPage() {
+
+  const team = params.team as string;
 
   const squadra = rose[team as keyof typeof rose];
+
+  const [search, setSearch] = useState("");
 
   if (!squadra) {
     return (
@@ -64,6 +64,30 @@ export default async function TeamPage({
       >
         <BackHome />
 
+<div
+  style={{
+    marginTop: 15,
+    marginBottom: 20,
+  }}
+>
+  <input
+    type="text"
+    placeholder="🔍 Cerca giocatore..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    style={{
+      width: "100%",
+      padding: "12px 16px",
+      borderRadius: 12,
+      border: "1px solid rgba(255,255,255,0.15)",
+      background: "rgba(255,255,255,0.08)",
+      color: "white",
+      fontSize: "1rem",
+      outline: "none",
+    }}
+  />
+</div>
+
         <h1
           style={{
             textAlign: "center",
@@ -93,7 +117,11 @@ export default async function TeamPage({
           </h2>
 
           <ul style={listStyle}>
-            {squadra.portieri.map((p) => (
+            {squadra.portieri
+  .filter((p) =>
+    p.toLowerCase().includes(search.toLowerCase())
+  )
+  .map((p) => (
               <li key={p} style={playerStyle}>
                 {p}
               </li>
@@ -121,7 +149,11 @@ export default async function TeamPage({
           </h2>
 
           <ul style={listStyle}>
-            {squadra.centrocampisti.map((c) => (
+            {squadra.difensori
+  .filter((d) =>
+    d.toLowerCase().includes(search.toLowerCase())
+  )
+  .map((d) => (
               <li key={c} style={playerStyle}>
                 {c}
               </li>
@@ -135,7 +167,11 @@ export default async function TeamPage({
           </h2>
 
           <ul style={listStyle}>
-            {squadra.attaccanti.map((a) => (
+           {squadra.attaccanti
+  .filter((a) =>
+    a.toLowerCase().includes(search.toLowerCase())
+  )
+  .map((a) => (
               <li key={a} style={playerStyle}>
                 {a}
               </li>
