@@ -562,7 +562,7 @@ function roleStyle(role: string) {
     paddingTop: 12,
     borderTop: "1px solid rgba(255,255,255,0.15)",
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
+    gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
     textAlign: "center",
     gap: 10,
   }}
@@ -695,7 +695,7 @@ awayFP
           <div
   style={{
     display: "grid",
-    gridTemplateColumns: "1fr 1fr 1fr",
+    gridTemplateColumns: "1fr 1fr",
     gap: 10,
     textAlign: "center",
   }}

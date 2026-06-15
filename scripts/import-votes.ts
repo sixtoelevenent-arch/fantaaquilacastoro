@@ -138,6 +138,21 @@ const voto = parseFloat(
   valori[1].replace(",", ".")
 );
 
+if (
+  nome.toUpperCase().includes("DUMFRIES") ||
+  nome.toUpperCase().includes("GYOKERES") ||
+  nome.toUpperCase().includes("DEPAY")
+) {
+  console.log(
+    nome,
+    "VOTO RAW:",
+    valori[1],
+    "PARSED:",
+    voto,
+    valori
+  );
+}
+
 // =====================
 // GOL FATTI / SUBITI
 // =====================
@@ -249,6 +264,7 @@ const assist = assistValue;
 
     const { error } = await supabase
       .from("player_votes")
+      
       .upsert(
         {
           matchday_id: 1,
