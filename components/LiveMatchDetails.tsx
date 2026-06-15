@@ -647,13 +647,14 @@ return (
 <> 
 
 <div
-
-style={{
-  display: "grid",
-  gap: "10px",
-  gridTemplateColumns:
-    "repeat(auto-fit,minmax(340px,1fr))",
-}}
+  style={{
+    display: "grid",
+    gap: "10px",
+    gridTemplateColumns:
+      window.innerWidth < 768
+        ? "1fr"
+        : "1fr 1fr",
+  }}
 >
 
 {renderTeam(
