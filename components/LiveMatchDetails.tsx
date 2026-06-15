@@ -174,55 +174,34 @@ console.log("AWAY FORMATION", awayFormation);
   .select("*")
   .eq("matchday_id", matchData.matchday_id);
 
-const { data: loadedPlayers } = await supabase
-  .from("player_votes")
-  .select(`
-    player_id,
-    players!player_votes_player_id_fkey (
-      nazionale
-    )
-  `)
-  .eq("matchday_id", matchData.matchday_id);
-
-  const loadedNationals = new Set<string>();
-
-(loadedPlayers || []).forEach((p: any) => {
-
-  const nazionale =
-    p.players?.nazionale;
-
-  if (nazionale) {
-    loadedNationals.add(nazionale);
-  }
-
-});
-
-console.log(
-  "LOADED NATIONALS",
-  [...loadedNationals]
+const playerIds = (votes || []).map(
+  (v: any) => v.player_id
 );
 
+const { data: loadedPlayers } =
+  await supabase
+    .from("players")
+    .select("id,nazionale")
+    .in("id", playerIds);
+
+ 
   const votesMap = new Map();
+
+(votes || []).forEach((v: any) => {
+  votesMap.set(v.player_id, v);
+});
 
 const loadedNationals = new Set<string>();
 
-(votes || []).forEach((v: any) => {
+(loadedPlayers || []).forEach((p: any) => {
 
-  votesMap.set(v.player_id, v);
-
-  const nazionale =
-    v.players?.nazionale;
-
-  if (nazionale) {
-    loadedNationals.add(nazionale);
+  if (p.nazionale) {
+    loadedNationals.add(
+      p.nazionale
+    );
   }
 
 });
-
-console.log(
-  "LOADED NATIONALS",
-  [...loadedNationals]
-);
 
 console.log(homeRows?.[0]);
 
