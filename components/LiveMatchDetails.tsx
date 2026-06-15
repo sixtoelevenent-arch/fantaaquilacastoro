@@ -438,7 +438,18 @@ function roleStyle(role: string) {
   const roleInfo = roleStyle(player.ruolo);
 
   return (
-    <>
+  <div
+    key={`${player.nome}-${player.posizione}`}
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "6px 0",
+      borderBottom:
+        "1px solid rgba(255,255,255,0.05)",
+    }}
+  >
+
       {roleChanged && (
         <div
           style={{
@@ -513,8 +524,8 @@ function roleStyle(role: string) {
   {playerIcons(player)}
 </span>
 
-     </>
-  );
+  </div>
+);
 })}
 
         <Collapsible
@@ -623,47 +634,63 @@ function roleStyle(role: string) {
     );
   }
 
-  if (loading) {
-    return (
-      <main style={{ padding: 20 }}>
-        Caricamento...
-      </main>
-    );
-  }
 
-  if (!match) return null;
+if (loading) {
+  return <div>Caricamento...</div>;
+}
 
-  return (
-  <>
-     
-      
+if (!match) {
+  return null;
+}
+
+return (
+<> 
+
 <div
-  style={{
-    display: "grid",
-          gap: "10px",
-          gridTemplateColumns: "1fr 1fr",
-        }}
-      >
-        {renderTeam(
-  match.home_name,
-  match.home_owner,
-  homePlayers,
-  homeVotes,
-  homeBonus,
-  homeFP
+
+style={{
+  display: "grid",
+  gap: "10px",
+  gridTemplateColumns:
+    "repeat(auto-fit,minmax(340px,1fr))",
+}}
+>
+
+{renderTeam(
+
+match.home_name,
+
+match.home_owner,
+
+homePlayers,
+
+homeVotes,
+
+homeBonus,
+
+homeFP
 )}
 
-        {renderTeam(
-  match.away_name,
-  match.away_owner,
-  awayPlayers,
-  awayVotes,
-  awayBonus,
-  awayFP
-)}
-      </div>
+{renderTeam(
 
-      <div style={{ marginTop: 25 }}>
+match.away_name,
+
+match.away_owner,
+
+awayPlayers,
+
+awayVotes,
+
+awayBonus,
+
+awayFP
+
+)}
+
+</div>
+
+<div style={{ marginTop: 25 }}>
+
         <Collapsible title="📖 Legenda">
           <div
   style={{
@@ -696,5 +723,4 @@ function roleStyle(role: string) {
 </>
 );
 } 
-        
         
