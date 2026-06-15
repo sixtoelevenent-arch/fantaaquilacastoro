@@ -1,5 +1,7 @@
 "use client";
 
+import BackHome from "@/components/BackHome";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 
 export default function TeamPage() {
@@ -149,15 +151,15 @@ export default function TeamPage() {
           </h2>
 
           <ul style={listStyle}>
-            {squadra.difensori
-  .filter((d) =>
-    d.toLowerCase().includes(search.toLowerCase())
+            {squadra.centrocampisti
+  .filter((c) =>
+    c.toLowerCase().includes(search.toLowerCase())
   )
-  .map((d) => (
-              <li key={c} style={playerStyle}>
-                {c}
-              </li>
-            ))}
+  .map((c) => (
+      <li key={c} style={playerStyle}>
+        {c}
+      </li>
+))}
           </ul>
         </div>
 
