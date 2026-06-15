@@ -482,13 +482,12 @@ function playerIcons(player: any) {
           {match.home_name}{" "}
 <span
   style={{
-    color:
-      homeGoals > 0
-        ? "#22c55e"
-        : "#facc15",
+    color: homeIsFinal
+      ? "#22c55e"
+      : "#facc15",
   }}
 >
-  {homeGoals > 0
+  {homeIsFinal
     ? homeGoals
     : homeProjectedGoals}
 </span>
@@ -497,13 +496,12 @@ function playerIcons(player: any) {
 
 <span
   style={{
-    color:
-      awayGoals > 0
-        ? "#22c55e"
-        : "#facc15",
+    color: awayIsFinal
+      ? "#22c55e"
+      : "#facc15",
   }}
 >
-  {awayGoals > 0
+  {awayIsFinal
     ? awayGoals
     : awayProjectedGoals}
 </span>
