@@ -1,3 +1,4 @@
+"use client";
 import BackHome from "@/components/BackHome";
 import { useState } from "react";
 export default function Home() {
@@ -35,8 +36,10 @@ export default function Home() {
 
 <div
   style={{
-    marginTop: 15,
-    marginBottom: 20,
+    marginTop: 12,
+    paddingTop: 12,
+    borderTop:
+      "1px solid rgba(255,255,255,0.08)",
   }}
 >
   <input
@@ -104,15 +107,18 @@ export default function Home() {
             margin: "0 auto",
           }}
         >
-          <a
-            href="/live"
-            style={{
-              ...buttonStyle,
-              background: "#dc2626",
-            }}
-          >
-            🔴 Live Giornata
-          </a>
+          <h1
+  style={{
+    textAlign: "center",
+    color: "#ef4444",
+    fontSize: "clamp(2rem, 5vw, 3.2rem)",
+    fontWeight: "800",
+    marginTop: "10px",
+    marginBottom: "20px",
+  }}
+>
+  🔴 LIVE GIORNATA
+</h1>
 
           <a
             href="/classifiche"

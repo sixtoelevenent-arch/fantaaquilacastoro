@@ -1,11 +1,14 @@
 "use client";
 
-import BackHome from "@/components/BackHome";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 
+import BackHome from "@/components/BackHome";
+import { rose } from "@/data/rose";;
+
 export default function TeamPage() {
 
+  const params = useParams();
   const team = params.team as string;
 
   const squadra = rose[team as keyof typeof rose];
