@@ -1,20 +1,42 @@
 type CardProps = {
   title?: string;
   children: React.ReactNode;
+  onClick?: () => void;
+  highlight?: boolean;
 };
 
-export default function Card({ title, children }: CardProps) {
+export default function Card({
+  title,
+  children,
+  onClick,
+  highlight,
+}: CardProps) {
+
   return (
     <div
-      style={{
-        background: "rgba(255,255,255,0.08)",
-        backdropFilter: "blur(10px)",
-        border: "1px solid rgba(255,255,255,0.15)",
-        borderRadius: "20px",
-        padding: "24px",
-        marginBottom: "24px",
-        boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
-      }}
+     onClick={onClick}
+     style={{
+  cursor: onClick ? "pointer" : "default",
+
+  background: "rgba(255,255,255,0.08)",
+  backdropFilter: "blur(10px)",
+
+  border: highlight
+    ? "2px solid #facc15"
+    : "1px solid rgba(255,255,255,0.15)",
+
+  borderRadius: "20px",
+
+  padding: "14px",
+
+  marginBottom: "12px",
+
+  transition: "all 0.2s ease",
+
+  boxShadow: highlight
+    ? "0 0 25px rgba(250,204,21,0.35)"
+    : "0 10px 30px rgba(0,0,0,0.35)",
+}}
     >
       {title && (
         <h2

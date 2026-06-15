@@ -1,30 +1,167 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import LiveMatchDetails from "@/components/LiveMatchDetails";
 import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
-import { liveMatches } from "@/data/live";
-
+import { calculateMatchLive } from "@/lib/calculateMatchLive";
 export default function LivePage() {
-  return (
+  const [openMatchId, setOpenMatchId] =
+  useState<number | null>(null);
+
+  const [matches, setMatches] = useState<any[]>([]);
+  
+  const [modules, setModules] = useState<
+  Record<
+    number,
+    {
+      home: string;
+      away: string;
+    }
+  >
+>({});
+
+  const [liveData, setLiveData] = useState<
+  Record<
+    number,
+    {
+      homeFP: number;
+      awayFP: number;
+      homeGoals: number;
+      awayGoals: number;
+    }
+  >
+>({});
+
+useEffect(() => {
+
+  loadMatches();
+
+  const interval = setInterval(() => {
+    loadMatches();
+  }, 30000);
+
+  return () => clearInterval(interval);
+
+}, []);
+
+  async function loadMatches() {
+
+  const { data: activeMatchday } = await supabase
+  .from("matchdays")
+  .select("id,nome")
+  .eq("attiva", true)
+  .single();
+
+if (!activeMatchday) {
+  setMatches([]);
+  return;
+}
+
+  const { data } = await supabase
+    .from("matches")
+    .select(`
+      *,
+      home:team_home_id (
+        id,
+        nome,
+        proprietario
+      ),
+      away:team_away_id (
+        id,
+        nome,
+        proprietario
+      )
+    `)
+    .eq("matchday_id", activeMatchday.id)
+    .order("id");
+
+  const live: any = {};
+
+for (const match of data || []) {
+
+  const result =
+    await calculateMatchLive(match.id);
+
+  if (result) {
+    live[match.id] = result;
+  }
+}
+
+setLiveData(live);
+
+setMatches(data || []);
+  
+const newModules: Record<
+  number,
+  {
+    home: string;
+    away: string;
+  }
+> = {};
+
+for (const match of data || []) {
+
+  const { data: homeFormation } =
+    await supabase
+      .from("formations")
+      .select("modulo")
+      .eq("team_id", match.team_home_id)
+      .eq("matchday_id", match.matchday_id)
+      .single();
+
+  const { data: awayFormation } =
+    await supabase
+      .from("formations")
+      .select("modulo")
+      .eq("team_id", match.team_away_id)
+      .eq("matchday_id", match.matchday_id)
+      .single();
+
+  newModules[match.id] = {
+    home: homeFormation?.modulo || "-",
+    away: awayFormation?.modulo || "-",
+  };
+}
+
+setModules(newModules);
+
+  }
+  const gironeA = matches.filter(
+  (m) => m.gruppo === "A"
+);
+
+const gironeB = matches.filter(
+  (m) => m.gruppo === "B"
+);
+
+const gironeC = matches.filter(
+  (m) => m.gruppo === "C"
+);
+
+return (
     <main
       style={{
         minHeight: "100vh",
         background: "linear-gradient(to bottom, #450a0a, #1f0808)",
         color: "white",
-        padding: "20px",
+        padding: "12px",
       }}
     >
       <div
-        style={{
-          maxWidth: "900px",
-          margin: "0 auto",
-        }}
-      >
+  style={{
+    maxWidth: "1600px",
+    width: "100%",
+    margin: "0 auto",
+  }}
+>
         <BackHome />
 
         <h1
           style={{
-            textAlign: "center",
             color: "#ef4444",
-            fontSize: "clamp(2.3rem, 7vw, 4rem)",
+            fontSize: "clamp(2rem, 5vw, 3.2rem)",
             fontWeight: "800",
             marginTop: "10px",
             marginBottom: "10px",
@@ -33,6 +170,18 @@ export default function LivePage() {
           🔴 LIVE GIORNATA
         </h1>
 
+
+<div
+  style={{
+    textAlign: "center",
+    color: "#facc15",
+    fontWeight: 800,
+    fontSize: "1.1rem",
+    marginBottom: 8,
+  }}
+>
+  ⚽ 1ª GIORNATA
+</div>
         <p
           style={{
             textAlign: "center",
@@ -50,90 +199,224 @@ export default function LivePage() {
             marginBottom: "35px",
           }}
         >
-          <span
-            style={{
-              display: "inline-block",
-              padding: "8px 14px",
-              background: "#7f1d1d",
-              borderRadius: "999px",
-              color: "#fecaca",
-              fontSize: "0.9rem",
-              fontWeight: "600",
-            }}
-          >
-            ⏱️ Giornata in corso
-          </span>
+          <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 8,
+  }}
+>
+  <span
+    style={{
+      padding: "8px 14px",
+      background: "#7f1d1d",
+      borderRadius: 999,
+      color: "#fecaca",
+      fontSize: "0.9rem",
+      fontWeight: 600,
+    }}
+  >
+    ⏱️ Giornata in corso
+  </span>
+
+  <span
+    style={{
+      padding: "8px 10px",
+      background: "#dc2626",
+      borderRadius: 999,
+      color: "white",
+      fontSize: "0.8rem",
+      fontWeight: 700,
+    }}
+  >
+    LIVE
+  </span>
+</div>
+
+          
         </div>
 
-        {liveMatches.map((match, index) => (
-          <Card
-            key={index}
-            title={`${match.casa} vs ${match.trasferta}`}
-          >
-            <div
-              style={{
-                textAlign: "center",
-                padding: "10px 0",
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  marginBottom: "15px",
-                  gap: "10px",
-                }}
-              >
-                <div style={{ flex: 1 }}>
-                  <div>{match.casa}</div>
+        {matches.map((match) => (
 
-                  <div
-                    style={{
-                      fontSize: "0.85rem",
-                      color: "#94a3b8",
-                      marginTop: "4px",
-                    }}
-                  >
-                    👤 {match.coachCasa}
-                  </div>
-                </div>
+  <Card
+  key={match.id}
+  highlight={openMatchId === match.id}
+  onClick={() =>
+    setOpenMatchId(
+      openMatchId === match.id
+        ? null
+        : match.id
+    )
+  }
+>
 
-                <div
-                  style={{
-                    fontSize: "1.8rem",
-                    fontWeight: "800",
-                    minWidth: "90px",
-                  }}
-                >
-                  {match.golCasa} - {match.golTrasferta}
-                </div>
+  <div
+    style={{
+    cursor: "pointer",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  }}
+>
+  
+    <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  }}
+>
+  <div
+    style={{
+            padding: "4px 10px",
+      background: "#854d0e",
+      borderRadius: 999,
+            fontSize: "0.8rem",
+      fontWeight: 700,
+      
+    }}
+  >
+       {openMatchId === match.id ? "▼" : "▶"} 🏆 GIRONE {match.gruppo}
+  </div>
+</div>
+</div>
+          <div
+  style={{
+    textAlign: "center",
+    padding: "4px 0",
+  }}
+>
+        <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 0,
+    }}
+  >
+    
+    
+    <div style={{ flex: 1 }}>
+      <div
+        style={{
+          fontWeight: 700,
+          fontSize: "1.50rem",
+        }}
+      >
+        {match.home?.nome}
+      </div>
+      
+<div
+  style={{
+    color: "#facc15",
+    fontWeight: 800,
+    fontSize: "0.95rem",
+    marginBottom: 4,
+  }}
+>
+  {modules[match.id]?.home}
+</div>
 
-                <div style={{ flex: 1 }}>
-                  <div>{match.trasferta}</div>
+      <div
+        style={{
+          color: "#94a3b8",
+          fontSize: "0.8rem",
+        }}
+      >
+        {match.home?.proprietario}
+      </div>
+    </div>
 
-                  <div
-                    style={{
-                      fontSize: "0.85rem",
-                      color: "#94a3b8",
-                      marginTop: "4px",
-                    }}
-                  >
-                    👤 {match.coachTrasferta}
-                  </div>
-                </div>
-              </div>
+    <div
+      style={{
+        minWidth: 100,
+        textAlign: "center",
+      }}
+    >
+      <div
+  style={{
+    fontSize: "3.5rem",
+    fontWeight: 900,
+    lineHeight: 1,
+  }}
+>
+  
+  {liveData[match.id]?.homeGoals ?? 0}
+  {" - "}
+  {liveData[match.id]?.awayGoals ?? 0}
+</div>
 
-              <p
-                style={{
-                  color: "#cbd5e1",
-                  margin: 0,
-                }}
-              >
-                In attesa dei voti...
-              </p>
-            </div>
-          </Card>
+<div
+  style={{
+    marginTop: 8,
+    fontSize: "1rem",
+    color: "#94a3b8",
+    fontWeight: 600,
+  }}
+>
+  {liveData[match.id]?.homeFP?.toFixed(1) ?? "0.0"}
+  {" • "}
+  {liveData[match.id]?.awayFP?.toFixed(1) ?? "0.0"}
+</div>
+
+    </div>
+
+    <div style={{ flex: 1 }}>
+      <div
+        style={{
+          fontWeight: 700,
+          fontSize: "1.50rem",
+        }}
+      >
+        {match.away?.nome}
+      </div>
+
+<div
+  style={{
+    color: "#facc15",
+    fontWeight: 800,
+    fontSize: "0.95rem",
+    marginBottom: 4,
+  }}
+>
+  {modules[match.id]?.away}
+</div>
+
+      <div
+        style={{
+          color: "#94a3b8",
+          fontSize: "0.8rem",
+        }}
+      >
+        {match.away?.proprietario}
+      </div>
+    </div>
+  </div>
+
+</div>
+                        
+ {openMatchId === match.id && (
+  <div
+    style={{ marginTop: 15 }}
+    onClick={(e) => e.stopPropagation()}
+  >
+    <LiveMatchDetails
+      matchId={match.id}
+      onUpdate={(data) =>
+        setLiveData((prev) => ({
+          ...prev,
+          [match.id]: data,
+        }))
+      }
+    />
+  </div>
+)}
+
+</Card>
+
         ))}
 
         <div

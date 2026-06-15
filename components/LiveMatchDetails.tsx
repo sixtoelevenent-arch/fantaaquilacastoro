@@ -1,11 +1,8 @@
 "use client";
 // import { calculateTeam } from "@/lib/fantacalcio";
-import Link from "next/link";
 import { calculateTeam } from "@/lib/fantacalcio";
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 
-import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
 import Collapsible from "@/components/Collapsible";
 
@@ -46,14 +43,23 @@ type PlayerRow = {
   hasVoteRow?: boolean;
 };
 
-export default function LiveMatchPage() {
-const params = useParams();
+
+export default function LiveMatchDetails({
+  matchId,
+  onUpdate,
+}: {
+  matchId: number;
+  onUpdate?: (data: {
+    homeFP: number;
+    awayFP: number;
+    homeGoals: number;
+    awayGoals: number;
+  }) => void;
+}) {
 
 const [loading, setLoading] = useState(true);
 
 const [match, setMatch] = useState<MatchData | null>(null);
-
-const [otherMatches, setOtherMatches] = useState<any[]>([]);
 
 const [homePlayers, setHomePlayers] = useState<PlayerRow[]>([]);
 const [awayPlayers, setAwayPlayers] = useState<PlayerRow[]>([]);
@@ -87,8 +93,8 @@ const [awayIsFinal, setAwayIsFinal] =
   useState(false);
 
 
+
     async function loadMatch() {
-    const matchId = Number(params.id);
     console.log("MATCH ID", matchId);
 
     const { data: matchData, error: matchError } = await supabase
@@ -102,22 +108,6 @@ if (!matchData) {
   setLoading(false);
   return;
 }
-
-const { data: allMatches } = await supabase
-  .from("matches")
-  .select(`
-    *,
-    home:team_home_id(nome),
-    away:team_away_id(nome)
-  `)
-  .eq("matchday_id", matchData.matchday_id)
-  .order("id");
-
-setOtherMatches(
-  (allMatches || []).filter(
-    (m) => m.id !== matchId
-  )
-);
 
     const { data: homeTeam } = await supabase
       .from("teams")
@@ -137,7 +127,7 @@ setOtherMatches(
       .eq("team_id", matchData.team_home_id)
       .eq("matchday_id", matchData.matchday_id)
       .single();
-
+    
     const { data: awayFormation } = await supabase
   .from("formations")
   .select("id")
@@ -284,7 +274,18 @@ setAwayProjectedGoals(
   awayCalc.projectedGoals
 );
 setAwayIsFinal(awayCalc.isFinal);
+onUpdate?.({
+  homeFP: homeCalc.fantapoints,
+  awayFP: awayCalc.fantapoints,
 
+  homeGoals: homeCalc.isFinal
+    ? homeCalc.goals
+    : homeCalc.projectedGoals,
+
+  awayGoals: awayCalc.isFinal
+    ? awayCalc.goals
+    : awayCalc.projectedGoals,
+});
     setMatch({
       id: matchData.id,
 
@@ -308,10 +309,14 @@ setAwayIsFinal(awayCalc.isFinal);
   }
 
   useEffect(() => {
-    if (params?.id) {
-      loadMatch();
-    }
-  }, [params]);
+  loadMatch();
+
+  const interval = setInterval(() => {
+    loadMatch();
+  }, 30000);
+
+  return () => clearInterval(interval);
+}, [matchId]);
 
 function playerIcons(player: any) {
   let icons = "";
@@ -338,26 +343,67 @@ function playerIcons(player: any) {
   return icons;
 }
 
+function roleStyle(role: string) {
+  switch (role) {
+    case "P":
+      return {
+        color: "#38bdf8",
+        borderColor: "rgba(56,189,248,0.25)",
+      };
+
+    case "D":
+      return {
+        color: "#22c55e",
+        borderColor: "rgba(34,197,94,0.25)",
+      };
+
+    case "C":
+      return {
+        color: "#facc15",
+        borderColor: "rgba(250,204,21,0.25)",
+      };
+
+    case "A":
+      return {
+        color: "#ef4444",
+        borderColor: "rgba(239,68,68,0.25)",
+      };
+
+    default:
+      return {
+        color: "#ffffff",
+        borderColor: "rgba(255,255,255,0.1)",
+      };
+  }
+}
+
   function renderTeam(
-    title: string,
-    owner: string,
-    players: PlayerRow[]
-  ) {
+  title: string,
+  owner: string,
+  players: PlayerRow[],
+  votes: number,
+  bonus: number,
+  fp: number
+) {
+
     const titolari = players
-      .filter((p) => p.titolare)
-      .sort(
-        (a, b) =>
-          (a.posizione || 0) -
-          (b.posizione || 0)
-      );
+  .filter((p) => p.titolare)
+  .sort(
+    (a, b) =>
+      (a.posizione || 0) -
+      (b.posizione || 0)
+  );
 
     const panchina = players
-      .filter((p) => !p.titolare)
-      .sort(
-        (a, b) =>
-          (a.ordine_panchina || 0) -
-          (b.ordine_panchina || 0)
-      );
+  .filter((p) => !p.titolare)
+  .sort(
+    (a, b) =>
+      (a.ordine_panchina || 0) -
+      (b.ordine_panchina || 0)
+      
+  );
+
+  let previousRole = "";
       
     return (
         
@@ -375,69 +421,155 @@ function playerIcons(player: any) {
           style={{
             textAlign: "center",
             color: "#94a3b8",
-            marginBottom: 20,
+            marginBottom: 10,
           }}
         >
           {owner}
         </div>
 
-        {titolari.map((player) => (
+        {titolari.map((player) => {
 
-  <div
-    key={`${player.nome}-${player.posizione}`}
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      padding: "7px 0",
-      borderBottom: "1px solid rgba(255,255,255,0.06)",
-    }}
-  >
+  const roleChanged =
+    previousRole !== "" &&
+    previousRole !== player.ruolo;
 
-    <span>
-      {player.ruolo} {livePlayerName(player.nome)}
-    </span>
+  previousRole = player.ruolo;
+
+  const roleInfo = roleStyle(player.ruolo);
+
+  return (
+    <>
+      {roleChanged && (
+        <div
+          style={{
+            margin: "10px 0",
+            borderTop: `2px solid ${roleInfo.borderColor}`,
+          }}
+        />
+      )}
+
+      <div
+  key={`${player.nome}-${player.posizione}`}
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    padding: "7px 10px",
+    borderBottom:
+      "1px solid rgba(255,255,255,0.06)",
+    background:
+      "rgba(255,255,255,0.02)",
+    borderRadius: 8,
+    marginBottom: 4,
+  }}
+>
+
+
+    <div
+  style={{
+    display: "flex",
+    flex: 1,
+    alignItems: "center",
+  }}
+>
+  <span
+  style={{
+    width: 60,
+    fontWeight: 800,
+    fontSize: "1.15rem",
+  }}
+>
+
+   <span
+  style={{
+    color: roleInfo.color,
+    fontWeight: 900,
+  }}
+>
+  {player.ruolo}
+</span>
+
+  </span>
+
+  <span
+  style={{
+    fontSize: "1.08rem",
+    fontWeight: 600,
+  }}
+>
+  {livePlayerName(player.nome)}
+</span>
+
+</div>
 
     <div
   style={{
     display: "flex",
     alignItems: "center",
     gap: 8,
-    minWidth: 70,
-    justifyContent: "flex-end",
   }}
+>
+    <span
+  style={{
+    width: 45,
+    marginLeft: 0,
+    textAlign: "center",
+    color: "#94a3b8",
+  }}
+>
+  {getNationalCode(player.nazionale)}
+</span>
 
-    >
-      <span>{getNationalCode(player.nazionale)}</span>
-
-  <strong>
+<span
+  style={{
+    width: 40,
+    textAlign: "right",
+    fontWeight: 700,
+  }}
+>
   {!player.hasVoteRow
     ? ""
     : player.voto === null
-      ? `⏳ ${playerIcons(player)}`
-      : player.sv
-        ? `SV ${playerIcons(player)}`
-        : `${player.voto} ${playerIcons(player)}`}
-</strong>
+    ? "⏳"
+    : player.sv
+    ? "SV"
+    : player.voto}
+</span>
 
+<span
+  style={{
+    width: 150,
+    fontSize: "1.35rem",
+    textAlign: "left",
+    whiteSpace: "nowrap",
+  }}
+>
+  {playerIcons(player)}
+</span>
 
   </div>
 
 </div>
 
-))}
+    </>
+  );
+})}
 
         <Collapsible
           title={`📋 Panchina (${panchina.length})`}
         >
           {panchina.map((player, index) => (
-            <div
-              key={`${player.nome}-${index}`}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 20,
-              }}
-            >
+  <div
+    key={`${player.nome}-${index}`}
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      gap: 20,
+      background: "rgba(0,0,0,0.15)",
+      padding: "6px 10px",
+      borderRadius: 8,
+      marginBottom: 4,
+    }}
+              >
               <span>
                 {index + 1}. {player.ruolo}{" "}
                 {livePlayerName(player.nome)}
@@ -449,7 +581,82 @@ function playerIcons(player: any) {
             </div>
           ))}
         </Collapsible>
-      </Card>
+
+<div
+  style={{
+    marginTop: 12,
+    paddingTop: 12,
+    borderTop: "1px solid rgba(255,255,255,0.15)",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    textAlign: "center",
+    gap: 10,
+  }}
+>
+  <div>
+    <div
+      style={{
+        color: "#94a3b8",
+        fontSize: "0.8rem",
+      }}
+    >
+      Voti
+    </div>
+
+    <div
+      style={{
+        fontWeight: 800,
+        fontSize: "1.3rem",
+      }}
+    >
+      {votes.toFixed(1)}
+    </div>
+  </div>
+
+  <div>
+    <div
+      style={{
+        color: "#94a3b8",
+        fontSize: "0.8rem",
+      }}
+    >
+      Bonus/Malus
+    </div>
+
+    <div
+      style={{
+        fontWeight: 800,
+        fontSize: "1.3rem",
+        color: "#facc15",
+      }}
+    >
+      {bonus.toFixed(1)}
+    </div>
+  </div>
+
+  <div>
+    <div
+      style={{
+        color: "#94a3b8",
+        fontSize: "0.8rem",
+      }}
+    >
+      Totale
+    </div>
+
+    <div
+      style={{
+        fontWeight: 900,
+        fontSize: "1.5rem",
+        color: "#22c55e",
+      }}
+    >
+      {fp.toFixed(1)}
+    </div>
+  </div>
+</div>
+
+</Card>
     );
   }
 
@@ -461,200 +668,12 @@ function playerIcons(player: any) {
     );
   }
 
-  if (!match) {
-  return (
-    <main style={{ padding: 20, color: "white" }}>
-      <pre>
-        {JSON.stringify(
-          {
-            params,
-            homePlayers: homePlayers.length,
-            awayPlayers: awayPlayers.length,
-          },
-          null,
-          2
-        )}
-      </pre>
-    </main>
-  );
-}
+  if (!match) return null;
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        padding: "20px",
-        background:
-          "linear-gradient(to bottom, #020617 0%, #08122c 50%, #020617 100%)",
-        color: "white",
-      }}
-    >
-      <BackHome />
-
-<h1
-  style={{
-    textAlign: "center",
-    color: "#ef4444",
-    fontSize: "clamp(2.3rem, 7vw, 4rem)",
-    fontWeight: "800",
-    marginTop: "10px",
-    marginBottom: "20px",
-  }}
->
-  🔴 LIVE GIORNATA
-</h1>
-
-<div
-  style={{
-    textAlign: "center",
-    marginBottom: 30,
-  }}
->
-        <Card>
-  <div
-    style={{
-      textAlign: "center",
-      padding: "10px 0",
-    }}
-  >
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginBottom: "15px",
-        gap: "10px",
-      }}
-    >
-      <div style={{ flex: 1 }}>
-        <div>{match.home_name}</div>
-
-        <div
-          style={{
-            fontSize: "0.85rem",
-            color: "#94a3b8",
-            marginTop: "4px",
-          }}
-        >
-          👤 {match.home_owner}
-        </div>
-      </div>
-
-      <div
-        style={{
-          fontSize: "1.8rem",
-          fontWeight: "800",
-          minWidth: "90px",
-        }}
-      >
-        <span
-          style={{
-            color: homeIsFinal
-              ? "#22c55e"
-              : "#facc15",
-          }}
-        >
-          {homeIsFinal
-            ? homeGoals
-            : homeProjectedGoals}
-        </span>
-
-        {" - "}
-
-        <span
-          style={{
-            color: awayIsFinal
-              ? "#22c55e"
-              : "#facc15",
-          }}
-        >
-          {awayIsFinal
-            ? awayGoals
-            : awayProjectedGoals}
-        </span>
-      </div>
-
-      <div style={{ flex: 1 }}>
-        <div>{match.away_name}</div>
-
-        <div
-          style={{
-            fontSize: "0.85rem",
-            color: "#94a3b8",
-            marginTop: "4px",
-          }}
-        >
-          👤 {match.away_owner}
-        </div>
-      </div>
-    </div>
-
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: "15px",
-      }}
-    >
-      <div>
-        <div
-          style={{
-            color: "#9ca3af",
-            fontSize: "0.9rem",
-          }}
-        >
-          Fantapunti
-        </div>
-
-        <div
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: "800",
-          }}
-        >
-          {homeFP.toFixed(1)}
-        </div>
-      </div>
-
-      <div
-        style={{
-          color: "#d1d5db",
-          fontWeight: 700,
-        }}
-      >
-        →
-      </div>
-
-      <div
-        style={{
-          textAlign: "right",
-        }}
-      >
-        <div
-          style={{
-            color: "#9ca3af",
-            fontSize: "0.9rem",
-          }}
-        >
-          Fantapunti
-        </div>
-
-        <div
-          style={{
-            fontSize: "1.5rem",
-            fontWeight: "800",
-          }}
-        >
-          {awayFP.toFixed(1)}
-        </div>
-      </div>
-    </div>
-  </div>
-</Card>
-
-</div>
-
+  <>
+     
+      
 <div
   style={{
     display: "grid",
@@ -664,78 +683,56 @@ function playerIcons(player: any) {
         }}
       >
         {renderTeam(
-          match.home_name,
-          match.home_owner,
-          homePlayers
-        )}
+  match.home_name,
+  match.home_owner,
+  homePlayers,
+  homeVotes,
+  homeBonus,
+  homeFP
+)}
 
         {renderTeam(
-          match.away_name,
-          match.away_owner,
-          awayPlayers
-        )}
+  match.away_name,
+  match.away_owner,
+  awayPlayers,
+  awayVotes,
+  awayBonus,
+  awayFP
+)}
       </div>
-
-<Card>
-  <h2
-    style={{
-      textAlign: "center",
-      marginTop: 0,
-      marginBottom: 20,
-    }}
-  >
-    🏆 Altre Partite
-  </h2>
-
-  {otherMatches.map((m) => (
-    <Link
-      key={m.id}
-      href={`/live/${m.id}`}
-      style={{
-        textDecoration: "none",
-        color: "inherit",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "12px 0",
-          borderBottom:
-            "1px solid rgba(255,255,255,0.08)",
-        }}
-      >
-        <span>{m.home?.nome}</span>
-
-        <strong>
-          {m.gol_home ?? 0} - {m.gol_away ?? 0}
-        </strong>
-
-        <span>{m.away?.nome}</span>
-      </div>
-    </Link>
-  ))}
-</Card>
 
       <div style={{ marginTop: 25 }}>
         <Collapsible title="📖 Legenda">
-          <div>🔴 Partita in corso</div>
-          <div>⏳ Voti non ancora importati</div>
+          <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 10,
+    textAlign: "center",
+  }}
+>
+  <div>⚽ Gol</div>
+  <div>🥅 Gol Subito</div>
+  <div>✨ Clean Sheet</div>
 
-          <br />
+  <div>🅰️ Assist</div>
+  <div>🧤 Rig. Parato</div>
+  <div> </div>
 
-          <div>⚽ Gol</div>
-          <div>🅰️ Assist</div>
-          <div>🟨 Ammonizione</div>
-          <div>🟥 Espulsione</div>
-          <div>🧤 Rigore parato</div>
-          <div>❌ Rigore sbagliato</div>
-          <div>🥅 Gol subito</div>
-          <div>💥 Autogol</div>
-          <div>✨ Clean Sheet</div>
-        </Collapsible>
-      </div>
-    </main>
-  );
-}
+  <div>🟨 Giallo</div>
+  <div>❌ Rig. Sbagliato</div>
+  <div>🔴 Live</div>
+
+  <div>🟥 Rosso</div>
+  <div>💥 Autogol</div>
+  <div>⏳ Attesa</div>  
+  <div></div>
+</div>
+         </Collapsible>
+</div>
+
+</>
+);
+} 
+        
+        

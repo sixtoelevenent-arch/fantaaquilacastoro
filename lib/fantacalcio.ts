@@ -92,6 +92,7 @@ export function calculateTeam(
 ) {
   let votesTotal = 0;
   let bonusTotal = 0;
+  let liveBonusWithoutVote = 0;
 
   let substitutions = 0;
 
@@ -126,13 +127,22 @@ export function calculateTeam(
 
     // LIVE → ancora nessuna sostituzione
     if (!allFinished) {
-      processedPlayers.push({
-        ...starter,
-        sv: true,
-      });
 
-      continue;
-    }
+  if (
+    result &&
+    result.voto === null &&
+    result.bonus !== 0
+  ) {
+    liveBonusWithoutVote += result.bonus;
+  }
+
+  processedPlayers.push({
+    ...starter,
+    sv: true,
+  });
+
+  continue;
+}
 
     // giornata finita → cerca sostituto
     let replacement = null;
@@ -200,7 +210,9 @@ export function calculateTeam(
   }
 
   const fantapoints =
-  votesTotal + bonusTotal;
+  votesTotal +
+  bonusTotal +
+  liveBonusWithoutVote;
 
 const playersWithVote =
   processedPlayers.filter(
@@ -216,6 +228,12 @@ const projectedFP =
 
 const projectedGoals =
   fantasyGoals(projectedFP);
+
+console.log("CALC TEAM", {
+  votesTotal,
+  bonusTotal,
+  fantapoints,
+});
 
   return {
   players: processedPlayers,
