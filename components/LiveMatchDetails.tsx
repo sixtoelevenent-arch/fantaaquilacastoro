@@ -525,9 +525,19 @@ if (playerIsSv) {
   );
 
     if (!benchIsSv) {
-      replacement = benchPlayer;
-      break;
-    }
+
+    replacement = benchPlayer;
+
+  break;
+}
+<span
+  style={{
+    marginLeft: 10,
+  }}
+>
+  {playerIcons(replacement)}
+</span>
+
   }
 
   if (!replacement && sameRoleBench.length > 0) {
@@ -610,10 +620,10 @@ if (playerIsSv) {
     : player.nationalExists
     ? "⏳"
     : ""
-  : player.voto === null
-  ? "⏳"
   : player.sv
-  ? "SV 🔄"
+? "SV 🔄"
+: player.voto === null
+? "⏳"
   : player.voto}
       </span>
 
@@ -645,7 +655,18 @@ if (playerIsSv) {
     </span>
 
     <span>
-      {replacement.voto ?? "SV"}
+      {!replacement.hasVoteRow
+  ? replacement.nationalFinalized
+    ? "SV"
+    : replacement.nationalExists
+    ? "⏳"
+    : ""
+  : replacement.voto === null
+  ? "⏳"
+  : replacement.sv
+  ? "SV"
+  : replacement.voto}
+
     </span>
   </div>
 )}
