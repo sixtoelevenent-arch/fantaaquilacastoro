@@ -449,22 +449,6 @@ function roleStyle(role: string) {
       )}
 
       <div
-  key={`${player.nome}-${player.posizione}`}
-  style={{
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "7px 10px",
-    borderBottom:
-      "1px solid rgba(255,255,255,0.06)",
-    background:
-      "rgba(255,255,255,0.02)",
-    borderRadius: 8,
-    marginBottom: 4,
-  }}
->
-
-
-    <div
   style={{
     display: "flex",
     flex: 1,
@@ -472,48 +456,31 @@ function roleStyle(role: string) {
   }}
 >
   <span
-  style={{
-    width: 60,
-    fontWeight: 800,
-    fontSize: "1.15rem",
-  }}
->
-
-   <span
-  style={{
-    color: roleInfo.color,
-    fontWeight: 900,
-  }}
->
-  {player.ruolo}
-</span>
-
+    style={{
+      width: 32,
+      fontWeight: 800,
+      fontSize: "1rem",
+      color: roleInfo.color,
+    }}
+  >
+    {player.ruolo}
   </span>
 
   <span
-  style={{
-    fontSize: "1.08rem",
-    fontWeight: 600,
-  }}
->
-  {livePlayerName(player.nome)}
-</span>
-
+    style={{
+      fontSize: "0.9rem",
+      fontWeight: 600,
+    }}
+  >
+    {livePlayerName(player.nome)}
+  </span>
 </div>
-
-    <div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: 8,
-  }}
->
     <span
   style={{
-    width: 45,
-    marginLeft: 0,
+    width: 32,
     textAlign: "center",
     color: "#94a3b8",
+    fontSize: "0.9rem",
   }}
 >
   {getNationalCode(player.nazionale)}
@@ -537,9 +504,9 @@ function roleStyle(role: string) {
 
 <span
   style={{
-    width: 150,
-    fontSize: "1.35rem",
-    textAlign: "left",
+    width: 55,
+    fontSize: "1.15rem",
+    textAlign: "center",
     whiteSpace: "nowrap",
   }}
 >
@@ -677,9 +644,8 @@ function roleStyle(role: string) {
 <div
   style={{
     display: "grid",
-          gap: "20px",
-          gridTemplateColumns:
-            "repeat(auto-fit,minmax(340px,1fr))",
+          gap: "10px",
+          gridTemplateColumns: "1fr 1fr",
         }}
       >
         {renderTeam(
