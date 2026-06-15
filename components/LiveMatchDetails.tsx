@@ -504,9 +504,11 @@ if (playerIsSv) {
 
   for (const benchPlayer of sameRoleBench) {
     const benchIsSv =
-      (benchPlayer.hasVoteRow && benchPlayer.sv) ||
-      (!benchPlayer.hasVoteRow &&
-        benchPlayer.nationalLoaded);
+  (benchPlayer.hasVoteRow && benchPlayer.sv) ||
+  (
+    !benchPlayer.hasVoteRow &&
+    benchPlayer.nationalFinalized
+  );
 
     if (!benchIsSv) {
       replacement = benchPlayer;
