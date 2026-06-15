@@ -126,7 +126,7 @@ export function calculateTeam(
     }
 
     // LIVE → ancora nessuna sostituzione
-    iif (!allFinished) {
+    if (!allFinished) {
 
   if (
     result &&
@@ -135,7 +135,15 @@ export function calculateTeam(
   ) {
     liveBonusWithoutVote += result.bonus;
   }
-
+  console.log(
+  starter.nome,
+  {
+    hasVoteRow: starter.hasVoteRow,
+    nationalLoaded: starter.nationalLoaded,
+    sv: result?.sv,
+    voto: result?.voto,
+  }
+);
   processedPlayers.push({
     ...starter,
 
