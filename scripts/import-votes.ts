@@ -44,6 +44,23 @@ function lastName(nome: string) {
 async function main() {
   console.log("Download Fantapiu3...");
 
+  const { data: activeMatchday, error: matchdayError } =
+  await supabase
+    .from("matchdays")
+    .select("id,nome")
+    .eq("attiva", true)
+    .single();
+
+if (matchdayError || !activeMatchday) {
+  throw new Error(
+    "Nessuna giornata attiva trovata"
+  );
+}
+
+console.log(
+  "GIORNATA ATTIVA:",
+  activeMatchday.nome
+);
   const { data } = await axios.get(URL, {
     headers: {
       "User-Agent":
