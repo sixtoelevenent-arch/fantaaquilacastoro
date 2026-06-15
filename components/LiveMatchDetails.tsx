@@ -171,12 +171,7 @@ console.log("AWAY FORMATION", awayFormation);
 
     const { data: votes } = await supabase
   .from("player_votes")
-  .select(`
-    *,
-    players (
-      nazionale
-    )
-  `)
+  .select("*")
   .eq("matchday_id", matchData.matchday_id);
 
   const votesMap = new Map();
