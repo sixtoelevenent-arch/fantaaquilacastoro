@@ -513,11 +513,7 @@ function roleStyle(role: string) {
   {playerIcons(player)}
 </span>
 
-  </div>
-
-</div>
-
-    </>
+     </>
   );
 })}
 
