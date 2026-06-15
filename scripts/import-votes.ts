@@ -10,8 +10,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const URL =
-  "https://fantapiu3.com/voti-globali/fantacalcio-voti-gazzetta-sport-coppa-del-mondo.php?fonte=votifp3&giornata=1";
+const BASE_URL =
+  "https://fantapiu3.com/voti-globali/fantacalcio-voti-gazzetta-sport-coppa-del-mondo.php?fonte=votifp3&giornata=";
 
 function normalize(str: string) {
   return str
@@ -61,6 +61,10 @@ console.log(
   "GIORNATA ATTIVA:",
   activeMatchday.nome
 );
+
+const URL =
+  `${BASE_URL}${activeMatchday.id}`;
+   
   const { data } = await axios.get(URL, {
     headers: {
       "User-Agent":

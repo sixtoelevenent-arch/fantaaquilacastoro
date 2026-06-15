@@ -11,7 +11,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Call Import Endpoint
-        run: |
-          curl -L \
-          https://fantaaquilacastoro.vercel.app/api/import-votes
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Import
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npx tsx scripts/import-votes.ts
