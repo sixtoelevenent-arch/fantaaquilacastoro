@@ -187,20 +187,22 @@ const { data: loadedPlayers } =
  
   const votesMap = new Map();
 
+const votesMap = new Map();
+
 (votes || []).forEach((v: any) => {
   votesMap.set(v.player_id, v);
 });
 
 const loadedNationals = new Set<string>();
 
-(loadedPlayers || []).forEach((p: any) => {
+(votes || []).forEach((v: any) => {
+  const nazionale = v.players?.nazionale;
 
-  if (p.nazionale) {
+  if (nazionale) {
     loadedNationals.add(
-      p.nazionale
+      nazionale.trim().toUpperCase()
     );
   }
-
 });
 
 console.log(homeRows?.[0]);
@@ -229,7 +231,12 @@ const normalize = (rows: any[]) =>
 
       hasVoteRow: !!voteData,
 
-      nationalLoaded,
+      nationalLoaded:
+  loadedNationals.has(
+    (r.nazionale || "")
+      .trim()
+      .toUpperCase()
+  ),
 
       voto: voteData?.voto ?? null,
       sv: voteData?.sv ?? null,

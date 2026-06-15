@@ -28,9 +28,12 @@ function normalizeNation(nation: string) {
   const n = normalize(nation);
 
   const map: Record<string, string> = {
-    OLANDA: "PAESI BASSI",
-    USA: "STATI UNITI",
-  };
+  OLANDA: "PAESI BASSI",
+  USA: "STATI UNITI",
+  IVORY COAST: "COSTA D'AVORIO",
+  SOUTH KOREA: "COREA DEL SUD",
+  CZECH REPUBLIC: "REPUBBLICA CECA",
+};
 
   return map[n] || n;
 }
@@ -64,7 +67,7 @@ console.log(
 
 const URL =
   `${BASE_URL}${activeMatchday.id}`;
-   
+
   const { data } = await axios.get(URL, {
     headers: {
       "User-Agent":
@@ -109,6 +112,22 @@ console.log("EXACT MAP:", exactMap.size);
 
     const info = row.find(".team-country").text().trim();
 
+    const blacklist = [
+  "ANCELOTTI",
+  "NAGELSMANN",
+  "KOEMAN",
+  "MARSCH",
+  "MONTELLA",
+  "POCHETTINO",
+  "DE LA FUENTE",
+  "MORIYASU",
+  "YAKIN M",
+  "BROOS",
+];
+
+if (blacklist.includes(normalize(nome))) {
+  continue;
+}
     const nazioneFantapiu = info
       .split("-")[0]
       .trim();
