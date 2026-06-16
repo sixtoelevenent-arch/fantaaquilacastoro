@@ -567,54 +567,7 @@ function roleStyle(role: string) {
   </div>
 </div>
 
-      <span
-        style={{
-          width: 42,
-textAlign: "center",
-color: "#94a3b8",
-fontSize: "0.9rem",
-flexShrink: 0,
-        }}
-      >
-        {getNationalCode(player.nazionale)}
-      </span>
-
-      <span
-  style={{
-    width: 50,
-textAlign: "center",
-fontWeight: 700,
-flexShrink: 0,
-  }}
->
-  {!player.hasVoteRow
-    ? player.nationalFinalized
-      ? "SV"
-      : player.nationalExists
-      ? "⏳"
-      : ""
-    : player.sv
-    ? "SV"
-    : player.voto === null
-    ? "⏳"
-    : player.voto}
-</span>
-
-
-      <span
-        style={{
-          width: 60,
-fontSize: "1.15rem",
-textAlign: "center",
-whiteSpace: "nowrap",
-flexShrink: 0,
-        }}
-      >
-        {player.replacementPlayer
-  ? "🔄"
-  : playerIcons(player)}
-      </span>
-    </div>
+        </div>
 
     {player.replacementPlayer && (
   <div
