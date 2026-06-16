@@ -510,6 +510,15 @@ function roleStyle(role: string) {
     {player.ruolo}
   </span>
 
+<div
+  style={{
+    flex: 1,
+    minWidth: 0,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+  }}
+>
   <div
     style={{
       flex: 1,
@@ -531,31 +540,43 @@ function roleStyle(role: string) {
     <div
       style={{
         marginTop: 2,
-        fontSize: "0.95rem",
+        fontSize: "0.85rem",
         color: "#94a3b8",
-        whiteSpace: "nowrap",
+        display: "flex",
+        justifyContent: "space-between",
       }}
     >
-      {getNationalCode(player.nazionale)}
-      {" • "}
-      {!player.hasVoteRow
-        ? player.nationalFinalized
-          ? "SV"
-          : player.nationalExists
-          ? "⏳"
-          : ""
-        : player.sv
-        ? "SV"
-        : player.voto === null
-        ? "⏳"
-        : player.voto}
+      <span>
+        {getNationalCode(player.nazionale)}
+      </span>
 
-      {player.replacementPlayer
-        ? " • 🔄"
-        : playerIcons(player)
-        ? ` • ${playerIcons(player)}`
-        : ""}
+      <span>
+        {playerIcons(player)}
+      </span>
     </div>
+  </div>
+
+  <div
+    style={{
+      width: 42,
+      textAlign: "right",
+      fontWeight: 800,
+      fontSize: "1rem",
+      flexShrink: 0,
+      marginLeft: 8,
+    }}
+  >
+    {!player.hasVoteRow
+      ? player.nationalFinalized
+        ? "SV"
+        : player.nationalExists
+        ? "⏳"
+        : ""
+      : player.sv
+      ? "SV"
+      : player.voto === null
+      ? "⏳"
+      : player.voto}
   </div>
 </div>
 
@@ -681,79 +702,40 @@ flexShrink: 0,
 
 <div
   style={{
-    marginTop: 12,
+    marginTop: "auto",
     paddingTop: 12,
     borderTop: "1px solid rgba(255,255,255,0.15)",
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))",
-    textAlign: "center",
-    gap: 10,
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    fontSize: "0.95rem",
+    fontWeight: 700,
   }}
 >
-  <div>
-    <div
-      style={{
-        color: "#94a3b8",
-        fontSize: "0.8rem",
-      }}
-    >
-      Voti
-    </div>
+  <span>
+    Voti {votes.toFixed(1)}
+  </span>
 
-    <div
-      style={{
-        fontWeight: 800,
-        fontSize: "1.3rem",
-      }}
-    >
-      {votes.toFixed(1)}
-    </div>
-  </div>
+  <span
+    style={{
+      color: "#facc15",
+    }}
+  >
+    B {bonus >= 0 ? "+" : ""}
+    {bonus.toFixed(1)}
+  </span>
 
-  <div>
-    <div
-      style={{
-        color: "#94a3b8",
-        fontSize: "0.8rem",
-      }}
-    >
-      Bonus/Malus
-    </div>
-
-    <div
-      style={{
-        fontWeight: 800,
-        fontSize: "1.3rem",
-        color: "#facc15",
-      }}
-    >
-      {bonus.toFixed(1)}
-    </div>
-  </div>
-
-  <div>
-    <div
-      style={{
-        color: "#94a3b8",
-        fontSize: "0.8rem",
-      }}
-    >
-      Totale
-    </div>
-
-    <div
-      style={{
-        fontWeight: 900,
-        fontSize: "1.5rem",
-        color: "#22c55e",
-      }}
-    >
-      {fp.toFixed(1)}
-    </div>
-  </div>
+  <span
+    style={{
+      color: "#22c55e",
+      fontWeight: 900,
+    }}
+  >
+    TOT {fp.toFixed(1)}
+  </span>
 </div>
 
-</Card>
+  </Card>
 </div>
 
     );

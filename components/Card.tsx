@@ -17,6 +17,10 @@ export default function Card({
      onClick={onClick}
      style={{
   cursor: onClick ? "pointer" : "default",
+  
+  display: "flex",
+flexDirection: "column",
+height: "100%",
 
   background: "rgba(255,255,255,0.08)",
   backdropFilter: "blur(10px)",
