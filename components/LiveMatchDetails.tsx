@@ -703,32 +703,23 @@ textOverflow: "ellipsis",
 })}
 
         <Collapsible
-          title={`📋 Panchina (${panchina.length})`}
-        >
-          {panchina.map((player, index) => (
-  <div
-    key={`${player.nome}-${index}`}
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      gap: 20,
-      background: "rgba(0,0,0,0.15)",
-      padding: "6px 10px",
-      borderRadius: 8,
-      marginBottom: 4,
-    }}
-              >
-              <span>
-                {index + 1}. {player.ruolo}{" "}
-                {player.nome}
-              </span>
-
-              <strong>
-                {getNationalCode(player.nazionale)}
-              </strong>
-            </div>
-          ))}
-        </Collapsible>
+  title={`📋 Panchina (${panchina.length})`}
+>
+  {panchina.map((player, index) => (
+    <div
+      key={`${player.nome}-${index}`}
+      style={{
+        padding: "3px 0",
+        fontSize: "0.92rem",
+        color: "#cbd5e1",
+      }}
+    >
+      {index + 1}. {player.ruolo}{" "}
+      {livePlayerName(player.nome)}{" "}
+      {getNationalCode(player.nazionale)}
+    </div>
+  ))}
+</Collapsible>
 
 <div
   style={{
