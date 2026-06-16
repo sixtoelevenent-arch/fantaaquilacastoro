@@ -466,6 +466,8 @@ function roleStyle(role: string) {
   style={{
     minWidth: 0,
     width: "100%",
+    paddingLeft: 2,
+    paddingRight: 2,
   }}
 >
   <Card>
@@ -586,7 +588,7 @@ function roleStyle(role: string) {
       display: "flex",
       alignItems: "center",
       paddingBottom: 8,
-      paddingLeft: 24,
+      paddingLeft: 0,
     }}
   >
     <div
@@ -603,7 +605,21 @@ function roleStyle(role: string) {
           textOverflow: "ellipsis",
         }}
       >
-        ↳ {livePlayerName(player.replacementPlayer.nome)}
+        <span
+  style={{
+    color: replacementRoleInfo.color,
+    fontWeight: 900,
+    fontSize: "1.25rem",
+    marginRight: 4,
+  }}
+>
+  ⤷
+</span>
+
+{livePlayerName(
+  player.replacementPlayer.nome
+)}
+
       </div>
 
       <div
@@ -692,38 +708,57 @@ function roleStyle(role: string) {
 <div
   style={{
     marginTop: "auto",
-    paddingTop: 12,
+    paddingTop: 10,
     borderTop: "1px solid rgba(255,255,255,0.15)",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    fontSize: "0.95rem",
-    fontWeight: 700,
   }}
 >
-  <span>
-    Voti {votes.toFixed(1)}
-  </span>
-
-  <span
+  <div
     style={{
-      color: "#facc15",
+      display: "flex",
+      flexDirection: "column",
+      gap: 4,
+      fontSize: "0.95rem",
+      fontWeight: 700,
     }}
   >
-    B {bonus >= 0 ? "+" : ""}
-    {bonus.toFixed(1)}
-  </span>
+    <div>
+      V {votes.toFixed(1)}
+    </div>
 
-  <span
+    <div
+      style={{
+        color: "#facc15",
+      }}
+    >
+      B {bonus >= 0 ? "+" : ""}
+      {bonus.toFixed(1)}
+    </div>
+  </div>
+
+  <div
     style={{
+      minWidth: 78,
+      height: 58,
+      borderRadius: 14,
+      background:
+        "rgba(34,197,94,0.12)",
+      border:
+        "1px solid rgba(34,197,94,0.35)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       color: "#22c55e",
       fontWeight: 900,
+      fontSize: "1.4rem",
     }}
   >
-    TOT {fp.toFixed(1)}
-  </span>
+    {fp.toFixed(1)}
+  </div>
 </div>
-
+  
   </Card>
 </div>
 
@@ -745,9 +780,10 @@ return (
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "50% 50%",
-    gap: 0,
+    gridTemplateColumns: "1fr 1fr",
+    gap: 4,
     width: "100%",
+    padding: "0 2px",
   }}
 >
 
