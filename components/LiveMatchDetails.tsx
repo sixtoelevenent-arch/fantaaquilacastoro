@@ -711,16 +711,15 @@ textOverflow: "ellipsis",
       style={{
         display: "flex",
         alignItems: "center",
-        gap: 4,
         padding: "1px 0",
-        fontSize: "0.88rem",
+        fontSize: "0.84rem",
         color: "#cbd5e1",
         whiteSpace: "nowrap",
       }}
     >
       <span
         style={{
-          minWidth: 12,
+          minWidth: 10,
           color: "#94a3b8",
         }}
       >
@@ -729,9 +728,9 @@ textOverflow: "ellipsis",
 
       <span
         style={{
+          minWidth: 8,
           fontWeight: 800,
           color: roleStyle(player.ruolo).color,
-          minWidth: 10,
         }}
       >
         {player.ruolo}
@@ -742,6 +741,7 @@ textOverflow: "ellipsis",
           flex: 1,
           overflow: "hidden",
           textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
         {livePlayerName(player.nome)}
@@ -749,6 +749,7 @@ textOverflow: "ellipsis",
 
       <span
         style={{
+          marginLeft: "auto",
           color: "#94a3b8",
           flexShrink: 0,
         }}
