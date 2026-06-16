@@ -577,26 +577,56 @@ function roleStyle(role: string) {
           whiteSpace: "nowrap",
         }}
       >
-        <span
-  style={{
-    width: 55,
-    fontSize: "1.15rem",
-    textAlign: "center",
-    whiteSpace: "nowrap",
-  }}
->
- {playerIcons(
-  player.replacementPlayer ?? player
-)}
+        {playerIcons(
+          player.replacementPlayer ?? player
+        )}
 
-{player.replacedBy ? " 🔄" : ""}
-
-</span>
+        {player.replacedBy ? " 🔄" : ""}
       </span>
     </div>
 
-   
+    {player.replacementPlayer && (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          paddingLeft: 42,
+          paddingBottom: 6,
+          color: "#94a3b8",
+          fontSize: "0.9rem",
+          fontWeight: 600,
+        }}
+      >
+        <span>
+          ↳ {livePlayerName(
+            player.replacementPlayer.nome
+          )}
+        </span>
+
+        <span
+          style={{
+            width: 70,
+            textAlign: "right",
+          }}
+        >
+          {player.replacementPlayer.voto ?? "SV"}
+        </span>
+
+        <span
+          style={{
+            width: 70,
+            textAlign: "center",
+          }}
+        >
+          {playerIcons(
+            player.replacementPlayer
+          )}
+        </span>
+      </div>
+    )}
+
   </div>
+
 );
 
 })}
