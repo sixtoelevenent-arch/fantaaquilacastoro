@@ -561,17 +561,22 @@ textOverflow: "ellipsis",
     color: "#94a3b8",
     display: "flex",
     alignItems: "center",
-    gap: 4,
   }}
 >
-      <span>
-        {getNationalCode(player.nazionale)}
-      </span>
+  <span>
+    {getNationalCode(player.nazionale)}
+  </span>
 
-      <span>
-        {playerIcons(player)}
-      </span>
-    </div>
+  <span
+    style={{
+      marginLeft: "auto",
+      paddingRight: 8,
+    }}
+  >
+    {playerIcons(player)}
+  </span>
+</div>
+
   </div>
 
   <div
@@ -635,9 +640,7 @@ textAlign: "center",
   ⤷
 </span>
 
-{livePlayerName(
-  player.replacementPlayer.nome
-)}
+{player.replacementPlayer.nome}
 
       </div>
 
@@ -719,7 +722,7 @@ textAlign: "center",
               >
               <span>
                 {index + 1}. {player.ruolo}{" "}
-                {livePlayerName(player.nome)}
+                {player.nome}
               </span>
 
               <strong>
