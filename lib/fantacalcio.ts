@@ -121,6 +121,15 @@ export function calculateTeam(
       starter.ruolo
     );
 
+    console.log(
+  starter.nome,
+  {
+    voto: vote?.voto,
+    sv: vote?.sv,
+    result
+  }
+);
+
     // voto normale
     if (
       result &&
@@ -144,6 +153,13 @@ export function calculateTeam(
     !starter.hasVoteRow &&
     starter.nationalFinalized
   );
+
+  if (
+  starter.nome === "DANI OLMO" ||
+  starter.nome === "D. Svensson"
+) {
+
+}
 
 if (!starterIsSv) {
 

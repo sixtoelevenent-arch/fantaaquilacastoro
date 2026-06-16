@@ -181,9 +181,17 @@ const votoParsed = parseFloat(
 );
 
 const isSv =
-  votoRaw.toUpperCase() === "SV" ||
-  votoRaw.toUpperCase() === "S.V." ||
-  votoRaw.toUpperCase() === "S.V";
+  valori[1].trim().toUpperCase() === "SV";
+
+if (isSv) {
+  console.log(
+    "SV TROVATO:",
+    nome,
+    nazioneFantapiu
+  );
+}
+
+
 
 const voto =
   isSv || Number.isNaN(votoParsed)
@@ -319,7 +327,7 @@ const assist = assistValue;
       
       .upsert(
         {
-          matchday_id: activeMatchday.id,,
+          matchday_id: activeMatchday.id,
           player_id: player.id,
           voto,
           gol: golSegnati + (golRigore > 0 ? 1 : 0),
@@ -332,13 +340,7 @@ const assist = assistValue;
           gol_subiti: Math.abs(golSubiti),
           clean_sheet: golSubiti === 0,
           sv: isSv,
-          if (isSv) {
-  console.log(
-    "SV TROVATO:",
-    nome,
-    nazioneFantapiu
-  );
-},
+          
         },
         {
           onConflict: "matchday_id,player_id",

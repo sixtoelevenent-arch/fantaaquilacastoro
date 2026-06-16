@@ -584,11 +584,9 @@ function roleStyle(role: string) {
           whiteSpace: "nowrap",
         }}
       >
-        {playerIcons(
-          player.replacementPlayer ?? player
-        )}
-
-        {player.replacementPlayer ? " 🔄" : ""}
+        {player.replacementPlayer
+  ? "🔄"
+  : playerIcons(player)}
       </span>
     </div>
 
@@ -613,14 +611,15 @@ function roleStyle(role: string) {
       }}
     >
       <span
-        style={{
-          width: 32,
-          color: "#22c55e",
-          fontWeight: 900,
-        }}
-      >
-        ↳
-      </span>
+  style={{
+    width: 32,
+    color: "#22c55e",
+    fontWeight: 900,
+    fontSize: "1.1rem",
+  }}
+>
+  ⤷
+</span>
 
       <span>
         {livePlayerName(
