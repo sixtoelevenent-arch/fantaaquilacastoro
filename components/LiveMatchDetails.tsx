@@ -610,16 +610,26 @@ textOverflow: "ellipsis",
       display: "flex",
       alignItems: "center",
       paddingBottom: 8,
-      paddingLeft: 0,
     }}
   >
+    <span
+      style={{
+        width: 24,
+        flexShrink: 0,
+        color: replacementRoleInfo.color,
+        fontWeight: 900,
+        textAlign: "center",
+      }}
+    >
+      ⤷
+    </span>
+
     <div
-  style={{
-    flex: 1,
-    minWidth: 0,
-    paddingRight: 2,
-  }}
->
+      style={{
+        flex: 1,
+        minWidth: 0,
+      }}
+    >
       <div
         style={{
           fontSize: "0.95rem",
@@ -628,63 +638,48 @@ textOverflow: "ellipsis",
           textOverflow: "ellipsis",
         }}
       >
-        <span
-  style={{
-    color: replacementRoleInfo.color,
-    fontWeight: 900,
-    fontSize: "1.1rem",
-display: "inline-block",
-width: 18,
-textAlign: "center",
-  }}
->
-  ⤷
-</span>
-
-{livePlayerName(
-  player.replacementPlayer.nome
-)}
-
+        {livePlayerName(
+          player.replacementPlayer.nome
+        )}
       </div>
 
       <div
-  style={{
-    marginTop: 2,
-    fontSize: "0.85rem",
-    color: "#94a3b8",
-    display: "flex",
-    alignItems: "center",
-  }}
->
-  <span>
-    {getNationalCode(
-      player.replacementPlayer.nazionale
-    )}
-  </span>
+        style={{
+          marginTop: 2,
+          fontSize: "0.85rem",
+          color: "#94a3b8",
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <span>
+          {getNationalCode(
+            player.replacementPlayer.nazionale
+          )}
+        </span>
 
-  <span
-    style={{
-      marginLeft: "auto",
-      paddingRight: 8,
-    }}
-  >
-    {playerIcons(
-      player.replacementPlayer
-    )}
-  </span>
-</div>
+        <span
+          style={{
+            marginLeft: "auto",
+            paddingRight: 8,
+          }}
+        >
+          {playerIcons(
+            player.replacementPlayer
+          )}
+        </span>
+      </div>
     </div>
 
     <div
-  style={{
-    width: 22,
-    textAlign: "right",
-    fontWeight: 800,
-    fontSize: "0.95rem",
-    flexShrink: 0,
-    marginLeft: 0,
-  }}
->
+      style={{
+        width: 22,
+        textAlign: "right",
+        fontWeight: 800,
+        fontSize: "0.95rem",
+        flexShrink: 0,
+      }}
+    >
       {!player.replacementPlayer.hasVoteRow
         ? player.replacementPlayer.nationalFinalized
           ? "SV"

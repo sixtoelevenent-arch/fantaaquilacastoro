@@ -30,18 +30,12 @@ function normalizeNation(nation: string) {
   const map: Record<string, string> = {
   "OLANDA": "PAESI BASSI",
   "USA": "STATI UNITI",
-  "IVORY COAST": "COSTA D'AVORIO",
+  "IVORY COAST": "COSTA DAVORIO",
   "SOUTH KOREA": "COREA DEL SUD",
   "CZECH REPUBLIC": "REPUBBLICA CECA",
 };
 
   return map[n] || n;
-}
-
-function lastName(nome: string) {
-  const clean = normalize(nome);
-  const parts = clean.split(" ");
-  return parts[parts.length - 1];
 }
 
 async function main() {
@@ -144,33 +138,38 @@ if (
   `${normalize(nome)}|${normalizeNation(nazioneFantapiu)}`;
 
 let player = exactMap.get(key);
+
+if (
+  normalizeNation(nazioneFantapiu) === "COSTA D'AVORIO"
+) {
+  console.log(
+    "MATCH:",
+    nome,
+    "=>",
+    !!player,
+    player?.id,
+    player?.nome
+  );
+}
+
     if (!player) {
   nonTrovati++;
 
   console.log(
-    "NON TROVATO:",
-    nome,
-    "|",
-    nazioneFantapiu,
-    "| KEY:",
-    key
-  );
+  "NON TROVATO:",
+  nome,
+  "|",
+  nazioneFantapiu,
+  "| KEY:",
+  key
+);
 
   continue;
 }
-
     const valori = row
   .find(".table-text.bold")
   .map((_, el) => $(el).text().trim())
   .get();
-
-if (
-  nome.toUpperCase().includes("EMBOLO") ||
-  nome.toUpperCase().includes("MUSIALA")
-) {
-  console.log(nome);
-  console.log(valori);
-}
 
 if (valori.length < 10) continue;
 
@@ -183,36 +182,10 @@ const votoParsed = parseFloat(
 const isSv =
   valori[1].trim().toUpperCase() === "SV";
 
-if (isSv) {
-  console.log(
-    "SV TROVATO:",
-    nome,
-    nazioneFantapiu
-  );
-}
-
-
-
 const voto =
   isSv || Number.isNaN(votoParsed)
     ? null
     : votoParsed;
-
-if (
-  nome.toUpperCase().includes("DUMFRIES") ||
-  nome.toUpperCase().includes("GYOKERES") ||
-  nome.toUpperCase().includes("DEPAY")
-) {
-  console.log(
-    nome,
-    "VOTO RAW:",
-    valori[1],
-    "PARSED:",
-    voto,
-    valori
-  );
-}
-
 // =====================
 // GOL FATTI / SUBITI
 // =====================
@@ -323,34 +296,32 @@ const assistValue =
 const assist = assistValue;
 
     const { error } = await supabase
-      .from("player_votes")
-      
-      .upsert(
-        {
-          matchday_id: activeMatchday.id,
-          player_id: player.id,
-          voto,
-          gol: golSegnati + (golRigore > 0 ? 1 : 0),
-          assist,
-          ammonizione,
-          espulsione,
-          autogol,
-          rigori_parati: rigoriParati,
-          rigori_sbagliati: rigoriSbagliati,
-          gol_subiti: Math.abs(golSubiti),
-          clean_sheet: golSubiti === 0,
-          sv: isSv,
-          
-        },
-        {
-          onConflict: "matchday_id,player_id",
-        }
-      );
-
-    if (error) {
-      console.log("ERRORE:", nome, error.message);
-      continue;
+  .from("player_votes")
+  .upsert(
+    {
+      matchday_id: activeMatchday.id,
+      player_id: player.id,
+      voto,
+      gol: golSegnati + (golRigore > 0 ? 1 : 0),
+      assist,
+      ammonizione,
+      espulsione,
+      autogol,
+      rigori_parati: rigoriParati,
+      rigori_sbagliati: rigoriSbagliati,
+      gol_subiti: Math.abs(golSubiti),
+      clean_sheet: golSubiti === 0,
+      sv: isSv,
+    },
+    {
+      onConflict: "matchday_id,player_id",
     }
+  );
+
+      if (error) {
+  console.log("ERRORE:", nome, error.message);
+  continue;
+}
 
     importati++;
   }

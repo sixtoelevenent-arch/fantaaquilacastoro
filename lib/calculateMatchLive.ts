@@ -206,6 +206,12 @@ nationalFinalized: finalized,
     false
   );
 
+  console.log("MATCH RESULT", {
+  matchId,
+  homeGoals: homeCalc.projectedGoals,
+  awayGoals: awayCalc.projectedGoals,
+});
+
   return {
 
     homeFP:

@@ -267,17 +267,53 @@ bonusTotal += replacement.result.bonus;
   bonusTotal +
   liveBonusWithoutVote;
 
-const playersWithVote =
-  processedPlayers.filter(
-    (p) =>
-      p.hasVoteRow &&
-      p.voto !== null
-  ).length;
+let projectedFP = 0;
 
-const projectedFP =
-  playersWithVote > 0
-    ? (fantapoints / playersWithVote) * 11
-    : 0;
+for (const player of processedPlayers) {
+
+  console.log(
+    "PROJ PLAYER",
+    player.nome,
+    "SV:",
+    player.sv,
+    "REPL:",
+    player.replacementPlayer?.nome
+  );
+  
+  if (player.replacementPlayer) {
+
+  const repl = player.replacementPlayer;
+
+  if (
+    repl.voto !== null &&
+    repl.voto !== undefined
+  ) {
+    projectedFP += repl.voto;
+  } else {
+    projectedFP += 6;
+  }
+
+  projectedFP += repl.bonus || 0;
+
+  continue;
+}
+
+if (player.sv) {
+  continue;
+}
+
+if (
+  player.voto !== null &&
+  player.voto !== undefined
+) {
+  projectedFP += player.voto;
+} else {
+  projectedFP += 6;
+}
+
+projectedFP += player.bonus || 0;
+
+}
 
 const projectedGoals =
   fantasyGoals(projectedFP);
@@ -288,7 +324,13 @@ console.log("CALC TEAM", {
   fantapoints,
 });
 
-  return {
+  console.log("PROIEZIONE", {
+  fantapoints,
+  projectedFP,
+  projectedGoals,
+});
+
+return {
   players: processedPlayers,
 
   substitutions,
