@@ -705,7 +705,13 @@ textOverflow: "ellipsis",
         <Collapsible
   title={`📋 Panchina (${panchina.length})`}
 >
-  {panchina.map((player, index) => (
+  <div
+    style={{
+      marginLeft: "-4px",
+      marginRight: "-4px",
+    }}
+  >
+    {panchina.map((player, index) => (
     <div
   key={`${player.nome}-${index}`}
   style={{
@@ -720,23 +726,23 @@ textOverflow: "ellipsis",
   }}
 >
       <span
-        style={{
-          minWidth: 10,
-          color: "#94a3b8",
-        }}
-      >
-        {index + 1}.
-      </span>
+  style={{
+    color: "#94a3b8",
+    marginRight: 4,
+  }}
+>
+  {index + 1}.
+</span>
 
       <span
-        style={{
-          minWidth: 8,
-          fontWeight: 800,
-          color: roleStyle(player.ruolo).color,
-        }}
-      >
-        {player.ruolo}
-      </span>
+  style={{
+    fontWeight: 800,
+    color: roleStyle(player.ruolo).color,
+    marginRight: 4,
+  }}
+>
+  {player.ruolo}
+</span>
 
       <div
   style={{
@@ -769,6 +775,7 @@ textOverflow: "ellipsis",
 
     </div>
   ))}
+  </div>
 </Collapsible>
 
 <div
