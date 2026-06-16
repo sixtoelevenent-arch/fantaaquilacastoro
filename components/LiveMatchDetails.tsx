@@ -239,7 +239,24 @@ const exists =
 const finalized =
   nationalFinalized.has(nation);
 
-
+if (
+  r.players?.nome?.toUpperCase().includes("OLMO") ||
+  r.players?.nome?.toUpperCase().includes("SVENSSON")
+) {
+  console.log(
+    "DEBUG NORMALIZE",
+    r.players.nome,
+    nation,
+    "exists:",
+    exists,
+    "finalized:",
+    finalized,
+    "vote:",
+    voteData?.voto,
+    "sv:",
+    voteData?.sv
+  );
+}
       return {
 
       player_id: r.player_id,
@@ -464,12 +481,13 @@ function roleStyle(role: string) {
         
     <div
   style={{
-    minWidth: 0,
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 4,
     width: "100%",
-    paddingLeft: 2,
-    paddingRight: 2,
   }}
 >
+
   <Card>
         
         {titolari.map((player) => {
@@ -717,15 +735,18 @@ function roleStyle(role: string) {
 >
   <div
     style={{
+      width: "50%",
       display: "flex",
       flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
       gap: 4,
       fontSize: "0.95rem",
       fontWeight: 700,
     }}
   >
     <div>
-      V {votes.toFixed(1)}
+      Voti {votes.toFixed(1)}
     </div>
 
     <div

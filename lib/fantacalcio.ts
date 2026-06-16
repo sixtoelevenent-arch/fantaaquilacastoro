@@ -150,6 +150,12 @@ export function calculateTeam(
     const starterIsSv =
   result?.sv === true ||
   (
+    starter.hasVoteRow &&
+    starter.voto === null &&
+    starter.sv !== true &&
+    starter.nationalFinalized
+  ) ||
+  (
     !starter.hasVoteRow &&
     starter.nationalFinalized
   );

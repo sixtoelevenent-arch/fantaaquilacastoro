@@ -17,7 +17,7 @@ export default function Card({
      onClick={onClick}
      style={{
   cursor: onClick ? "pointer" : "default",
-  
+
   display: "flex",
 flexDirection: "column",
 height: "100%",
@@ -33,6 +33,9 @@ height: "100%",
 
   padding: "2px",
 
+
+  marginLeft: "2px",
+  marginRight: "2px",
   marginBottom: "12px",
 
   transition: "all 0.2s ease",

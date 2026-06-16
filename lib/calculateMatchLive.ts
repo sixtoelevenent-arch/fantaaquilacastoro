@@ -119,6 +119,24 @@ const exists =
 
 const finalized =
   nationalFinalized.has(nation);
+if (
+  r.players?.nome?.toUpperCase().includes("OLMO") ||
+  r.players?.nome?.toUpperCase().includes("SVENSSON")
+) {
+  console.log(
+    "DEBUG NORMALIZE",
+    r.players.nome,
+    nation,
+    "exists:",
+    exists,
+    "finalized:",
+    finalized,
+    "vote:",
+    voteData?.voto,
+    "sv:",
+    voteData?.sv
+  );
+}
 
       return {
 
