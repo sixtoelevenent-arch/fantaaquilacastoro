@@ -486,13 +486,7 @@ function roleStyle(role: string) {
     display: "flex",
   }}
 >
-  <Card
-  style={{
-    width: "100%",
-    display: "flex",
-    flexDirection: "column",
-  }}
->
+  <Card>
         
         {titolari.map((player) => {
 
