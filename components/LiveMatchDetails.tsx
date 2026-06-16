@@ -616,12 +616,12 @@ if (playerIsSv) {
       >
         {!player.hasVoteRow
   ? player.nationalFinalized
-    ? "SV 🔄"
+    ? "SV"
     : player.nationalExists
     ? "⏳"
     : ""
   : player.sv
-? "SV 🔄"
+? "SV"
 : player.voto === null
 ? "⏳"
   : player.voto}
@@ -635,38 +635,55 @@ if (playerIsSv) {
           whiteSpace: "nowrap",
         }}
       >
-        {playerIcons(player)}
+        <span
+  style={{
+    width: 55,
+    fontSize: "1.15rem",
+    textAlign: "center",
+    whiteSpace: "nowrap",
+  }}
+>
+  {playerIcons(player)}
+
+  {playerIsSv ? " 🔄" : ""}
+</span>
       </span>
     </div>
 
    {replacement && (
   <div
     style={{
-      paddingLeft: 42,
-      paddingBottom: 6,
-      color: "#94a3b8",
-      fontSize: "0.85rem",
       display: "flex",
+      alignItems: "center",
       justifyContent: "space-between",
+      padding: "2px 0 8px 42px",
+      color: "#94a3b8",
+      fontSize: "0.9rem",
+      fontWeight: 600,
     }}
   >
     <span>
       ↳ {livePlayerName(replacement.nome)}
     </span>
 
-    <span>
-      {!replacement.hasVoteRow
-  ? replacement.nationalFinalized
-    ? "SV"
-    : replacement.nationalExists
-    ? "⏳"
-    : ""
-  : replacement.voto === null
-  ? "⏳"
-  : replacement.sv
-  ? "SV"
-  : replacement.voto}
+    <span
+      style={{
+        width: 55,
+        textAlign: "right",
+        fontWeight: 700,
+      }}
+    >
+      {replacement.voto ?? "SV"}
+    </span>
 
+    <span
+      style={{
+        width: 55,
+        textAlign: "center",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {playerIcons(replacement)}
     </span>
   </div>
 )}
