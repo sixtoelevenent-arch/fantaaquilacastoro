@@ -488,6 +488,12 @@ function roleStyle(role: string) {
   }}
 >
 
+  <div
+  style={{
+    width: "50%",
+    minWidth: 0,
+  }}
+>
   <Card>
         
         {titolari.map((player) => {
@@ -788,7 +794,7 @@ boxSizing: "border-box",
   
   </Card>
 </div>
-
+</div>
     );
   }
 
@@ -807,10 +813,10 @@ return (
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "calc(50% - 2px) calc(50% - 2px)",
     gap: 4,
     width: "100%",
-    padding: "0",
+    boxSizing: "border-box",
   }}
 >
 
