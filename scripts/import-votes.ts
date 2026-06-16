@@ -174,9 +174,21 @@ if (
 
 if (valori.length < 10) continue;
 
-const voto = parseFloat(
-  valori[1].replace(",", ".")
+const votoRaw = valori[1].trim();
+
+const votoParsed = parseFloat(
+  votoRaw.replace(",", ".")
 );
+
+const isSv =
+  votoRaw.toUpperCase() === "SV" ||
+  votoRaw.toUpperCase() === "S.V." ||
+  votoRaw.toUpperCase() === "S.V";
+
+const voto =
+  isSv || Number.isNaN(votoParsed)
+    ? null
+    : votoParsed;
 
 if (
   nome.toUpperCase().includes("DUMFRIES") ||
@@ -307,7 +319,7 @@ const assist = assistValue;
       
       .upsert(
         {
-          matchday_id: 1,
+          matchday_id: activeMatchday.id,,
           player_id: player.id,
           voto,
           gol: golSegnati + (golRigore > 0 ? 1 : 0),
@@ -319,7 +331,14 @@ const assist = assistValue;
           rigori_sbagliati: rigoriSbagliati,
           gol_subiti: Math.abs(golSubiti),
           clean_sheet: golSubiti === 0,
-          sv: false,
+          sv: isSv,
+          if (isSv) {
+  console.log(
+    "SV TROVATO:",
+    nome,
+    nazioneFantapiu
+  );
+},
         },
         {
           onConflict: "matchday_id,player_id",

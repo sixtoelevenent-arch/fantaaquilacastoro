@@ -138,8 +138,14 @@ export function calculateTeam(
       continue;
     }
 
-    // LIVE → ancora nessuna sostituzione
-    if (!allFinished) {
+    const starterIsSv =
+  result?.sv === true ||
+  (
+    !starter.hasVoteRow &&
+    starter.nationalFinalized
+  );
+
+if (!starterIsSv) {
 
   if (
     result &&
@@ -148,19 +154,12 @@ export function calculateTeam(
   ) {
     liveBonusWithoutVote += result.bonus;
   }
-  
-processedPlayers.push({
-  ...starter,
 
-  sv:
-    result?.sv === true ||
-    (
-      !starter.hasVoteRow &&
-      starter.nationalFinalized
-    ),
+  processedPlayers.push({
+    ...starter,
+    ...result,
+  });
 
-  voto: result?.voto ?? null,
-});
   continue;
 }
 
@@ -183,20 +182,21 @@ processedPlayers.push({
         bench.ruolo
       );
 
-      if (
-        !benchResult ||
-        benchResult.sv ||
-        benchResult.totale === null
-      ) {
-        continue;
-      }
+      if (!benchResult) {
+  continue;
+}
 
-      replacement = {
-        player: bench,
-        result: benchResult,
-      };
+if (benchResult.sv) {
+  continue;
+}
 
-      break;
+replacement = {
+  player: bench,
+  result: benchResult,
+};
+
+break;
+
     }
 
     if (
@@ -209,8 +209,11 @@ processedPlayers.push({
 
       substitutions++;
 
-      votesTotal += replacement.result.voto;
-      bonusTotal += replacement.result.bonus;
+      if (replacement.result.voto !== null) {
+  votesTotal += replacement.result.voto;
+}
+
+bonusTotal += replacement.result.bonus;
 
       processedPlayers.push({
   ...starter,
@@ -218,38 +221,12 @@ processedPlayers.push({
   replacedBy:
     replacement.player.player_id,
 
-  replacementPlayer:
-    replacement.player,
-
+  replacementPlayer: {
+  ...replacement.player,
   ...replacement.result,
+},
 
-  gol:
-    replacement.player.gol ?? 0,
-
-  assist:
-    replacement.player.assist ?? 0,
-
-  ammonizione:
-    replacement.player.ammonizione ?? false,
-
-  espulsione:
-    replacement.player.espulsione ?? false,
-
-  autogol:
-    replacement.player.autogol ?? 0,
-
-  rigori_parati:
-    replacement.player.rigori_parati ?? 0,
-
-  rigori_sbagliati:
-    replacement.player.rigori_sbagliati ?? 0,
-
-  gol_subiti:
-    replacement.player.gol_subiti ?? 0,
-
-  clean_sheet:
-    replacement.player.clean_sheet ?? false,
-});
+  });
 
       continue;
     }

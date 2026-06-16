@@ -72,11 +72,53 @@ const nationalFinalized = new Set<string>();
     votesMap.set(v.player_id, v);
   });
 
+  const playerIds = (votes || []).map(
+  (v: any) => v.player_id
+);
+
+const { data: loadedPlayers } =
+  await supabase
+    .from("players")
+    .select("id,nazionale")
+    .in("id", playerIds);
+
+(votes || []).forEach((v: any) => {
+  const player = (loadedPlayers || []).find(
+    (p: any) => p.id === v.player_id
+  );
+
+  const nation = player?.nazionale
+    ?.trim()
+    ?.toUpperCase();
+
+  if (!nation) return;
+
+  nationalExists.add(nation);
+
+  if (
+    v.voto !== null ||
+    v.sv === true
+  ) {
+    nationalFinalized.add(nation);
+  }
+});
+
   const normalize = (rows: any[]) =>
     (rows || []).map((r) => {
 
       const voteData =
         votesMap.get(r.player_id);
+
+        const nation =
+  (r.players?.nazionale || "")
+    .trim()
+    .toUpperCase();
+
+const exists =
+  nationalExists.has(nation);
+
+const finalized =
+  nationalFinalized.has(nation);
 
       return {
 
@@ -91,6 +133,9 @@ const nationalFinalized = new Set<string>();
         ordine_panchina: r.ordine_panchina,
 
         hasVoteRow: !!voteData,
+
+        nationalExists: exists,
+nationalFinalized: finalized,
 
         voto: voteData?.voto ?? null,
         sv: voteData?.sv ?? null,

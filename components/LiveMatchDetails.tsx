@@ -303,6 +303,13 @@ const awayCalc = calculateTeam(
   false
 );
 
+console.log(
+  votes?.find(
+    (v: any) =>
+      v.player_id === 12345
+  )
+);
+
 setHomePlayers([
   ...homeCalc.players,
   ...homePlayersNorm.filter((p) => !p.titolare),
@@ -581,49 +588,94 @@ function roleStyle(role: string) {
           player.replacementPlayer ?? player
         )}
 
-        {player.replacedBy ? " 🔄" : ""}
+        {player.replacementPlayer ? " 🔄" : ""}
       </span>
     </div>
 
     {player.replacementPlayer && (
-      <div
+  <div
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      paddingLeft: 42,
+      paddingBottom: 6,
+      color: "#94a3b8",
+      fontSize: "0.9rem",
+      fontWeight: 600,
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        flex: 1,
+        alignItems: "center",
+      }}
+    >
+      <span
         style={{
-          display: "flex",
-          justifyContent: "space-between",
-          paddingLeft: 42,
-          paddingBottom: 6,
-          color: "#94a3b8",
-          fontSize: "0.9rem",
-          fontWeight: 600,
+          width: 32,
+          color: "#22c55e",
+          fontWeight: 900,
         }}
       >
-        <span>
-          ↳ {livePlayerName(
-            player.replacementPlayer.nome
-          )}
-        </span>
+        ↳
+      </span>
 
-        <span
-          style={{
-            width: 70,
-            textAlign: "right",
-          }}
-        >
-          {player.replacementPlayer.voto ?? "SV"}
-        </span>
+      <span>
+        {livePlayerName(
+          player.replacementPlayer.nome
+        )}
+      </span>
+    </div>
 
-        <span
-          style={{
-            width: 70,
-            textAlign: "center",
-          }}
-        >
-          {playerIcons(
-            player.replacementPlayer
-          )}
-        </span>
-      </div>
-    )}
+    <span
+      style={{
+        width: 32,
+        textAlign: "center",
+      }}
+    >
+      {getNationalCode(
+        player.replacementPlayer.nazionale
+      )}
+    </span>
+
+    <span
+      style={{
+        width: 70,
+        textAlign: "right",
+        fontWeight: 700,
+      }}
+    >
+      {!player.replacementPlayer.hasVoteRow
+        ? player.replacementPlayer
+            .nationalFinalized
+          ? "SV"
+          : player.replacementPlayer
+              .nationalExists
+          ? "⏳"
+          : ""
+        : player.replacementPlayer.sv
+        ? "SV"
+        : player.replacementPlayer.voto ===
+          null
+        ? "⏳"
+        : player.replacementPlayer.voto}
+    </span>
+
+    <span
+      style={{
+        width: 70,
+        textAlign: "center",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {playerIcons(
+        player.replacementPlayer
+      )}
+    </span>
+  </div>
+)}
 
   </div>
 
