@@ -483,9 +483,16 @@ function roleStyle(role: string) {
   style={{
     minWidth: 0,
     width: "100%",
+    display: "flex",
   }}
 >
-  <Card>
+  <Card
+  style={{
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+  }}
+>
         
         {titolari.map((player) => {
 
@@ -651,25 +658,25 @@ textAlign: "center",
     color: "#94a3b8",
     display: "flex",
     alignItems: "center",
-    gap: 4,
   }}
 >
-        <span
-  style={{
-    minWidth: 42,
-  }}
->
-  {getNationalCode(
-    player.replacementPlayer.nazionale
-  )}
-</span>
+  <span>
+    {getNationalCode(
+      player.replacementPlayer.nazionale
+    )}
+  </span>
 
-<span>
-  {playerIcons(
-    player.replacementPlayer
-  )}
-</span>
-      </div>
+  <span
+    style={{
+      marginLeft: "auto",
+      paddingRight: 8,
+    }}
+  >
+    {playerIcons(
+      player.replacementPlayer
+    )}
+  </span>
+</div>
     </div>
 
     <div
