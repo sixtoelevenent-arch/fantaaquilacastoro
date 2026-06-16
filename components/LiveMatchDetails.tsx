@@ -575,14 +575,12 @@ textOverflow: "ellipsis",
 
   <div
   style={{
-    width: 46,
+    width: 34,
     textAlign: "right",
     fontWeight: 800,
     fontSize: "1rem",
     flexShrink: 0,
-    marginLeft: 8,
-    paddingRight: 6,
-    boxSizing: "border-box",
+    marginLeft: 4,
   }}
 >
     {!player.hasVoteRow
@@ -609,11 +607,12 @@ textOverflow: "ellipsis",
     }}
   >
     <div
-      style={{
-        flex: 1,
-        minWidth: 0,
-      }}
-    >
+  style={{
+    flex: 1,
+    minWidth: 0,
+    paddingRight: 2,
+  }}
+>
       <div
         style={{
           fontSize: "0.95rem",
@@ -665,17 +664,15 @@ textAlign: "center",
     </div>
 
     <div
-      style={{
-        width: 46        ,
-        textAlign: "right",
-        fontWeight: 800,
-        fontSize: "1rem",
-        flexShrink: 0,
-        marginLeft: 8,
-        paddingRight: 6,
-boxSizing: "border-box",
-      }}
-    >
+  style={{
+    width: 34,
+    textAlign: "right",
+    fontWeight: 800,
+    fontSize: "1rem",
+    flexShrink: 0,
+    marginLeft: 4,
+  }}
+>
       {!player.replacementPlayer.hasVoteRow
         ? player.replacementPlayer.nationalFinalized
           ? "SV"
