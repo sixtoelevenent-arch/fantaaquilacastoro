@@ -641,7 +641,9 @@ textAlign: "center",
   ⤷
 </span>
 
-{player.replacementPlayer.nome}
+{livePlayerName(
+  player.replacementPlayer.nome
+)}
 
       </div>
 
