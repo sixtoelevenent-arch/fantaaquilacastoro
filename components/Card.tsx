@@ -27,7 +27,7 @@ export default function Card({
 
   borderRadius: "20px",
 
-  padding: "14px",
+  padding: "8px",
 
   marginBottom: "12px",
 
