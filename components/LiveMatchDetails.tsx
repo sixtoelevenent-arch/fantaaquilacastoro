@@ -808,10 +808,7 @@ return (
   style={{
     display: "grid",
     gap: "10px",
-    gridTemplateColumns:
-      window.innerWidth < 768
-        ? "1fr"
-        : "1fr 1fr",
+    gridTemplateColumns: "1fr 1fr",
   }}
 >
 
