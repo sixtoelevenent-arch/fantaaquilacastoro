@@ -462,26 +462,14 @@ function roleStyle(role: string) {
       
     return (
         
-      <Card>
-        <h2
-          style={{
-            marginTop: 0,
-            textAlign: "center",
-          }}
-        >
-          {title}
-        </h2>
-
-        <div
-          style={{
-            textAlign: "center",
-            color: "#94a3b8",
-            marginBottom: 4,
-          }}
-        >
-          {owner}
-        </div>
-
+    <div
+  style={{
+    minWidth: 0,
+    width: "100%",
+  }}
+>
+  <Card>
+        
         {titolari.map((player) => {
 
   const roleChanged =
@@ -505,7 +493,7 @@ function roleStyle(role: string) {
   style={{
     display: "flex",
     alignItems: "flex-start",
-    padding: "10px 0",
+    padding: "6px 0",
     borderBottom:
       "1px solid rgba(255,255,255,0.05)",
   }}
@@ -514,7 +502,7 @@ function roleStyle(role: string) {
     style={{
       width: 24,
       fontWeight: 800,
-      fontSize: "1.35rem",
+      fontSize: "1rem",
       color: roleInfo.color,
       flexShrink: 0,
     }}
@@ -530,8 +518,8 @@ function roleStyle(role: string) {
   >
     <div
       style={{
-        fontSize: "0.9rem",
-        fontWeight: 600,
+        fontSize: "1rem",
+        fontWeight: 700,
         whiteSpace: "nowrap",
         overflow: "hidden",
         textOverflow: "ellipsis",
@@ -543,7 +531,7 @@ function roleStyle(role: string) {
     <div
       style={{
         marginTop: 2,
-        fontSize: "1.0rem",
+        fontSize: "0.95rem",
         color: "#94a3b8",
         whiteSpace: "nowrap",
       }}
@@ -573,17 +561,15 @@ function roleStyle(role: string) {
 
       {player.replacementPlayer && (
   <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      paddingLeft: 0,
-      paddingBottom: 6,
-      color: "#94a3b8",
-      fontSize: "1.15rem",
-      fontWeight: 600,
-    }}
-  >
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+    paddingBottom: 8,
+    fontSize: "1rem",
+  }}
+>
+
     <div
       style={{
         display: "flex",
@@ -612,7 +598,7 @@ function roleStyle(role: string) {
 
     <span
       style={{
-        width: 32,
+        width: 28,
         textAlign: "center",
       }}
     >
@@ -623,7 +609,7 @@ function roleStyle(role: string) {
 
     <span
       style={{
-        width: 50,
+        width: 40,
 textAlign: "center",
 fontWeight: 700,
 flexShrink: 0,
@@ -647,7 +633,7 @@ flexShrink: 0,
 
     <span
       style={{
-        width: 70,
+        width: 45,
         textAlign: "center",
         whiteSpace: "nowrap",
       }}
@@ -768,6 +754,8 @@ flexShrink: 0,
 </div>
 
 </Card>
+</div>
+
     );
   }
 
@@ -786,8 +774,9 @@ return (
 <div
   style={{
     display: "grid",
-    gap: "4px",
-    gridTemplateColumns: "1fr 1fr",
+    gridTemplateColumns: "50% 50%",
+    gap: 0,
+    width: "100%",
   }}
 >
 
