@@ -479,19 +479,12 @@ function roleStyle(role: string) {
       
     return (
         
-    <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 4,
-    width: "100%",
-  }}
->
+    return (
 
-  <div
+<div
   style={{
-    width: "50%",
     minWidth: 0,
+    width: "100%",
   }}
 >
   <Card>
@@ -793,7 +786,6 @@ boxSizing: "border-box",
 </div>
   
   </Card>
-</div>
 </div>
     );
   }
