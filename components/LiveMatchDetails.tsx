@@ -476,7 +476,7 @@ function roleStyle(role: string) {
           style={{
             textAlign: "center",
             color: "#94a3b8",
-            marginBottom: 10,
+            marginBottom: 4,
           }}
         >
           {owner}
@@ -505,7 +505,7 @@ function roleStyle(role: string) {
   style={{
     display: "flex",
     alignItems: "flex-start",
-    padding: "6px 0",
+    padding: "10px 0",
     borderBottom:
       "1px solid rgba(255,255,255,0.05)",
   }}
@@ -514,7 +514,7 @@ function roleStyle(role: string) {
     style={{
       width: 24,
       fontWeight: 800,
-      fontSize: "1rem",
+      fontSize: "1.35rem",
       color: roleInfo.color,
       flexShrink: 0,
     }}
@@ -543,7 +543,7 @@ function roleStyle(role: string) {
     <div
       style={{
         marginTop: 2,
-        fontSize: "0.75rem",
+        fontSize: "1.0rem",
         color: "#94a3b8",
         whiteSpace: "nowrap",
       }}
@@ -580,7 +580,7 @@ function roleStyle(role: string) {
       paddingLeft: 0,
       paddingBottom: 6,
       color: "#94a3b8",
-      fontSize: "0.9rem",
+      fontSize: "1.15rem",
       fontWeight: 600,
     }}
   >
@@ -786,7 +786,7 @@ return (
 <div
   style={{
     display: "grid",
-    gap: "10px",
+    gap: "4px",
     gridTemplateColumns: "1fr 1fr",
   }}
 >
