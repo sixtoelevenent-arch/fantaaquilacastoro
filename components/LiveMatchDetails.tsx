@@ -544,7 +544,7 @@ function roleStyle(role: string) {
   >
     <div
       style={{
-        fontSize: "0.92rem",
+        fontSize: "0.95rem",
 fontWeight: 700,
 whiteSpace: "nowrap",
 overflow: "hidden",
@@ -570,7 +570,7 @@ textOverflow: "ellipsis",
   <span
     style={{
       marginLeft: "auto",
-      paddingRight: 8,
+      paddingRight: 2,
     }}
   >
     {playerIcons(player)}
@@ -581,12 +581,12 @@ textOverflow: "ellipsis",
 
   <div
   style={{
-    width: 30,
+    width: 22,
     textAlign: "right",
     fontWeight: 800,
     fontSize: "0.95rem",
     flexShrink: 0,
-    marginLeft: 4,
+    marginLeft: 0,
   }}
 >
     {!player.hasVoteRow
@@ -674,12 +674,12 @@ textAlign: "center",
 
     <div
   style={{
-    width: 30,
+    width: 22,
     textAlign: "right",
     fontWeight: 800,
     fontSize: "0.95rem",
     flexShrink: 0,
-    marginLeft: 4,
+    marginLeft: 0,
   }}
 >
       {!player.replacementPlayer.hasVoteRow
