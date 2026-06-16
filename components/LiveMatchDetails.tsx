@@ -741,7 +741,7 @@ textAlign: "center",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    minHeight: 70,
+    flexShrink: 0,
   }}
 >
   

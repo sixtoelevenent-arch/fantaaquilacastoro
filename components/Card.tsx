@@ -61,13 +61,18 @@ overflow: "hidden",
       )}
 
       <div
-        style={{
-          color: "#e2e8f0",
-          lineHeight: 1.8,
-        }}
-      >
-        {children}
-      </div>
+  style={{
+    color: "#e2e8f0",
+    lineHeight: 1.8,
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    minHeight: 0,
+  }}
+>
+  {children}
+</div>
+
     </div>
   );
 }
