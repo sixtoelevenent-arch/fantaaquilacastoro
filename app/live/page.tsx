@@ -230,16 +230,26 @@ return (
 
 {matches.length === 0 && (
   <Card>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      paddingTop: 0,
+      marginTop: -15,
+    }}
+  >
     <img
       src="/images/pasquale-banner.png"
       alt="Pasquale l'Aquila Reale"
       style={{
-        width: "90%",
-        display: "block",
+        width: "88%",
+        maxWidth: "520px",
         borderRadius: 16,
       }}
     />
-  </Card>
+  </div>
+</Card>
+
 )}
 
 {matches.map((match) => (
