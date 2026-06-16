@@ -234,7 +234,7 @@ return (
       src="/images/pasquale-banner.png"
       alt="Pasquale l'Aquila Reale"
       style={{
-        width: "95%",
+        width: "90%",
         display: "block",
         borderRadius: 16,
       }}
