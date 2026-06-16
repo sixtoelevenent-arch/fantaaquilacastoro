@@ -228,17 +228,19 @@ return (
           
         </div>   {/* chiusura del blocco LIVE */}
 
-<Card>
-  <img
-    src="/images/pasquale-banner.png"
-    alt="Pasquale l'Aquila Reale"
-    style={{
-      width: "100%",
-      display: "block",
-      borderRadius: 16,
-    }}
-  />
-</Card>
+{matches.length === 0 && (
+  <Card>
+    <img
+      src="/images/pasquale-banner.png"
+      alt="Pasquale l'Aquila Reale"
+      style={{
+        width: "95%",
+        display: "block",
+        borderRadius: 16,
+      }}
+    />
+  </Card>
+)}
 
 {matches.map((match) => (
 
