@@ -707,17 +707,47 @@ textOverflow: "ellipsis",
 >
   {panchina.map((player, index) => (
     <div
-      key={`${player.nome}-${index}`}
-      style={{
-        padding: "3px 0",
-        fontSize: "0.92rem",
-        color: "#cbd5e1",
-      }}
-    >
-      {index + 1}. {player.ruolo}{" "}
-      {livePlayerName(player.nome)}{" "}
-      {getNationalCode(player.nazionale)}
-    </div>
+  key={`${player.nome}-${index}`}
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    padding: "2px 0",
+    fontSize: "0.92rem",
+    color: "#cbd5e1",
+  }}
+>
+  <span
+    style={{
+      minWidth: 18,
+      color: "#94a3b8",
+    }}
+  >
+    {index + 1}.
+  </span>
+
+  <span
+    style={{
+      fontWeight: 800,
+      color: roleStyle(player.ruolo).color,
+      minWidth: 12,
+    }}
+  >
+    {player.ruolo}
+  </span>
+
+  <span>
+    {livePlayerName(player.nome)}
+  </span>
+
+  <span
+    style={{
+      color: "#94a3b8",
+    }}
+  >
+    {getNationalCode(player.nazionale)}
+  </span>
+</div>
   ))}
 </Collapsible>
 
