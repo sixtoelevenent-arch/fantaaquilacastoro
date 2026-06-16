@@ -567,9 +567,7 @@ function roleStyle(role: string) {
   </div>
 </div>
 
-        </div>
-
-    {player.replacementPlayer && (
+      {player.replacementPlayer && (
   <div
     style={{
       display: "flex",
