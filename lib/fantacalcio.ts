@@ -169,6 +169,7 @@ export function calculateTeam(
 
 if (!starterIsSv) {
 
+  
   if (
     result &&
     result.voto === null &&
@@ -240,15 +241,16 @@ bonusTotal += replacement.result.bonus;
       processedPlayers.push({
   ...starter,
 
+  sv: true,
+
   replacedBy:
     replacement.player.player_id,
 
   replacementPlayer: {
-  ...replacement.player,
-  ...replacement.result,
-},
-
-  });
+    ...replacement.player,
+    ...replacement.result,
+  },
+});
 
       continue;
     }

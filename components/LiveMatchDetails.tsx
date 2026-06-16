@@ -544,7 +544,7 @@ function roleStyle(role: string) {
   >
     <div
       style={{
-        fontSize: "0.95rem",
+        fontSize: "0.92rem",
 fontWeight: 700,
 whiteSpace: "nowrap",
 overflow: "hidden",
@@ -555,14 +555,15 @@ textOverflow: "ellipsis",
     </div>
 
     <div
-      style={{
-        marginTop: 2,
-        fontSize: "0.85rem",
-        color: "#94a3b8",
-        display: "flex",
-        justifyContent: "space-between",
-      }}
-    >
+  style={{
+    marginTop: 2,
+    fontSize: "0.85rem",
+    color: "#94a3b8",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+  }}
+>
       <span>
         {getNationalCode(player.nazionale)}
       </span>
@@ -575,10 +576,10 @@ textOverflow: "ellipsis",
 
   <div
   style={{
-    width: 34,
+    width: 30,
     textAlign: "right",
     fontWeight: 800,
-    fontSize: "1rem",
+    fontSize: "0.95rem",
     flexShrink: 0,
     marginLeft: 4,
   }}
@@ -641,34 +642,39 @@ textAlign: "center",
       </div>
 
       <div
-        style={{
-          marginTop: 2,
-          fontSize: "0.85rem",
-          color: "#94a3b8",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <span>
-          {getNationalCode(
-            player.replacementPlayer.nazionale
-          )}
-        </span>
+  style={{
+    marginTop: 2,
+    fontSize: "0.85rem",
+    color: "#94a3b8",
+    display: "flex",
+    alignItems: "center",
+    gap: 4,
+  }}
+>
+        <span
+  style={{
+    minWidth: 42,
+  }}
+>
+  {getNationalCode(
+    player.replacementPlayer.nazionale
+  )}
+</span>
 
-        <span>
-          {playerIcons(
-            player.replacementPlayer
-          )}
-        </span>
+<span>
+  {playerIcons(
+    player.replacementPlayer
+  )}
+</span>
       </div>
     </div>
 
     <div
   style={{
-    width: 34,
+    width: 30,
     textAlign: "right",
     fontWeight: 800,
-    fontSize: "1rem",
+    fontSize: "0.95rem",
     flexShrink: 0,
     marginLeft: 4,
   }}
