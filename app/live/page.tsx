@@ -410,6 +410,79 @@ return (
 
         ))}
 
+<Card>
+  <div
+    style={{
+      textAlign: "center",
+      padding: "20px",
+      background:
+        "linear-gradient(135deg,#7f1d1d,#450a0a)",
+      borderRadius: 20,
+    }}
+  >
+    <div
+      style={{
+        fontSize: "4rem",
+        marginBottom: 10,
+      }}
+    >
+      🦅
+    </div>
+
+    <div
+      style={{
+        color: "#facc15",
+        fontWeight: 900,
+        fontSize: "1.8rem",
+        marginBottom: 12,
+      }}
+    >
+      LIVE 1ª GIORNATA
+    </div>
+
+    <div
+      style={{
+        color: "#fff",
+        fontSize: "1.1rem",
+        marginBottom: 10,
+      }}
+    >
+      Il Live della prima giornata è offerto da:
+    </div>
+
+    <div
+      style={{
+        color: "#facc15",
+        fontWeight: 900,
+        fontSize: "2rem",
+      }}
+    >
+      👑 Pasquale l'Aquila Reale
+    </div>
+
+    <div
+      style={{
+        marginTop: 12,
+        color: "#fecaca",
+        fontSize: "0.95rem",
+      }}
+    >
+      Sponsor ufficiale della 1ª giornata
+    </div>
+  </div>
+
+<Card>
+  <img
+    src="/images/pasquale-banner.png"
+    alt="Pasquale l'Aquila Reale"
+    style={{
+      width: "100%",
+      display: "block",
+      borderRadius: 16,
+    }}
+  />
+</Card>
+
         <div
           style={{
             marginTop: "50px",
