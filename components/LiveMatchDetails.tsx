@@ -707,8 +707,8 @@ textOverflow: "ellipsis",
 >
   <div
     style={{
-      marginLeft: "-8px",
-      marginRight: "-8px",
+      marginLeft: "-12px",
+      marginRight: "-12px",
     }}
   >
     {panchina.map((player, index) => (
