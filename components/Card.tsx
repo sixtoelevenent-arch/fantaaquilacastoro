@@ -31,11 +31,10 @@ height: "100%",
 
   borderRadius: "20px",
 
-  padding: "2px",
+  padding: "8px",
 
-
-  marginLeft: "2px",
-  marginRight: "2px",
+marginLeft: 0,
+marginRight: 0,
   marginBottom: "12px",
 
   transition: "all 0.2s ease",

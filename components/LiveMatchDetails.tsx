@@ -577,15 +577,17 @@ function roleStyle(role: string) {
   </div>
 
   <div
-    style={{
-      width: 42,
-      textAlign: "right",
-      fontWeight: 800,
-      fontSize: "1rem",
-      flexShrink: 0,
-      marginLeft: 8,
-    }}
-  >
+  style={{
+    width: 46,
+    textAlign: "right",
+    fontWeight: 800,
+    fontSize: "1rem",
+    flexShrink: 0,
+    marginLeft: 8,
+    paddingRight: 6,
+    boxSizing: "border-box",
+  }}
+>
     {!player.hasVoteRow
       ? player.nationalFinalized
         ? "SV"
@@ -627,8 +629,10 @@ function roleStyle(role: string) {
   style={{
     color: replacementRoleInfo.color,
     fontWeight: 900,
-    fontSize: "1.25rem",
-    marginRight: 4,
+    fontSize: "1.1rem",
+display: "inline-block",
+width: 18,
+textAlign: "center",
   }}
 >
   ⤷
@@ -665,12 +669,14 @@ function roleStyle(role: string) {
 
     <div
       style={{
-        width: 42,
+        width: 46        ,
         textAlign: "right",
         fontWeight: 800,
         fontSize: "1rem",
         flexShrink: 0,
         marginLeft: 8,
+        paddingRight: 6,
+boxSizing: "border-box",
       }}
     >
       {!player.replacementPlayer.hasVoteRow
@@ -804,7 +810,7 @@ return (
     gridTemplateColumns: "1fr 1fr",
     gap: 4,
     width: "100%",
-    padding: "0 2px",
+    padding: "0",
   }}
 >
 
