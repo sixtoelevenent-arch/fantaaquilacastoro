@@ -492,8 +492,12 @@ function roleStyle(role: string) {
 
   const roleInfo = roleStyle(player.ruolo);
   
+  const replacementRoleInfo =
+  player.replacementPlayer
+    ? roleStyle(player.replacementPlayer.ruolo)
+    : roleInfo;
 
-  return (
+    return (
   <div
     key={`${player.nome}-${player.posizione}`}
   >
@@ -573,7 +577,7 @@ function roleStyle(role: string) {
       display: "flex",
       alignItems: "center",
       justifyContent: "space-between",
-      paddingLeft: 42,
+      paddingLeft: 0,
       paddingBottom: 6,
       color: "#94a3b8",
       fontSize: "0.9rem",
@@ -587,15 +591,16 @@ function roleStyle(role: string) {
         alignItems: "center",
       }}
     >
-      <span
+ <span
   style={{
-    width: 32,
-    color: "#22c55e",
+    width: 24,
+    color: replacementRoleInfo.color,
     fontWeight: 900,
-    fontSize: "1.1rem",
+    fontSize: "1rem",
+    flexShrink: 0,
   }}
 >
-  ⤷
+  ↳
 </span>
 
       <span>
