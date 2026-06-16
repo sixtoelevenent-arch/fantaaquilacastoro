@@ -479,9 +479,7 @@ function roleStyle(role: string) {
       
     return (
         
-    return (
-
-<div
+ <div
   style={{
     minWidth: 0,
     width: "100%",
