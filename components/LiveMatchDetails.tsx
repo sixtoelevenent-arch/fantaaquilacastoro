@@ -850,10 +850,12 @@ awayFP
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: 10,
-    textAlign: "center",
+    gap: 4,
+    width: "100%",
+    minWidth: 0,
   }}
 >
+  
   <div>⚽ Gol</div>
   <div>🥅 Gol Subito</div>
   <div>✨ Clean Sheet</div>
