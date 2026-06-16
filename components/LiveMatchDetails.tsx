@@ -747,8 +747,10 @@ textAlign: "center",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+    minHeight: 70,
   }}
 >
+  
   <div
     style={{
       width: "50%",
