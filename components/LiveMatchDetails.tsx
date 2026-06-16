@@ -498,51 +498,74 @@ function roleStyle(role: string) {
     key={`${player.nome}-${player.posizione}`}
   >
     <div
+  style={{
+    display: "flex",
+    alignItems: "flex-start",
+    padding: "6px 0",
+    borderBottom:
+      "1px solid rgba(255,255,255,0.05)",
+  }}
+>
+  <span
+    style={{
+      width: 24,
+      fontWeight: 800,
+      fontSize: "1rem",
+      color: roleInfo.color,
+      flexShrink: 0,
+    }}
+  >
+    {player.ruolo}
+  </span>
+
+  <div
+    style={{
+      flex: 1,
+      minWidth: 0,
+    }}
+  >
+    <div
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "6px 0",
-        borderBottom:
-          "1px solid rgba(255,255,255,0.05)",
+        fontSize: "0.9rem",
+        fontWeight: 600,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       }}
     >
-      {roleChanged && (
-        <div
-          style={{
-            margin: "10px 0",
-            borderTop: `2px solid ${roleInfo.borderColor}`,
-          }}
-        />
-      )}
+      {livePlayerName(player.nome)}
+    </div>
 
-      <div
-        style={{
-          display: "flex",
-          flex: 1,
-          alignItems: "center",
-        }}
-      >
-        <span
-          style={{
-            width: 32,
-            fontWeight: 800,
-            fontSize: "1rem",
-            color: roleInfo.color,
-          }}
-        >
-          {player.ruolo}
-        </span>
+    <div
+      style={{
+        marginTop: 2,
+        fontSize: "0.75rem",
+        color: "#94a3b8",
+        whiteSpace: "nowrap",
+      }}
+    >
+      {getNationalCode(player.nazionale)}
+      {" • "}
+      {!player.hasVoteRow
+        ? player.nationalFinalized
+          ? "SV"
+          : player.nationalExists
+          ? "⏳"
+          : ""
+        : player.sv
+        ? "SV"
+        : player.voto === null
+        ? "⏳"
+        : player.voto}
 
-        <span
-          style={{
-            fontSize: "0.9rem",
-            fontWeight: 600,
-          }}
-        >
-          {livePlayerName(player.nome)}
-        </span>
-      </div>
+      {player.replacementPlayer
+        ? " • 🔄"
+        : playerIcons(player)
+        ? ` • ${playerIcons(player)}`
+        : ""}
+    </div>
+  </div>
+</div>
 
       <span
         style={{
