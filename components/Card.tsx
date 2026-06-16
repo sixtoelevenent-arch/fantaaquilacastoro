@@ -33,7 +33,12 @@ height: "100%",
 
   padding: "8px",
 
+  marginLeft: 0,
+marginRight: 0,
   marginBottom: "12px",
+
+  boxSizing: "border-box",
+overflow: "hidden",
 
   transition: "all 0.2s ease",
 

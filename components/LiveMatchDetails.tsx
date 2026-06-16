@@ -544,11 +544,11 @@ function roleStyle(role: string) {
   >
     <div
       style={{
-        fontSize: "1rem",
-        fontWeight: 700,
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
+        fontSize: "0.95rem",
+fontWeight: 700,
+whiteSpace: "nowrap",
+overflow: "hidden",
+textOverflow: "ellipsis",
       }}
     >
       {livePlayerName(player.nome)}
@@ -803,7 +803,7 @@ return (
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "calc(50% - 2px) calc(50% - 2px)",
+    gridTemplateColumns: "1fr 1fr",
     gap: 4,
     width: "100%",
     boxSizing: "border-box",
