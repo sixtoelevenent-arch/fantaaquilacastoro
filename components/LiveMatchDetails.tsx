@@ -549,28 +549,24 @@ function roleStyle(role: string) {
       </span>
 
       <span
-        style={{
-          width: 70,
-          textAlign: "right",
-          fontWeight: 700,
-        }}
-      >
-        {!player.hasVoteRow
-  ? player.nationalFinalized
+  style={{
+    width: 70,
+    textAlign: "right",
+    fontWeight: 700,
+  }}
+>
+  {!player.hasVoteRow
+    ? player.nationalFinalized
+      ? "SV"
+      : player.nationalExists
+      ? "⏳"
+      : ""
+    : player.sv
     ? "SV"
-    : player.nationalExists
+    : player.voto === null
     ? "⏳"
-    : ""
-  : player.sv
-? "SV"
-: player.voto === null
-? "⏳"
-  : player.voto}
-      </span>{player.voto === null
-  ? player.sv
-    ? "SV"
-    : "⏳"
-  : player.voto}
+    : player.voto}
+</span>
 
 
       <span
