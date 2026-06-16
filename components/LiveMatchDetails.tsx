@@ -707,50 +707,57 @@ textOverflow: "ellipsis",
 >
   {panchina.map((player, index) => (
     <div
-  key={`${player.nome}-${index}`}
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: 6,
-    padding: "2px 0",
-    fontSize: "0.92rem",
-    color: "#cbd5e1",
-  }}
->
-  <span
-    style={{
-      minWidth: 18,
-      color: "#94a3b8",
-    }}
-  >
-    {index + 1}.
-  </span>
+      key={`${player.nome}-${index}`}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 4,
+        padding: "1px 0",
+        fontSize: "0.88rem",
+        color: "#cbd5e1",
+        whiteSpace: "nowrap",
+      }}
+    >
+      <span
+        style={{
+          minWidth: 12,
+          color: "#94a3b8",
+        }}
+      >
+        {index + 1}.
+      </span>
 
-  <span
-    style={{
-      fontWeight: 800,
-      color: roleStyle(player.ruolo).color,
-      minWidth: 12,
-    }}
-  >
-    {player.ruolo}
-  </span>
+      <span
+        style={{
+          fontWeight: 800,
+          color: roleStyle(player.ruolo).color,
+          minWidth: 10,
+        }}
+      >
+        {player.ruolo}
+      </span>
 
-  <span>
-    {livePlayerName(player.nome)}
-  </span>
+      <span
+        style={{
+          flex: 1,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {livePlayerName(player.nome)}
+      </span>
 
-  <span
-    style={{
-      color: "#94a3b8",
-    }}
-  >
-    {getNationalCode(player.nazionale)}
-  </span>
-</div>
+      <span
+        style={{
+          color: "#94a3b8",
+          flexShrink: 0,
+        }}
+      >
+        {getNationalCode(player.nazionale)}
+      </span>
+    </div>
   ))}
 </Collapsible>
-
 <div
   style={{
     marginTop: "auto",
