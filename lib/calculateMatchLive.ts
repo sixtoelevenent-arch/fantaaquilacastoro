@@ -5,6 +5,8 @@ export async function calculateMatchLive(
   matchId: number
 ) {
 
+const nationalExists = new Set<string>();
+const nationalFinalized = new Set<string>();  
   const { data: matchData } = await supabase
     .from("matches")
     .select("*")
@@ -116,7 +118,8 @@ export async function calculateMatchLive(
 
         clean_sheet:
           voteData?.clean_sheet ?? false,
-      };
+
+                };
 
     });
 

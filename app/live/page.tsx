@@ -128,18 +128,7 @@ for (const match of data || []) {
 setModules(newModules);
 
   }
-  const gironeA = matches.filter(
-  (m) => m.gruppo === "A"
-);
-
-const gironeB = matches.filter(
-  (m) => m.gruppo === "B"
-);
-
-const gironeC = matches.filter(
-  (m) => m.gruppo === "C"
-);
-
+  
 return (
     <main
       style={{

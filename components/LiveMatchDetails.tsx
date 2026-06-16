@@ -48,6 +48,9 @@ type PlayerRow = {
   nationalExists?: boolean;
   nationalFinalized?: boolean;
 
+  replacementPlayer?: PlayerRow;
+  replacedBy?: number;
+
   gol?: number;
   assist?: number;
   ammonizione?: boolean;
@@ -96,18 +99,7 @@ const [awayFP, setAwayFP] = useState(0);
 
 const [awayGoals, setAwayGoals] = useState(0);
 
-const [homeProjectedGoals, setHomeProjectedGoals] =
-  useState(0);
-
-const [awayProjectedGoals, setAwayProjectedGoals] =
-  useState(0);
-
-  const [homeIsFinal, setHomeIsFinal] =
-  useState(false);
-
-const [awayIsFinal, setAwayIsFinal] =
-  useState(false);
-
+  
 
 
     async function loadMatch() {
@@ -231,8 +223,6 @@ const nationalFinalized = new Set<string>();
   }
 });
 
-console.log(homeRows?.[0]);
-
 const normalize = (rows: any[]) =>
   (rows || []).map((r) => {
 
@@ -327,19 +317,11 @@ setHomeVotes(homeCalc.votesTotal);
 setHomeBonus(homeCalc.bonusTotal);
 setHomeFP(homeCalc.fantapoints);
 setHomeGoals(homeCalc.goals);
-setHomeProjectedGoals(
-  homeCalc.projectedGoals
-);
-setHomeIsFinal(homeCalc.isFinal)
 
 setAwayVotes(awayCalc.votesTotal);
 setAwayBonus(awayCalc.bonusTotal);
 setAwayFP(awayCalc.fantapoints);
 setAwayGoals(awayCalc.goals);
-setAwayProjectedGoals(
-  awayCalc.projectedGoals
-);
-setAwayIsFinal(awayCalc.isFinal);
 onUpdate?.({
   homeFP: homeCalc.fantapoints,
   awayFP: awayCalc.fantapoints,
@@ -502,49 +484,8 @@ function roleStyle(role: string) {
   previousRole = player.ruolo;
 
   const roleInfo = roleStyle(player.ruolo);
-  const playerIsSv =
-  (player.hasVoteRow && player.sv) ||
-  (
-    !player.hasVoteRow &&
-    player.nationalFinalized
-  );
+  
 
-let replacement = null;
-
-if (playerIsSv) {
-  const sameRoleBench = panchina.filter(
-    (b) => b.ruolo === player.ruolo
-  );
-
-  for (const benchPlayer of sameRoleBench) {
-    const benchIsSv =
-  (benchPlayer.hasVoteRow && benchPlayer.sv) ||
-  (
-    !benchPlayer.hasVoteRow &&
-    benchPlayer.nationalFinalized
-  );
-
-    if (!benchIsSv) {
-
-    replacement = benchPlayer;
-
-  break;
-}
-<span
-  style={{
-    marginLeft: 10,
-  }}
->
-  {playerIcons(replacement)}
-</span>
-
-  }
-
-  if (!replacement && sameRoleBench.length > 0) {
-    replacement =
-      sameRoleBench[sameRoleBench.length - 1];
-  }
-}
   return (
   <div
     key={`${player.nome}-${player.posizione}`}
@@ -625,7 +566,12 @@ if (playerIsSv) {
 : player.voto === null
 ? "⏳"
   : player.voto}
-      </span>
+      </span>{player.voto === null
+  ? player.sv
+    ? "SV"
+    : "⏳"
+  : player.voto}
+
 
       <span
         style={{
@@ -643,50 +589,17 @@ if (playerIsSv) {
     whiteSpace: "nowrap",
   }}
 >
-  {playerIcons(player)}
+ {playerIcons(
+  player.replacementPlayer ?? player
+)}
 
-  {playerIsSv ? " 🔄" : ""}
+{player.replacedBy ? " 🔄" : ""}
+
 </span>
       </span>
     </div>
 
-   {replacement && (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: "2px 0 8px 42px",
-      color: "#94a3b8",
-      fontSize: "0.9rem",
-      fontWeight: 600,
-    }}
-  >
-    <span>
-      ↳ {livePlayerName(replacement.nome)}
-    </span>
-
-    <span
-      style={{
-        width: 55,
-        textAlign: "right",
-        fontWeight: 700,
-      }}
-    >
-      {replacement.voto ?? "SV"}
-    </span>
-
-    <span
-      style={{
-        width: 55,
-        textAlign: "center",
-        whiteSpace: "nowrap",
-      }}
-    >
-      {playerIcons(replacement)}
-    </span>
-  </div>
-)}
+   
   </div>
 );
 

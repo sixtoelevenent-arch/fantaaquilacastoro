@@ -26,25 +26,13 @@ export function calcPlayerScore(
   vote: any,
   ruolo: string
 ) {
+
   if (!vote) {
     return null;
   }
 
-  if (vote.voto === null || vote.voto === undefined) {
-  return {
-    sv: false,
-    voto: null,
-    bonus: calcBonusMalus({
-      ...vote,
-      ruolo,
-    }),
-    totale: null,
-  };
-}
-
-let votoBase = Number(vote.voto);
-
   if (vote.sv) {
+
     const hasBonus =
       (vote.gol || 0) > 0 ||
       (vote.assist || 0) > 0 ||
@@ -64,8 +52,32 @@ let votoBase = Number(vote.voto);
       };
     }
 
-    votoBase = 6;
+    const bonus = calcBonusMalus({
+      ...vote,
+      ruolo,
+    });
+
+    return {
+      sv: false,
+      voto: 6,
+      bonus,
+      totale: 6 + bonus,
+    };
   }
+
+  if (vote.voto === null || vote.voto === undefined) {
+    return {
+      sv: false,
+      voto: null,
+      bonus: calcBonusMalus({
+        ...vote,
+        ruolo,
+      }),
+      totale: null,
+    };
+  }
+
+  const votoBase = Number(vote.voto);
 
   const bonus = calcBonusMalus({
     ...vote,
@@ -79,6 +91,7 @@ let votoBase = Number(vote.voto);
     totale: votoBase + bonus,
   };
 }
+
 export function fantasyGoals(fp: number) {
   if (fp < 66) return 0;
 
@@ -200,11 +213,43 @@ processedPlayers.push({
       bonusTotal += replacement.result.bonus;
 
       processedPlayers.push({
-        ...starter,
-        replacedBy:
-          replacement.player.player_id,
-        ...replacement.result,
-      });
+  ...starter,
+
+  replacedBy:
+    replacement.player.player_id,
+
+  replacementPlayer:
+    replacement.player,
+
+  ...replacement.result,
+
+  gol:
+    replacement.player.gol ?? 0,
+
+  assist:
+    replacement.player.assist ?? 0,
+
+  ammonizione:
+    replacement.player.ammonizione ?? false,
+
+  espulsione:
+    replacement.player.espulsione ?? false,
+
+  autogol:
+    replacement.player.autogol ?? 0,
+
+  rigori_parati:
+    replacement.player.rigori_parati ?? 0,
+
+  rigori_sbagliati:
+    replacement.player.rigori_sbagliati ?? 0,
+
+  gol_subiti:
+    replacement.player.gol_subiti ?? 0,
+
+  clean_sheet:
+    replacement.player.clean_sheet ?? false,
+});
 
       continue;
     }
