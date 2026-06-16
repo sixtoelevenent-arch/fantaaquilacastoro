@@ -546,10 +546,11 @@ function roleStyle(role: string) {
 
       <span
         style={{
-          width: 32,
-          textAlign: "center",
-          color: "#94a3b8",
-          fontSize: "0.9rem",
+          width: 42,
+textAlign: "center",
+color: "#94a3b8",
+fontSize: "0.9rem",
+flexShrink: 0,
         }}
       >
         {getNationalCode(player.nazionale)}
@@ -557,9 +558,10 @@ function roleStyle(role: string) {
 
       <span
   style={{
-    width: 70,
-    textAlign: "right",
-    fontWeight: 700,
+    width: 50,
+textAlign: "center",
+fontWeight: 700,
+flexShrink: 0,
   }}
 >
   {!player.hasVoteRow
@@ -578,10 +580,11 @@ function roleStyle(role: string) {
 
       <span
         style={{
-          width: 70,
-          fontSize: "1.15rem",
-          textAlign: "center",
-          whiteSpace: "nowrap",
+          width: 60,
+fontSize: "1.15rem",
+textAlign: "center",
+whiteSpace: "nowrap",
+flexShrink: 0,
         }}
       >
         {player.replacementPlayer
@@ -641,9 +644,10 @@ function roleStyle(role: string) {
 
     <span
       style={{
-        width: 70,
-        textAlign: "right",
-        fontWeight: 700,
+        width: 50,
+textAlign: "center",
+fontWeight: 700,
+flexShrink: 0,
       }}
     >
       {!player.replacementPlayer.hasVoteRow

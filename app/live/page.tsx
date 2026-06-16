@@ -129,6 +129,7 @@ setModules(newModules);
 
   }
   
+
 return (
     <main
       style={{
@@ -154,6 +155,7 @@ return (
             fontWeight: "800",
             marginTop: "10px",
             marginBottom: "10px",
+            textAlign: "center"
           }}
         >
           🔴 LIVE GIORNATA
@@ -327,7 +329,7 @@ return (
     >
       <div
   style={{
-    fontSize: "3.5rem",
+    fontSize: "2.5rem",
     fontWeight: 900,
     lineHeight: 1,
   }}
