@@ -26,11 +26,12 @@ export default function LivePage() {
   Record<
     number,
     {
-      homeFP: number;
-      awayFP: number;
-      homeGoals: number;
-      awayGoals: number;
-    }
+  homeFP: number;
+  awayFP: number;
+  homeGoals: number;
+  awayGoals: number;
+  isFinal: boolean;
+}
   >
 >({});
 
@@ -225,6 +226,24 @@ return (
   </span>
 </div>
 
+<div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    gap: 18,
+    marginTop: 10,
+    fontSize: "0.8rem",
+    color: "#fecaca",
+  }}
+>
+  <span>
+    <span style={{ color: "#facc15" }}>●</span> Gol previsti
+  </span>
+
+  <span>
+    <span style={{ color: "#22c55e" }}>●</span> Gol finali
+  </span>
+</div>
           
         </div>   {/* chiusura del blocco LIVE */}
 
@@ -356,9 +375,11 @@ return (
     fontSize: "2.5rem",
     fontWeight: 900,
     lineHeight: 1,
+    color: liveData[match.id]?.isFinal
+      ? "#22c55e"
+      : "#facc15",
   }}
 >
-  
   {liveData[match.id]?.homeGoals ?? 0}
   {" - "}
   {liveData[match.id]?.awayGoals ?? 0}

@@ -242,7 +242,12 @@ await supabase
 return {
   homeFP: homeCalc.fantapoints,
   awayFP: awayCalc.fantapoints,
-  homeGoals: finalHomeGoals,
-  awayGoals: finalAwayGoals,
-}
+
+  homeGoals: homeCalc.projectedGoals,
+  awayGoals: awayCalc.projectedGoals,
+
+  isFinal:
+    homeCalc.isFinal &&
+    awayCalc.isFinal,
+};
 }
