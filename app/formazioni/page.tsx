@@ -390,11 +390,13 @@ if (oldFormations?.length) {
   formationId = newFormation.id;
 }
 
-      const benchPlayers = panchina
+   const benchPlayers = panchina
   .map((id) =>
     players.find((p) => p.id === id)
   )
-  .filter(Boolean);
+  .filter(
+    (p): p is Player => p !== undefined
+  );
 
       const ordineRuoli = {
   P: 1,
