@@ -181,16 +181,6 @@ return (
   ⚽ {matchdayName}
 </div>
 
-  <div
-  style={{
-    textAlign: "center",
-    color: "#cbd5e1",
-    fontSize: "0.85rem",
-    marginBottom: 18,
-  }}
->
-  👆 Tocca una partita per vedere formazioni, voti e sostituzioni live
-</div>
 
         <p
           style={{

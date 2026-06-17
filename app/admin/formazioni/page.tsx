@@ -81,16 +81,29 @@ export default function Page() {
 
   async function loadPlayers(teamId: number) {
     const { data } = await supabase
-      .from("players")
-      .select("*")
-      .eq("team_id", teamId)
-      .order("ruolo");
+      const { data } = await supabase
+  .from("players")
+  .select("*")
+  .eq("team_id", teamId);
 
-    setPlayers(data || []);
-    setTitolari([]);
-  }
+const ordineRuoli = {
+  P: 1,
+  D: 2,
+  C: 3,
+  A: 4,
+};
 
-  function togglePlayer(playerId: number) {
+const sortedPlayers = (data || []).sort(
+  (a, b) =>
+    ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
+    ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
+);
+
+setPlayers(sortedPlayers);
+setTitolari([]);
+return;
+
+     function togglePlayer(playerId: number) {
     if (titolari.includes(playerId)) {
       setTitolari((prev) => prev.filter((id) => id !== playerId));
       return;
@@ -212,9 +225,24 @@ export default function Page() {
       );
 
       const rows = [
-        ...players
-          .filter((p) => titolari.includes(p.id))
-          .map((p, index) => ({
+        const ordineRuoli = {
+  P: 1,
+  D: 2,
+  C: 3,
+  A: 4,
+};
+
+const titolariOrdinati = players
+  .filter((p) => titolari.includes(p.id))
+  .sort(
+    (a, b) =>
+      ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
+      ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
+  );
+
+const rows = [
+
+  ...titolariOrdinati.map((p, index) => ({
             formation_id: newFormation.id,
             player_id: p.id,
             titolare: true,
@@ -392,9 +420,11 @@ export default function Page() {
                 cursor: "pointer",
               }}
             >
-              {saving
-                ? "Salvataggio..."
-                : "💾 Salva Formazione"}
+              {locked
+  ? "🔒 INSERIMENTO CHIUSO"
+  : saving
+  ? "SALVATAGGIO..."
+  : "💾 SALVA FORMAZIONE"}
             </button>
           </>
         )}

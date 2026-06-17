@@ -1,15 +1,18 @@
 import { supabase } from "@/lib/supabase";
 
 export async function getActiveMatchday() {
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from("matchdays")
     .select("*")
-    .eq("attiva", true)
+    .lte(
+      "chiusura_formazioni",
+      new Date().toISOString()
+    )
+    .order("ordine", {
+      ascending: false,
+    })
+    .limit(1)
     .single();
-
-  if (error || !data) {
-    return null;
-  }
 
   return data;
 }

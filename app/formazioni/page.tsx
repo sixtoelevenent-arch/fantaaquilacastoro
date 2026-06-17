@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import Card from "@/components/Card";
+import BackHome from "@/components/BackHome";
 
 type Team = {
   id: number;
@@ -20,6 +22,8 @@ type Player = {
 type Matchday = {
   id: number;
   nome: string;
+  ordine?: number;
+  chiusura_formazioni?: string;
 };
 
 const MODULI = [
@@ -60,6 +64,11 @@ export default function Page() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  const [locked, setLocked] = useState(false);
+
+const [lastUpdate, setLastUpdate] =
+  useState("");
+
   useEffect(() => {
     loadData();
   }, []);
@@ -83,31 +92,26 @@ export default function Page() {
 
   const { data: activeMatchday } = await supabase
   .from("matchdays")
-  .select("id,nome")
-  .eq("attiva", true)
-  .single();
+.select(
+  "id,nome,ordine,chiusura_formazioni"
+)
+.eq("attiva", true)
+.single();
 
 let targetMatchday = activeMatchday;
 
-if (activeMatchday?.id === 1) {
-  const { data } = await supabase
-    .from("matchdays")
-    .select("id,nome")
-    .eq("id", 2)
-    .single();
+const { data: nextMatchday } = await supabase
+  .from("matchdays")
+  .select(
+    "id,nome,ordine,chiusura_formazioni"
+  )
+  .gt("ordine", activeMatchday.ordine)
+  .order("ordine")
+  .limit(1)
+  .maybeSingle();
 
-  targetMatchday = data;
-}
-
-if (activeMatchday?.id === 2) {
-  const { data } = await supabase
-    .from("matchdays")
-    .select("id,nome")
-    .eq("id", 3)
-    .single();
-
-  targetMatchday = data;
-}
+ targetMatchday =
+  nextMatchday || activeMatchday; 
 
 if (!targetMatchday) {
 
@@ -119,6 +123,16 @@ if (!targetMatchday) {
 }
 
 setMatchday(targetMatchday);
+
+if (
+  targetMatchday.chiusura_formazioni &&
+  new Date() >
+    new Date(
+      targetMatchday.chiusura_formazioni
+    )
+) {
+  setLocked(true);
+}
 
 await loadPlayers(
   loggedUser.team_id,
@@ -156,26 +170,87 @@ setLoading(false);
 
   const { data: formation } = await supabase
     .from("formations")
-    .select("id, modulo")
+    .select(
+  "id, modulo, updated_at, submitted_at"
+)
     .eq("team_id", teamId)
     .eq("matchday_id", matchdayId)
     .maybeSingle();
 
   if (!formation) {
 
-  setTitolari([]);
+  const { data: lastFormation } =
+    await supabase
+      .from("formations")
+      .select("id, modulo")
+      .eq("team_id", teamId)
+      .order("matchday_id", {
+        ascending: false,
+      })
+      .limit(1)
+      .single();
 
-  const panchinari = sortedPlayers.map(
-    (p) => p.id
-  );
+  if (!lastFormation) {
 
-  setPanchina(panchinari);
+    setTitolari([]);
+
+    const panchinari =
+      sortedPlayers.map((p) => p.id);
+
+    setPanchina(panchinari);
+
+    return;
+  }
+
+  setModulo(lastFormation.modulo);
+
+  const { data: oldPlayers } =
+    await supabase
+      .from("formation_players")
+      .select(`
+        player_id,
+        titolare,
+        posizione,
+        ordine_panchina
+      `)
+      .eq(
+        "formation_id",
+        lastFormation.id
+      );
+
+  const titolariIds =
+    (oldPlayers || [])
+      .filter((p) => p.titolare)
+      .sort(
+        (a, b) =>
+          (a.posizione || 99) -
+          (b.posizione || 99)
+      )
+      .map((p) => p.player_id);
+
+  const panchinaIds =
+    (oldPlayers || [])
+      .filter((p) => !p.titolare)
+      .sort(
+        (a, b) =>
+          (a.ordine_panchina || 999) -
+          (b.ordine_panchina || 999)
+      )
+      .map((p) => p.player_id);
+
+  setTitolari(titolariIds);
+
+  setPanchina(panchinaIds);
 
   return;
-
 }
 
   setModulo(formation.modulo);
+setLastUpdate(
+  formation.updated_at ||
+  formation.submitted_at ||
+  ""
+);
 
   const { data: formationPlayers } = await supabase
   .from("formation_players")
@@ -209,6 +284,12 @@ setPanchina(panchinaIds);
 
   function togglePlayer(playerId: number) {
 
+  const player = players.find(
+    (p) => p.id === playerId
+  );
+
+  if (!player) return;
+
   if (titolari.includes(playerId)) {
 
     setTitolari((prev) =>
@@ -223,10 +304,41 @@ setPanchina(panchinaIds);
     return;
   }
 
-  if (titolari.length >= 11) {
+  const required =
+    getModuloCounts(modulo);
 
-    alert("Puoi selezionare massimo 11 titolari");
+  const selectedPlayers =
+    players.filter((p) =>
+      titolari.includes(p.id)
+    );
 
+  const counts = {
+    P: selectedPlayers.filter(
+      (p) => p.ruolo === "P"
+    ).length,
+
+    D: selectedPlayers.filter(
+      (p) => p.ruolo === "D"
+    ).length,
+
+    C: selectedPlayers.filter(
+      (p) => p.ruolo === "C"
+    ).length,
+
+    A: selectedPlayers.filter(
+      (p) => p.ruolo === "A"
+    ).length,
+  };
+  
+  
+  if (
+    counts[
+      player.ruolo as keyof typeof counts
+    ] >=
+    required[
+      player.ruolo as keyof typeof required
+    ]
+  ) {
     return;
   }
 
@@ -318,6 +430,14 @@ function moveBenchPlayer(
   }
 
   async function salvaFormazione() {
+    
+    if (locked) {
+  alert(
+    "Inserimento formazioni chiuso"
+  );
+  return;
+}
+
     if (!user?.team_id) {
     alert("Utente non valido");
     return;
@@ -344,11 +464,7 @@ function moveBenchPlayer(
   .eq("team_id", user.team_id)
   .eq("matchday_id", matchday.id);
 
-  alert(
-  "oldFormations = " +
-  JSON.stringify(oldFormations)
-);
-
+  
       let formationId: number;
 
 if (oldFormations?.length) {
@@ -457,6 +573,41 @@ console.log(
 
     setSaving(false);
   }
+  const required =
+  getModuloCounts(modulo);
+
+const selectedPlayers =
+  players.filter((p) =>
+    titolari.includes(p.id)
+  );
+
+const counts = {
+  P: selectedPlayers.filter(
+    (p) => p.ruolo === "P"
+  ).length,
+
+  D: selectedPlayers.filter(
+    (p) => p.ruolo === "D"
+  ).length,
+
+  C: selectedPlayers.filter(
+    (p) => p.ruolo === "C"
+  ).length,
+
+  A: selectedPlayers.filter(
+    (p) => p.ruolo === "A"
+  ).length,
+};
+
+function getTitolariRuolo(
+  ruolo: string
+) {
+  return players.filter(
+    (p) =>
+      p.ruolo === ruolo &&
+      titolari.includes(p.id)
+  );
+}
 
   const titolariCount = titolari.length;
 
@@ -476,26 +627,87 @@ console.log(
           margin: "0 auto",
         }}
       >
-        <h1
-          style={{
-            textAlign: "center",
-            marginBottom: "20px",
-          }}
-        >
-          ⚽ Gestione Formazioni
-        </h1>
+        <BackHome />
+
+<h1
+  style={{
+    textAlign: "center",
+    color: "#38bdf8",
+    fontSize: "2.2rem",
+    fontWeight: 900,
+    marginBottom: 10,
+  }}
+>
+  ⚽ INSERIMENTO FORMAZIONE
+</h1>
+
+<div
+  style={{
+    textAlign: "center",
+    color: "#94a3b8",
+    marginBottom: 20,
+  }}
+>
+  {user?.username}
+</div>
 
         {matchday && (
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: "20px",
-              fontWeight: 700,
-            }}
-          >
-            📅 {matchday.nome}
-          </div>
-        )}
+  <Card>
+    <div
+      style={{
+        textAlign: "center",
+      }}
+    >
+      <div
+        style={{
+          color: "#facc15",
+          fontWeight: 900,
+          fontSize: "1.1rem",
+        }}
+      >
+        📅 {matchday.nome}
+
+        {locked && (
+  <div
+    style={{
+      marginTop: 10,
+      color: "#ef4444",
+      fontWeight: 900,
+    }}
+  >
+    🔒 Inserimento formazioni chiuso
+  </div>
+)}
+
+        {lastUpdate && (
+  <div
+    style={{
+      marginTop: 8,
+      color: "#94a3b8",
+      fontSize: "0.85rem",
+    }}
+  >
+    Ultimo salvataggio:
+    {" "}
+    {new Date(lastUpdate)
+      .toLocaleString("it-IT")}
+  </div>
+)}
+
+      </div>
+
+      <div
+        style={{
+          marginTop: 8,
+          color: "#94a3b8",
+          fontSize: "0.9rem",
+        }}
+      >
+        Seleziona 11 titolari e ordina la panchina
+      </div>
+    </div>
+  </Card>
+)}
 
         {loading ? (
           <p>Caricamento...</p>
@@ -510,8 +722,10 @@ console.log(
             >
               
            <select
-                value={modulo}
-                onChange={(e) => setModulo(e.target.value)}
+  value={modulo}
+  
+  disabled={locked}
+  onChange={(e) => setModulo(e.target.value)}
                 style={{
                   padding: "12px",
                   borderRadius: "8px",
@@ -523,6 +737,45 @@ console.log(
               </select>
             </div>
 
+<Card>
+
+<div
+  style={{
+    display: "flex",
+    justifyContent: "space-around",
+    textAlign: "center",
+    fontWeight: 900,
+  }}
+>
+
+  <div>
+    🧤
+    <br/>
+    {counts.P}/{required.P}
+  </div>
+
+  <div>
+    🛡️
+    <br/>
+    {counts.D}/{required.D}
+  </div>
+
+  <div>
+    ⚙️
+    <br/>
+    {counts.C}/{required.C}
+  </div>
+
+  <div>
+    🎯
+    <br/>
+    {counts.A}/{required.A}
+  </div>
+
+</div>
+
+</Card>
+
             <div
               style={{
                 marginBottom: "15px",
@@ -532,47 +785,298 @@ console.log(
               Titolari selezionati: {titolariCount}/11
             </div>
 
-            <div
-              style={{
-                display: "grid",
-                gap: "8px",
-              }}
-            >
-              {players.map((player) => (
-                <label
-                  key={player.id}
-                  style={{
-                    background: "#1f2937",
-                    padding: "10px",
-                    borderRadius: "8px",
-                    display: "flex",
-                    gap: "10px",
-                    alignItems: "center",
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={titolari.includes(player.id)}
-                    onChange={() => togglePlayer(player.id)}
-                  />
+            <Card>
 
-                  <strong>
-                    [{player.ruolo}]
-                  </strong>
-
-                  {player.nome}
-                </label>
-              ))}
-            </div>
-
-<h2
+<div
   style={{
-    marginTop: "30px",
-    marginBottom: "15px",
+    marginBottom: 15,
+    textAlign: "center",
+    fontWeight: 900,
+    color:
+      titolariCount === 11
+        ? "#22c55e"
+        : "#ef4444",
   }}
 >
-  Panchina
-</h2>
+  TITOLARI {titolariCount}/11
+
+  <div
+    style={{
+      marginTop: 8,
+      fontSize: "0.9rem",
+    }}
+  >
+    {titolariCount === 11
+      ? "✅ Formazione completa"
+      : `❌ Mancano ${11 - titolariCount} titolari`}
+  </div>
+
+</div>
+
+<Card>
+
+<div
+  style={{
+    background:
+      "linear-gradient(to bottom,#15803d,#166534)",
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    position: "relative",
+    overflow: "hidden",
+    border:
+      "2px solid rgba(255,255,255,0.15)",
+  }}
+>
+
+  <div
+    style={{
+      position: "absolute",
+      top: "25%",
+      left: 0,
+      right: 0,
+      height: 2,
+      background: "rgba(255,255,255,0.15)",
+    }}
+  />
+
+  <div
+    style={{
+      position: "absolute",
+      top: "50%",
+      left: 0,
+      right: 0,
+      height: 2,
+      background: "rgba(255,255,255,0.15)",
+    }}
+  />
+
+  <div
+    style={{
+      position: "absolute",
+      top: "75%",
+      left: 0,
+      right: 0,
+      height: 2,
+      background: "rgba(255,255,255,0.15)",
+    }}
+  />
+
+  <div
+    style={{
+      textAlign: "center",
+      marginBottom: 30,
+    }}
+  >
+    {getTitolariRuolo("P").map((p) => (
+      <div
+        key={p.id}
+        style={{
+          display: "inline-block",
+          background: "#0f172a",
+          padding: "10px 14px",
+          borderRadius: 12,
+          fontWeight: 700,
+        }}
+      >
+        🧤 {p.nome}
+      </div>
+    ))}
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-evenly",
+      marginBottom: 35,
+      flexWrap: "wrap",
+      gap: 10,
+    }}
+  >
+    {getTitolariRuolo("D").map((p) => (
+      <div
+        key={p.id}
+        style={{
+          background: "#0f172a",
+          padding: "10px 14px",
+          borderRadius: 12,
+          fontSize: "0.85rem",
+        }}
+      >
+        {p.nome}
+      </div>
+    ))}
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-evenly",
+      marginBottom: 35,
+      flexWrap: "wrap",
+      gap: 10,
+    }}
+  >
+    {getTitolariRuolo("C").map((p) => (
+      <div
+        key={p.id}
+        style={{
+          background: "#0f172a",
+          padding: "10px 14px",
+          borderRadius: 12,
+          fontSize: "0.85rem",
+        }}
+      >
+        {p.nome}
+      </div>
+    ))}
+  </div>
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-evenly",
+      flexWrap: "wrap",
+      gap: 10,
+    }}
+  >
+    {getTitolariRuolo("A").map((p) => (
+      <div
+        key={p.id}
+        style={{
+          background: "#0f172a",
+          padding: "10px 14px",
+          borderRadius: 12,
+          fontSize: "0.85rem",
+        }}
+      >
+        {p.nome}
+      </div>
+    ))}
+  </div>
+
+</div>
+
+</Card>
+
+  
+<div
+  style={{
+    background: "#166534",
+    borderRadius: 20,
+    padding: 20,
+    border:
+      "2px solid rgba(255,255,255,0.15)",
+  }}
+>
+
+  {["P","D","C","A"].map((ruolo) => (
+
+    <div
+      key={ruolo}
+      style={{
+        marginBottom: 22,
+      }}
+    >
+
+      <div
+        style={{
+          textAlign: "center",
+          marginBottom: 10,
+          fontWeight: 900,
+          color: "white",
+        }}
+      >
+        {ruolo === "P"
+          ? "🧤 PORTIERE"
+          : ruolo === "D"
+          ? "🛡️ DIFESA"
+          : ruolo === "C"
+          ? "⚙️ CENTROCAMPO"
+          : "🎯 ATTACCO"}
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          gap: 8,
+        }}
+      >
+
+        {players
+          .filter((p) => p.ruolo === ruolo)
+          .map((player) => (
+
+            <label
+              key={player.id}
+              style={{
+                width: "31%",
+                minWidth: 95,
+                minHeight: 60,
+                background:
+                  titolari.includes(player.id)
+                    ? "#14532d"
+                    : "#1f2937",
+                border:
+                  titolari.includes(player.id)
+                    ? "2px solid #22c55e"
+                    : "1px solid rgba(255,255,255,0.15)",
+                borderRadius: 12,
+                padding: 8,
+                textAlign: "center",
+                cursor: "pointer",
+              }}
+            >
+
+              <input
+                type="checkbox"
+                disabled={locked}
+                checked={titolari.includes(player.id)}
+                onChange={() =>
+                  togglePlayer(player.id)
+                }
+              />
+
+              <div
+  style={{
+    marginTop: 4,
+    fontWeight: 700,
+    fontSize: "0.75rem",
+    wordBreak: "break-word",
+  }}
+>
+  {player.nome}
+</div>
+
+            </label>
+
+          ))}
+
+      </div>
+
+    </div>
+
+  ))}
+
+</div>
+
+</Card>
+
+<Card>
+
+<div
+  style={{
+    fontWeight: 900,
+    fontSize: "1.1rem",
+    marginBottom: 12,
+  }}
+>
+  📋 PANCHINA ({panchina.length}/14)
+</div>
+
+</Card>
 
 <div
   style={{
@@ -603,9 +1107,37 @@ console.log(
         }}
       >
 
-        <div>
-          {index + 1}. [{player.ruolo}] {player.nome}
-        </div>
+        <div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: 8,
+  }}
+>
+  <strong>
+    {index + 1}.
+  </strong>
+
+  <span
+    style={{
+      color:
+        player.ruolo === "P"
+          ? "#38bdf8"
+          : player.ruolo === "D"
+          ? "#22c55e"
+          : player.ruolo === "C"
+          ? "#facc15"
+          : "#ef4444",
+      fontWeight: 800,
+    }}
+  >
+    {player.ruolo}
+  </span>
+
+  <span>
+    {player.nome}
+  </span>
+</div>
 
         <div
           style={{
@@ -615,28 +1147,40 @@ console.log(
         >
 
           <button
-            type="button"
-            onClick={() =>
-              moveBenchPlayer(
-                index,
-                "up"
-              )
-            }
-          >
-            ⬆️
-          </button>
+  type="button"
+  disabled={locked}
+  style={{
+    padding: "8px 12px",
+    minWidth: 44,
+    minHeight: 44,
+  }}
+  onClick={() =>
+    moveBenchPlayer(
+      index,
+      "up"
+    )
+  }
+>
+  ⬆️
+</button>
 
-          <button
-            type="button"
-            onClick={() =>
-              moveBenchPlayer(
-                index,
-                "down"
-              )
-            }
-          >
-            ⬇️
-          </button>
+<button
+  type="button"
+  disabled={locked}
+  style={{
+    padding: "8px 12px",
+    minWidth: 44,
+    minHeight: 44,
+  }}
+  onClick={() =>
+    moveBenchPlayer(
+      index,
+      "down"
+    )
+  }
+>
+  ⬇️
+</button>
 
         </div>
 
@@ -648,39 +1192,29 @@ console.log(
 </div>
 
             <button
-              onClick={salvaFormazione}
-              disabled={saving}
-              style={{
-                marginTop: "25px",
-                width: "100%",
-                padding: "16px",
-                border: "none",
-                borderRadius: "12px",
-                background: "#16a34a",
-                color: "white",
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
-            >
-              {saving
-                ? "Salvataggio..."
-                : "💾 Salva Formazione"}
-            </button>
+  onClick={salvaFormazione}
+  disabled={saving || locked}
+  style={{
+    marginTop: 25,
+    width: "100%",
+    padding: "18px",
+    border: "none",
+    borderRadius: "14px",
+    background: "#16a34a",
+    color: "white",
+    fontWeight: 900,
+    fontSize: "1.05rem",
+    cursor: "pointer",
+  }}
+>
+  {saving
+    ? "SALVATAGGIO..."
+    : "💾 SALVA FORMAZIONE"}
+</button>
           </>
         )}
 
-        <Link
-          href="/"
-          style={{
-            display: "block",
-            marginTop: "20px",
-            textAlign: "center",
-            color: "#cbd5e1",
-            textDecoration: "none",
-          }}
-        >
-          ← Torna alla Home
-        </Link>
+        
       </div>
     </main>
   );
