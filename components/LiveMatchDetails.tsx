@@ -917,11 +917,12 @@ awayFP
   <div>🟨 Giallo</div>
   <div>❌ Rig. Sbagliato</div>
   <div>🟥 Rosso</div>
-  <div>🔴 Live</div>
-  <div>🥅 Gol Subito</div>
   <div></div>
-  <div>⏳ Attesa</div>
+  <div>🥅 Gol Subito</div>
+  <div>🔴 Live</div>
   <div>💥 Autogol</div>
+  <div>⏳ Attesa</div>
+  
   
     
   <div></div>
