@@ -116,6 +116,7 @@ export default function LoginPage() {
         >
           Accedi
         </button>
+        
       </div>
     </main>
   );
