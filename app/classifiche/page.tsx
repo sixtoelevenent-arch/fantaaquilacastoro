@@ -170,7 +170,7 @@ away.fp += Number(match.fp_away || 0);
           <tr>
             <th style={thCenter}>#</th>
             <th style={thLeft}>Squadra</th>
-<th style={thLive}>🔴</th>
+<th style={thLive}></th>
 <th style={thCenter}>Pt</th>
             <th style={thCenter}>FP</th>
             <th style={thCenter}>GF</th>
@@ -319,7 +319,7 @@ away.fp += Number(match.fp_away || 0);
               <tr>
                 <th style={thCenter}>Q</th>
                 <th style={thLeft}>Squadra</th>
-<th style={thLive}>🔴</th>
+<th style={thLive}></th>
 <th style={thCenter}>FP</th>
                 <th style={thCenter}>Pt</th>
                 <th style={thCenter}>DR</th>
