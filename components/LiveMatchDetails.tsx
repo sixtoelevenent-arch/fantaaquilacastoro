@@ -391,6 +391,8 @@ const finalCompleted =
   homeCalc.isFinal &&
   awayCalc.isFinal;
 
+console.log("LOAD MATCH", matchId);
+
 console.log("UPDATE MATCHES", {
   matchId,
   fp_home: homeCalc.fantapoints,
@@ -400,41 +402,25 @@ console.log("UPDATE MATCHES", {
   completed: finalCompleted,
 });
 
-const { data: updatedRows, error: updateError } =
-  await supabase
-    .from("matches")
-    .update({
-      fp_home: homeCalc.fantapoints,
-      fp_away: awayCalc.fantapoints,
-      gol_home: finalHomeGoals,
-      gol_away: finalAwayGoals,
-      completata: finalCompleted,
-    })
-    .eq("id", matchId)
-    .select();
-
-console.log("UPDATED ROWS", updatedRows);
-console.log("UPDATE ERROR", updateError);
-
 console.log(
-  "MATCH UPDATE ERROR",
-  updateError
+  "HOME FORMATION",
+  homeFormation?.id
 );
 
-const { data: checkMatch } = await supabase
-  .from("matches")
-  .select(`
-    id,
-    fp_home,
-    fp_away,
-    gol_home,
-    gol_away,
-    completata
-  `)
-  .eq("id", matchId);
+console.log(
+  "AWAY FORMATION",
+  awayFormation?.id
+);
 
-console.log("CHECK MATCH", checkMatch);
+console.log(
+  "HOME PLAYERS",
+  homeRows?.length
+);
 
+console.log(
+  "AWAY PLAYERS",
+  awayRows?.length
+);
 /*
 await supabase
   .from("live_matches")

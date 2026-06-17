@@ -29,6 +29,8 @@ type Standing = {
   gs: number;
   dr: number;
   fp: number;
+
+  live: boolean;
 };
 
 export default async function ClassifichePage() {
@@ -45,50 +47,54 @@ export default async function ClassifichePage() {
 
   (teams || []).forEach((team: TeamRow) => {
     standings.set(team.id, {
-      id: team.id,
-      squadra: team.nome,
-      allenatore: team.proprietario,
-      gruppo: team.gruppo,
+  id: team.id,
+  squadra: team.nome,
+  allenatore: team.proprietario,
+  gruppo: team.gruppo,
 
-      pt: 0,
-      gf: 0,
-      gs: 0,
-      dr: 0,
-      fp: 0,
-    });
+  pt: 0,
+  gf: 0,
+  gs: 0,
+  dr: 0,
+  fp: 0,
+
+  live: false,
+});
   });
 
   (matches || []).forEach((match: MatchRow) => {
 
-  if (!match.completata) {
-    return;
-  }
-
   if (
-    match.gol_home === null ||
-    match.gol_away === null
+    match.fp_home === null ||
+    match.fp_away === null
   ) {
     return;
   }
 
-    const home = standings.get(match.team_home_id);
-    const away = standings.get(match.team_away_id);
+  const home = standings.get(match.team_home_id);
+  const away = standings.get(match.team_away_id);
 
-    if (!home || !away) return;
+  if (!home || !away) return;
 
-    home.gf += match.gol_home;
-    home.gs += match.gol_away;
-    home.dr = home.gf - home.gs;
-    home.fp += Number(match.fp_home || 0);
+  if (!match.completata) {
+  home.live = true;
+  away.live = true;
+}
+    home.gf += match.gol_home ?? 0;
+home.gs += match.gol_away ?? 0;
 
-    away.gf += match.gol_away;
-    away.gs += match.gol_home;
-    away.dr = away.gf - away.gs;
-    away.fp += Number(match.fp_away || 0);
+away.gf += match.gol_away ?? 0;
+away.gs += match.gol_home ?? 0;
 
-    if (match.gol_home > match.gol_away) {
+home.dr = home.gf - home.gs;
+home.fp += Number(match.fp_home || 0);
+
+away.dr = away.gf - away.gs;
+away.fp += Number(match.fp_away || 0);
+
+    if ((match.gol_home ?? 0) > (match.gol_away ?? 0)) {
       home.pt += 3;
-    } else if (match.gol_home < match.gol_away) {
+    } else if ((match.gol_home ?? 0) < (match.gol_away ?? 0)) {
       away.pt += 3;
     } else {
       home.pt += 1;
@@ -175,21 +181,22 @@ export default async function ClassifichePage() {
         <tbody>
           {dati.map((team, index) => (
             <tr
-              key={team.id}
-              style={{
-                background:
-                  index < 2
-                    ? "rgba(34,197,94,0.15)"
-                    : "transparent",
-              }}
-            >
+  key={team.id}
+  style={{
+  background:
+    index < 2
+      ? "rgba(34,197,94,0.15)"
+      : "transparent",
+}}
+>
               <td style={tdCenter}>
                 {index + 1}
               </td>
 
               <td style={tdLeft}>
-                {team.squadra}
-              </td>
+  {team.squadra}
+  {team.live ? " 🔴" : ""}
+</td>
 
               <td style={tdCenter}>{team.pt}</td>
 
@@ -245,7 +252,21 @@ export default async function ClassifichePage() {
         >
           Fase a Gironi • FantAquilaCastoro 2026
         </p>
-
+{(matches || []).some(
+  (m) => !m.completata
+) && (
+  <div
+    style={{
+      textAlign: "center",
+      marginBottom: "20px",
+      color: "#ef4444",
+      fontWeight: 800,
+      fontSize: "14px",
+    }}
+  >
+    🔴 Classifica Provvisoria
+  </div>
+)}
         {renderTable(
           "🟢 Girone A",
           "#22c55e",
@@ -304,14 +325,14 @@ export default async function ClassifichePage() {
               {miglioriTerze.map(
                 (team, index) => (
                   <tr
-                    key={team.id}
-                    style={{
-                      background:
-                        index < 2
-                          ? "rgba(34,197,94,0.15)"
-                          : "transparent",
-                    }}
-                  >
+  key={team.id}
+  style={{
+  background:
+    index < 2
+      ? "rgba(34,197,94,0.15)"
+      : "transparent",
+}}
+>
                     <td style={tdCenter}>
                       {index < 2
                         ? "✅"
@@ -319,8 +340,9 @@ export default async function ClassifichePage() {
                     </td>
 
                     <td style={tdLeft}>
-                      {team.squadra}
-                    </td>
+  {team.squadra}
+  {team.live ? " 🔴" : ""}
+</td>
 
                     <td style={tdCenter}>
                       {team.fp.toFixed(1)}

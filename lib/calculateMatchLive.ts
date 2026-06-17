@@ -212,18 +212,37 @@ nationalFinalized: finalized,
   awayGoals: awayCalc.projectedGoals,
 });
 
-  return {
+const finalHomeGoals =
+  homeCalc.isFinal
+    ? homeCalc.goals
+    : homeCalc.projectedGoals;
 
-    homeFP:
-      homeCalc.fantapoints,
+const finalAwayGoals =
+  awayCalc.isFinal
+    ? awayCalc.goals
+    : awayCalc.projectedGoals;
 
-    awayFP:
-      awayCalc.fantapoints,
+const finalCompleted =
+  homeCalc.isFinal &&
+  awayCalc.isFinal;
 
-    homeGoals:
-      homeCalc.projectedGoals,
+await supabase
+  .from("matches")
+  .update({
+    fp_home: homeCalc.fantapoints,
+    fp_away: awayCalc.fantapoints,
 
-    awayGoals:
-      awayCalc.projectedGoals,
-  };
+    gol_home: finalHomeGoals,
+    gol_away: finalAwayGoals,
+
+    completata: finalCompleted,
+  })
+  .eq("id", matchId);
+
+return {
+  homeFP: homeCalc.fantapoints,
+  awayFP: awayCalc.fantapoints,
+  homeGoals: finalHomeGoals,
+  awayGoals: finalAwayGoals,
+}
 }
