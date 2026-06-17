@@ -72,6 +72,7 @@ export default function Page() {
       .select("id,nome")
       .eq("attiva", true)
       .single();
+      
 
     setTeams(teamsData || []);
     setMatchday(matchdayData || null);
@@ -80,29 +81,28 @@ export default function Page() {
   }
 
   async function loadPlayers(teamId: number) {
-    const { data } = await supabase
-      const { data } = await supabase
-  .from("players")
-  .select("*")
-  .eq("team_id", teamId);
 
-const ordineRuoli = {
-  P: 1,
-  D: 2,
-  C: 3,
-  A: 4,
-};
+  const { data } = await supabase
+    .from("players")
+    .select("*")
+    .eq("team_id", teamId);
 
-const sortedPlayers = (data || []).sort(
-  (a, b) =>
+  const ordineRuoli = {
+    P: 1,
+    D: 2,
+    C: 3,
+    A: 4,
+  };
+
+  const sortedPlayers = (data || []).sort(
+  (a: Player, b: Player) =>
     ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
     ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
 );
 
-setPlayers(sortedPlayers);
-setTitolari([]);
-return;
-
+  setPlayers(sortedPlayers);
+  setTitolari([]);
+}
      function togglePlayer(playerId: number) {
     if (titolari.includes(playerId)) {
       setTitolari((prev) => prev.filter((id) => id !== playerId));
@@ -221,11 +221,10 @@ return;
       }
 
       const benchPlayers = players.filter(
-        (p) => !titolari.includes(p.id)
-      );
+  (p) => !titolari.includes(p.id)
+);
 
-      const rows = [
-        const ordineRuoli = {
+const ordineRuoli = {
   P: 1,
   D: 2,
   C: 3,
@@ -235,7 +234,7 @@ return;
 const titolariOrdinati = players
   .filter((p) => titolari.includes(p.id))
   .sort(
-    (a, b) =>
+    (a: Player, b: Player) =>
       ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
       ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
   );
@@ -243,21 +242,21 @@ const titolariOrdinati = players
 const rows = [
 
   ...titolariOrdinati.map((p, index) => ({
-            formation_id: newFormation.id,
-            player_id: p.id,
-            titolare: true,
-            posizione: index + 1,
-            ordine_panchina: null,
-          })),
+    formation_id: newFormation.id,
+    player_id: p.id,
+    titolare: true,
+    posizione: index + 1,
+    ordine_panchina: null,
+  })),
 
-        ...benchPlayers.map((p, index) => ({
-          formation_id: newFormation.id,
-          player_id: p.id,
-          titolare: false,
-          posizione: null,
-          ordine_panchina: index + 1,
-        })),
-      ];
+  ...benchPlayers.map((p, index) => ({
+    formation_id: newFormation.id,
+    player_id: p.id,
+    titolare: false,
+    posizione: null,
+    ordine_panchina: index + 1,
+  })),
+];
 
       const { error: playersError } = await supabase
         .from("formation_players")
@@ -420,9 +419,7 @@ const rows = [
                 cursor: "pointer",
               }}
             >
-              {locked
-  ? "🔒 INSERIMENTO CHIUSO"
-  : saving
+              {saving
   ? "SALVATAGGIO..."
   : "💾 SALVA FORMAZIONE"}
             </button>

@@ -97,7 +97,11 @@ const [lastUpdate, setLastUpdate] =
 )
 .eq("attiva", true)
 .single();
-
+if (!activeMatchday) {
+  alert("Nessuna giornata attiva");
+  setLoading(false);
+  return;
+}
 let targetMatchday = activeMatchday;
 
 const { data: nextMatchday } = await supabase
