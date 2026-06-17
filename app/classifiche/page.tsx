@@ -193,7 +193,12 @@ away.fp += Number(match.fp_away || 0);
                 {index + 1}
               </td>
 
-              <td style={tdLeft}>
+              <td
+  style={{
+    ...tdLeft,
+    minWidth: "120px",
+  }}
+>
   {team.squadra}
   {team.live ? " 🔴" : ""}
 </td>
@@ -339,7 +344,12 @@ away.fp += Number(match.fp_away || 0);
                         : "❌"}
                     </td>
 
-                    <td style={tdLeft}>
+                    <td
+  style={{
+    ...tdLeft,
+    minWidth: "120px",
+  }}
+>
   {team.squadra}
   {team.live ? " 🔴" : ""}
 </td>
@@ -376,15 +386,18 @@ const thCenter = {
   padding: "6px 2px",
   textAlign: "center" as const,
   color: "#cbd5e1",
+  width: "42px",
 };
 
 const tdLeft = {
   padding: "6px 4px",
   fontSize: "12px",
+  whiteSpace: "nowrap" as const,
 };
 
 const tdCenter = {
   padding: "6px 2px",
   textAlign: "center" as const,
   fontSize: "12px",
+  width: "42px",
 };
