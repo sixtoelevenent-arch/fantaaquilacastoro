@@ -162,7 +162,7 @@ away.fp += Number(match.fp_away || 0);
         style={{
           width: "100%",
           borderCollapse: "collapse",
-          tableLayout: "fixed",
+          tableLayout: "auto",
           fontSize: "12px",
         }}
       >
@@ -311,7 +311,7 @@ away.fp += Number(match.fp_away || 0);
             style={{
               width: "100%",
               borderCollapse: "collapse",
-              tableLayout: "fixed",
+              tableLayout: "auto",
               fontSize: "12px",
             }}
           >
