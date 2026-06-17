@@ -256,11 +256,35 @@ bonusTotal += replacement.result.bonus;
     }
 
     // nessun sostituto
-    processedPlayers.push({
-      ...starter,
-      sv: true,
-    });
+
+votesTotal += 0;
+
+processedPlayers.push({
+  ...starter,
+  sv: true,
+  voto: 0,
+  bonus: 0,
+  totale: 0,
+});
   }
+const completedSlots =
+  processedPlayers.filter((p) => {
+
+    if (p.replacementPlayer) {
+      return true;
+    }
+
+    if (p.voto !== null && p.voto !== undefined) {
+      return true;
+    }
+
+    if (p.sv && p.voto === 0) {
+      return true;
+    }
+
+    return false;
+
+  }).length;
 
   const fantapoints =
   votesTotal +
@@ -350,7 +374,8 @@ return {
 
   projectedGoals,
 
-  isFinal: allFinished,
+  isFinal:
+  completedSlots >= 11,
 };
 
 }

@@ -15,6 +15,7 @@ type MatchRow = {
   gol_away: number | null;
   fp_home: number | null;
   fp_away: number | null;
+  completata: boolean;
 };
 
 type Standing = {
@@ -58,12 +59,17 @@ export default async function ClassifichePage() {
   });
 
   (matches || []).forEach((match: MatchRow) => {
-    if (
-      match.gol_home === null ||
-      match.gol_away === null
-    ) {
-      return;
-    }
+
+  if (!match.completata) {
+    return;
+  }
+
+  if (
+    match.gol_home === null ||
+    match.gol_away === null
+  ) {
+    return;
+  }
 
     const home = standings.get(match.team_home_id);
     const away = standings.get(match.team_away_id);

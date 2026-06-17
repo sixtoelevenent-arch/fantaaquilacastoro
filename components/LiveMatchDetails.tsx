@@ -345,6 +345,12 @@ const awayCalc = calculateTeam(
   votesMap,
   false
 );
+console.log("FINAL STATUS", {
+  homeFinal: homeCalc.isFinal,
+  awayFinal: awayCalc.isFinal,
+  homeGoals: homeCalc.goals,
+  awayGoals: awayCalc.goals,
+});
 
 console.log(
   votes?.find(
