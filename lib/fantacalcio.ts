@@ -339,7 +339,9 @@ return {
     Math.round(votesTotal * 10) / 10,
 
   bonusTotal:
-    Math.round(bonusTotal * 10) / 10,
+  Math.round(
+    (bonusTotal + liveBonusWithoutVote) * 10
+  ) / 10,
 
   fantapoints:
     Math.round(fantapoints * 10) / 10,
