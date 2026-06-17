@@ -170,7 +170,8 @@ away.fp += Number(match.fp_away || 0);
           <tr>
             <th style={thCenter}>#</th>
             <th style={thLeft}>Squadra</th>
-            <th style={thCenter}>Pt</th>
+<th style={thLive}>🔴</th>
+<th style={thCenter}>Pt</th>
             <th style={thCenter}>FP</th>
             <th style={thCenter}>GF</th>
             <th style={thCenter}>GS</th>
@@ -193,14 +194,12 @@ away.fp += Number(match.fp_away || 0);
                 {index + 1}
               </td>
 
-              <td
-  style={{
-    ...tdLeft,
-    minWidth: "120px",
-  }}
->
+              <td style={tdLeft}>
   {team.squadra}
-  {team.live ? " 🔴" : ""}
+</td>
+
+<td style={tdLive}>
+  {team.live ? "🔴" : ""}
 </td>
 
               <td style={tdCenter}>{team.pt}</td>
@@ -320,7 +319,8 @@ away.fp += Number(match.fp_away || 0);
               <tr>
                 <th style={thCenter}>Q</th>
                 <th style={thLeft}>Squadra</th>
-                <th style={thCenter}>FP</th>
+<th style={thLive}>🔴</th>
+<th style={thCenter}>FP</th>
                 <th style={thCenter}>Pt</th>
                 <th style={thCenter}>DR</th>
               </tr>
@@ -344,16 +344,13 @@ away.fp += Number(match.fp_away || 0);
                         : "❌"}
                     </td>
 
-                    <td
-  style={{
-    ...tdLeft,
-    minWidth: "120px",
-  }}
->
+                    <td style={tdLeft}>
   {team.squadra}
-  {team.live ? " 🔴" : ""}
 </td>
 
+<td style={tdLive}>
+  {team.live ? "🔴" : ""}
+</td>
                     <td style={tdCenter}>
                       {team.fp.toFixed(1)}
                     </td>
@@ -380,24 +377,36 @@ const thLeft = {
   padding: "6px 4px",
   textAlign: "left" as const,
   color: "#cbd5e1",
-};
-
-const thCenter = {
-  padding: "6px 2px",
-  textAlign: "center" as const,
-  color: "#cbd5e1",
-  width: "42px",
+  width: "40%",
 };
 
 const tdLeft = {
   padding: "6px 4px",
   fontSize: "12px",
   whiteSpace: "nowrap" as const,
+  width: "40%",
+};
+
+const thCenter = {
+  padding: "6px 2px",
+  textAlign: "center" as const,
+  color: "#cbd5e1",
 };
 
 const tdCenter = {
   padding: "6px 2px",
   textAlign: "center" as const,
   fontSize: "12px",
-  width: "42px",
+};
+
+const thLive = {
+  width: "26px",
+  textAlign: "center" as const,
+  color: "#cbd5e1",
+};
+
+const tdLive = {
+  width: "26px",
+  textAlign: "center" as const,
+  fontSize: "12px",
 };
