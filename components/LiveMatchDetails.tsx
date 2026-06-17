@@ -69,11 +69,13 @@ export default function LiveMatchDetails({
 }: {
   matchId: number;
   onUpdate?: (data: {
-    homeFP: number;
-    awayFP: number;
-    homeGoals: number;
-    awayGoals: number;
-  }) => void;
+  homeFP: number;
+  awayFP: number;
+  homeGoals: number;
+  awayGoals: number;
+  isFinal: boolean;
+}) => void;
+
 }) {
 
 const [loading, setLoading] = useState(true);
@@ -450,13 +452,10 @@ onUpdate?.({
   homeFP: homeCalc.fantapoints,
   awayFP: awayCalc.fantapoints,
 
-  homeGoals: homeCalc.isFinal
-    ? homeCalc.goals
-    : homeCalc.projectedGoals,
+  homeGoals: finalHomeGoals,
+  awayGoals: finalAwayGoals,
 
-  awayGoals: awayCalc.isFinal
-    ? awayCalc.goals
-    : awayCalc.projectedGoals,
+  isFinal: finalCompleted,
 });
     setMatch({
       id: matchData.id,

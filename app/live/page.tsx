@@ -6,10 +6,12 @@ import LiveMatchDetails from "@/components/LiveMatchDetails";
 import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
 import { calculateMatchLive } from "@/lib/calculateMatchLive";
+import { getActiveMatchday } from "@/lib/getActiveMatchday";
 export default function LivePage() {
   const [openMatchId, setOpenMatchId] =
   useState<number | null>(null);
 
+  
   const [matches, setMatches] = useState<any[]>([]);
   
   const [modules, setModules] = useState<
@@ -22,19 +24,22 @@ export default function LivePage() {
   >
 >({});
 
-  const [liveData, setLiveData] = useState<
+  const [matchdayName, setMatchdayName] =
+  useState("");
+
+const [liveData, setLiveData] = useState<
   Record<
     number,
     {
-  homeFP: number;
-  awayFP: number;
-  homeGoals: number;
-  awayGoals: number;
-  isFinal: boolean;
-}
+      homeFP: number;
+      awayFP: number;
+      homeGoals: number;
+      awayGoals: number;
+      isFinal: boolean;
+    }
   >
 >({});
-
+    
 useEffect(() => {
 
   loadMatches();
@@ -49,16 +54,17 @@ useEffect(() => {
 
   async function loadMatches() {
 
-  const { data: activeMatchday } = await supabase
-  .from("matchdays")
-  .select("id,nome")
-  .eq("attiva", true)
-  .single();
+  const activeMatchday =
+    await getActiveMatchday();
 
-if (!activeMatchday) {
-  setMatches([]);
-  return;
-}
+  if (!activeMatchday) {
+    setMatches([]);
+    return;
+  }
+
+  setMatchdayName(
+    activeMatchday.nome || ""
+  );
 
   const { data } = await supabase
     .from("matches")
@@ -93,7 +99,7 @@ for (const match of data || []) {
 setLiveData(live);
 
 setMatches(data || []);
-  
+
 const newModules: Record<
   number,
   {
@@ -163,7 +169,7 @@ return (
         </h1>
 
 
-<div
+  <div
   style={{
     textAlign: "center",
     color: "#facc15",
@@ -172,8 +178,20 @@ return (
     marginBottom: 8,
   }}
 >
-  ⚽ 1ª GIORNATA
+  ⚽ {matchdayName}
 </div>
+
+  <div
+  style={{
+    textAlign: "center",
+    color: "#cbd5e1",
+    fontSize: "0.85rem",
+    marginBottom: 18,
+  }}
+>
+  👆 Tocca una partita per vedere formazioni, voti e sostituzioni live
+</div>
+
         <p
           style={{
             textAlign: "center",

@@ -243,11 +243,9 @@ return {
   homeFP: homeCalc.fantapoints,
   awayFP: awayCalc.fantapoints,
 
-  homeGoals: homeCalc.projectedGoals,
-  awayGoals: awayCalc.projectedGoals,
+  homeGoals: finalHomeGoals,
+  awayGoals: finalAwayGoals,
 
-  isFinal:
-    homeCalc.isFinal &&
-    awayCalc.isFinal,
+  isFinal: finalCompleted,
 };
 }
