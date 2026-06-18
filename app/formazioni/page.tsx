@@ -823,6 +823,8 @@ function getTitolariRuolo(
   style={{
     background:
       "linear-gradient(to bottom,#15803d,#166534)",
+      backgroundImage:
+  "radial-gradient(circle at center, rgba(255,255,255,0.08) 2px, transparent 2px)",
       boxShadow:
   "inset 0 0 25px rgba(255,255,255,0.08)",
     borderRadius: 20,
@@ -880,7 +882,9 @@ function getTitolariRuolo(
         style={{
           display: "inline-block",
           background: "#0f172a",
-          padding: "10px 14px",
+          padding: "8px 12px",
+maxWidth: 120,
+textAlign: "center",
           borderRadius: 12,
           fontWeight: 700,
         }}
@@ -897,7 +901,7 @@ function getTitolariRuolo(
 gap: 20,
       marginBottom: 35,
       flexWrap: "wrap",
-      gap: 10,
+      
     }}
   >
     {getTitolariRuolo("D").map((p) => (
@@ -905,7 +909,9 @@ gap: 20,
         key={p.id}
         style={{
           background: "#0f172a",
-          padding: "10px 14px",
+          padding: "8px 12px",
+maxWidth: 120,
+textAlign: "center",
           borderRadius: 12,
           fontSize: "0.85rem",
         }}
@@ -922,7 +928,7 @@ gap: 20,
 gap: 20,
       marginBottom: 35,
       flexWrap: "wrap",
-      gap: 10,
+      
     }}
   >
     {getTitolariRuolo("C").map((p) => (
@@ -930,7 +936,9 @@ gap: 20,
         key={p.id}
         style={{
           background: "#0f172a",
-          padding: "10px 14px",
+          padding: "8px 12px",
+maxWidth: 120,
+textAlign: "center",
           borderRadius: 12,
           fontSize: "0.85rem",
         }}
@@ -946,7 +954,7 @@ gap: 20,
       justifyContent: "center",
 gap: 20,
       flexWrap: "wrap",
-      gap: 10,
+      
     }}
   >
     {getTitolariRuolo("A").map((p) => (
@@ -954,7 +962,9 @@ gap: 20,
         key={p.id}
         style={{
           background: "#0f172a",
-          padding: "10px 14px",
+          padding: "8px 12px",
+maxWidth: 120,
+textAlign: "center",
           borderRadius: 12,
           fontSize: "0.85rem",
         }}
