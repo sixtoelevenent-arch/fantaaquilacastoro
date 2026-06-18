@@ -135,8 +135,7 @@ const { data: nextMatchday } = await supabase
   .limit(1)
   .maybeSingle();
 
- targetMatchday =
-  nextMatchday || activeMatchday; 
+ targetMatchday = activeMatchday; 
 
 if (!targetMatchday) {
 
