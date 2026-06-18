@@ -49,6 +49,12 @@ export default async function ClassifichePage() {
     )
   `);
 
+  const { data: activeMatchday } = await supabase
+  .from("matchdays")
+  .select("id")
+  .eq("attiva", true)
+  .single();
+  
   const standings = new Map<number, Standing>();
 
   (teams || []).forEach((team: TeamRow) => {
@@ -85,10 +91,15 @@ export default async function ClassifichePage() {
 
   if (!home || !away) return;
 
-  if (!match.completata) {
+  
+  if (
+  match.matchday_id === activeMatchday?.id &&
+  !match.completata
+) {
   home.live = true;
   away.live = true;
 }
+
     home.gf += match.gol_home ?? 0;
 home.gs += match.gol_away ?? 0;
 
@@ -266,7 +277,9 @@ away.fp += Number(match.fp_away || 0);
           Fase a Gironi • FantAquilaCastoro 2026
         </p>
 {(matches || []).some(
-  (m) => !m.completata
+  (m) =>
+    m.matchday_id === activeMatchday?.id &&
+    !m.completata
 ) && (
   <div
     style={{

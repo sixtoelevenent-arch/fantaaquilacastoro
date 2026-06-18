@@ -1,10 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Page() {
+  const [importing, setImporting] =
+  useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +40,15 @@ export default function Page() {
           textAlign: "center",
         }}
       >
+        <img
+  src="/logo.png"
+  alt="FantAquilaCastoro"
+  style={{
+    width: 90,
+    height: 90,
+    marginBottom: 20,
+  }}
+/>
         ⚙️ Area Admin
       </h1>
 
@@ -60,6 +72,7 @@ export default function Page() {
           gap: "12px",
         }}
       >
+        
         <Link
           href="/admin/formazioni"
           style={{
@@ -67,13 +80,17 @@ export default function Page() {
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            padding: "16px",
+            padding: "14px",
             borderRadius: "14px",
             textDecoration: "none",
             color: "white",
             fontWeight: 700,
-            fontSize: "18px",
+            fontSize: "1rem",
             background: "#2563eb",
+            boxShadow:
+  "0 8px 20px rgba(0,0,0,0.25)",
+border:
+  "1px solid rgba(255,255,255,0.08)",
           }}
         >
           ⚽ Formazioni
@@ -86,36 +103,91 @@ export default function Page() {
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            padding: "16px",
+            padding: "14px",
             borderRadius: "14px",
             textDecoration: "none",
             color: "white",
             fontWeight: 700,
-            fontSize: "18px",
-            background: "#f59e0b",
+            fontSize: "1rem",
+            background: "#7c3aed",
+            boxShadow:
+  "0 8px 20px rgba(0,0,0,0.25)",
+border:
+  "1px solid rgba(255,255,255,0.08)",
           }}
         >
           📅 Gestione Giornate
         </Link>
 
-        <Link
-          href="/admin/voti"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            padding: "16px",
-            borderRadius: "14px",
-            textDecoration: "none",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "18px",
-            background: "#16a34a",
-          }}
-        >
-          📥 Gestione Voti
-        </Link>
+        <button
+  disabled={importing}
+  onClick={async () => {
+
+    const ok = confirm(
+      "Importare i voti adesso?"
+    );
+
+    if (!ok) return;
+
+    try {
+
+      setImporting(true);
+
+      const res = await fetch(
+        "/api/admin/import-votes",
+        {
+          method: "POST",
+        }
+      );
+
+      const data =
+        await res.json();
+
+      if (!data.success) {
+        throw new Error(
+          data.error
+        );
+      }
+
+      alert(
+        `✅ Import completato
+
+Importati: ${data.importati}
+Non trovati: ${data.nonTrovati}`
+      );
+
+    } catch (err: any) {
+
+      alert(
+        err.message ||
+        "Errore import"
+      );
+
+    } finally {
+
+      setImporting(false);
+
+    }
+  }}
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    padding: "16px",
+    borderRadius: "14px",
+    border: "none",
+    color: "white",
+    fontWeight: 700,
+    fontSize: "18px",
+    background: "#16a34a",
+    cursor: "pointer",
+  }}
+>
+  {importing
+    ? "⏳ Import in corso..."
+    : "📥 Importa Voti"}
+</button>
 
         <button
           onClick={() => {
@@ -127,14 +199,17 @@ export default function Page() {
           }}
           style={{
             width: "100%",
-            padding: "16px",
+            padding: "14px",
             borderRadius: "14px",
-            border: "none",
             color: "white",
             fontWeight: 700,
-            fontSize: "18px",
+            fontSize: "1rem",
             background: "#dc2626",
             cursor: "pointer",
+            boxShadow:
+  "0 8px 20px rgba(0,0,0,0.25)",
+border:
+  "1px solid rgba(255,255,255,0.08)",
           }}
         >
           🚪 Logout Admin
@@ -147,18 +222,24 @@ export default function Page() {
             alignItems: "center",
             justifyContent: "center",
             width: "100%",
-            padding: "16px",
+            padding: "14px",
             borderRadius: "14px",
             textDecoration: "none",
             color: "white",
             fontWeight: 700,
-            fontSize: "18px",
-            background: "#475569",
+            fontSize: "1rem",
+            background: "#334155",
+            boxShadow:
+  "0 8px 20px rgba(0,0,0,0.25)",
+border:
+  "1px solid rgba(255,255,255,0.08)",
           }}
         >
           🏠 Torna alla Home
         </Link>
       </div>
     </main>
+
+    
   );
 }

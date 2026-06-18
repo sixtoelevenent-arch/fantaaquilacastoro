@@ -9,7 +9,7 @@ export const gironeB = [
   { squadra: "🇫🇷 Francia", allenatore: "Sirty", pt: 0, gf: 0, gs: 0, dr: 0 },
   { squadra: "🇺🇿 Uzbekistan", allenatore: "Michel", pt: 0, gf: 0, gs: 0, dr: 0 },
   { squadra: "🇲🇽 Messico", allenatore: "Cristian", pt: 0, gf: 0, gs: 0, dr: 0 },
-  { squadra: "🇨🇼 Curaçao", allenatore: "Fava", pt: 0, gf: 0, gs: 0, dr: 0 },
+  { squadra: "🇨🇼 Curaçao ", allenatore: "Fava", pt: 0, gf: 0, gs: 0, dr: 0 },
 ];
 
 export const gironeC = [
