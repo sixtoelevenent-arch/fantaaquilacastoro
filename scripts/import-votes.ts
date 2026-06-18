@@ -139,19 +139,6 @@ if (
 
 let player = exactMap.get(key);
 
-if (
-  normalizeNation(nazioneFantapiu) === "COSTA D'AVORIO"
-) {
-  console.log(
-    "MATCH:",
-    nome,
-    "=>",
-    !!player,
-    player?.id,
-    player?.nome
-  );
-}
-
   if (!player) {
 
   console.log(

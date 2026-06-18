@@ -9,8 +9,21 @@ export default function AccountPage() {
 
   const router = useRouter();
 
-  const [user, setUser] = useState<any>(null);
-  const [team, setTeam] = useState<any>(null);
+  type User = {
+  id: number;
+  username: string;
+  team_id: number;
+};
+
+type Team = {
+  id: number;
+  nome: string;
+  proprietario: string;
+  gruppo: string;
+};
+
+const [user, setUser] = useState<User | null>(null);
+const [team, setTeam] = useState<Team | null>(null);
 
   useEffect(() => {
 

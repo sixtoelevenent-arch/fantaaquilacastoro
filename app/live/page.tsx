@@ -44,7 +44,29 @@ const [liveData, setLiveData] = useState<
 }
   >
 >({});
-    
+
+const giornataTerminata =
+  matches.length > 0 &&
+  Object.values(liveData).length > 0 &&
+  Object.values(liveData).every(
+    (m) => m.isFinal
+  );
+
+  const bannerImages: Record<string, string> = {
+  "Giornata 1": "/images/pasquale-banner.png",
+  "Giornata 2": "/images/banner-g2.png",
+  "Giornata 3": "/images/banner-g3.png",
+  "Quarti Andata": "/images/banner-qf1.png",
+  "Quarti Ritorno": "/images/banner-qf2.png",
+  "Semifinali Andata": "/images/banner-sf1.png",
+  "Semifinali Ritorno": "/images/banner-sf2.png",
+  "Finale": "/images/banner-finale.png",
+};
+
+const currentBanner =
+  bannerImages[matchdayName] ||
+  "/images/pasquale-banner.png";
+
 useEffect(() => {
 
   loadMatches();
@@ -204,40 +226,65 @@ return (
             marginBottom: "35px",
           }}
         >
-          <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 8,
-  }}
->
-  <span
-    style={{
-      padding: "8px 14px",
-      background: "#7f1d1d",
-      borderRadius: 999,
-      color: "#fecaca",
-      fontSize: "0.9rem",
-      fontWeight: 600,
-    }}
-  >
-    ⏱️ Giornata in corso
-  </span>
+ {giornataTerminata ? (
 
-  <span
+  <div
     style={{
-      padding: "8px 10px",
-      background: "#dc2626",
-      borderRadius: 999,
-      color: "white",
-      fontSize: "0.8rem",
-      fontWeight: 700,
+      display: "flex",
+      justifyContent: "center",
     }}
   >
-    LIVE
-  </span>
-</div>
+    <span
+      style={{
+        padding: "8px 18px",
+        background: "#166534",
+        borderRadius: 999,
+        color: "white",
+        fontWeight: 700,
+      }}
+    >
+      ✅ Giornata terminata
+    </span>
+  </div>
+
+) : (
+
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      gap: 8,
+    }}
+  >
+    <span
+      style={{
+        padding: "8px 14px",
+        background: "#7f1d1d",
+        borderRadius: 999,
+        color: "#fecaca",
+        fontSize: "0.9rem",
+        fontWeight: 600,
+      }}
+    >
+      ⏱️ Giornata in corso
+    </span>
+
+    <span
+      style={{
+        padding: "8px 10px",
+        background: "#dc2626",
+        borderRadius: 999,
+        color: "white",
+        fontSize: "0.8rem",
+        fontWeight: 700,
+      }}
+    >
+      LIVE
+    </span>
+  </div>
+
+)}
 
 <div
   style={{
@@ -271,7 +318,7 @@ return (
     }}
   >
     <img
-      src="/images/pasquale-banner.png"
+      src={currentBanner}
       alt="Pasquale l'Aquila Reale"
       style={{
         width: "88%",

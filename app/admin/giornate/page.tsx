@@ -40,9 +40,9 @@ export default function Page() {
 
   async function impostaAttiva(id: number) {
     await supabase
-      .from("matchdays")
-      .update({ attiva: false })
-      .neq("id", 0);
+  .from("matchdays")
+  .update({ attiva: false })
+  .eq("attiva", true);
 
     await supabase
       .from("matchdays")
@@ -66,7 +66,10 @@ export default function Page() {
 
   async function chiudiEPassa(id: number) {
     const prossima = giornate.find((g) => g.id === id + 1);
-
+if (!prossima) {
+  alert("Nessuna giornata successiva disponibile");
+  return;
+}
     await supabase
       .from("matchdays")
       .update({

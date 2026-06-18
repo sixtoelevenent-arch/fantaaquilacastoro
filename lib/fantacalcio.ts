@@ -111,7 +111,7 @@ export function calculateTeam(
 
   const usedBench = new Set<number>();
 
-  const processedPlayers = [];
+  const processedPlayers: any[] = [];
 
   for (const starter of titolari) {
     const vote = votesMap.get(starter.player_id);
@@ -121,16 +121,7 @@ export function calculateTeam(
       starter.ruolo
     );
 
-    console.log(
-  starter.nome,
-  {
-    voto: vote?.voto,
-    sv: vote?.sv,
-    result
-  }
-);
-
-    // voto normale
+       // voto normale
     if (
       result &&
       !result.sv &&
@@ -160,14 +151,7 @@ export function calculateTeam(
     starter.nationalFinalized
   );
 
-  if (
-  starter.nome === "DANI OLMO" ||
-  starter.nome === "D. Svensson"
-) {
-
-}
-
-if (!starterIsSv) {
+  if (!starterIsSv) {
 
   
   if (
@@ -187,8 +171,8 @@ if (!starterIsSv) {
 }
 
     // giornata finita → cerca sostituto
-    let replacement = null;
-
+    let replacement: any = null;
+    
     for (const bench of panchina) {
       if (usedBench.has(bench.player_id))
         continue;
@@ -295,15 +279,6 @@ let projectedFP = 0;
 
 for (const player of processedPlayers) {
 
-  console.log(
-    "PROJ PLAYER",
-    player.nome,
-    "SV:",
-    player.sv,
-    "REPL:",
-    player.replacementPlayer?.nome
-  );
-  
   if (player.replacementPlayer) {
 
   const repl = player.replacementPlayer;
@@ -341,18 +316,6 @@ projectedFP += player.bonus || 0;
 
 const projectedGoals =
   fantasyGoals(projectedFP);
-
-console.log("CALC TEAM", {
-  votesTotal,
-  bonusTotal,
-  fantapoints,
-});
-
-  console.log("PROIEZIONE", {
-  fantapoints,
-  projectedFP,
-  projectedGoals,
-});
 
 return {
   players: processedPlayers,

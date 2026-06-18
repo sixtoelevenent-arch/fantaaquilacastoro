@@ -134,20 +134,7 @@ if (
     const key =
   `${normalize(nome)}|${normalizeNation(nazioneFantapiu)}`;
 
-let player = exactMap.get(key);
-
-if (
-  normalizeNation(nazioneFantapiu) === "COSTA D'AVORIO"
-) {
-  console.log(
-    "MATCH:",
-    nome,
-    "=>",
-    !!player,
-    player?.id,
-    player?.nome
-  );
-}
+const player = exactMap.get(key);
 
     if (!player) {
   nonTrovati++;
@@ -183,37 +170,19 @@ const voto =
   isSv || Number.isNaN(votoParsed)
     ? null
     : votoParsed;
-// =====================
-// GOL FATTI / SUBITI
-// =====================
 
 const valoreGol =
   parseInt(valori[2]) || 0;
-
-// Fantapiù3 usa:
-// +3 = 1 gol
-// +6 = 2 gol
-// +9 = 3 gol
 
 const golSegnati =
   valoreGol > 0
     ? Math.floor(valoreGol / 3)
     : 0;
 
-// Portieri:
-// -1 = 1 gol subito
-// -2 = 2 gol subiti
-
 const golSubiti =
   valoreGol < 0
     ? Math.abs(valoreGol)
     : 0;
-
-// =====================
-// GOL SU RIGORE
-// =====================
-
-// +3 = 1 rigore segnato
 
 const golRigoreValue =
   parseInt(valori[3]) || 0;
@@ -223,11 +192,6 @@ const golRigore =
     ? Math.floor(golRigoreValue / 3)
     : 0;
 
-// =====================
-// AMMONIZIONE
-// =====================
-
-// -0.5
 
 const ammonizioneValue =
   parseFloat(valori[4].replace(",", ".")) || 0;
@@ -235,24 +199,11 @@ const ammonizioneValue =
 const ammonizione =
   ammonizioneValue < 0;
 
-// =====================
-// ESPULSIONE
-// =====================
-
-// -1
-
 const espulsioneValue =
   parseFloat(valori[5].replace(",", ".")) || 0;
 
 const espulsione =
   espulsioneValue < 0;
-
-// =====================
-// RIGORI PARATI / SBAGLIATI
-// =====================
-
-// +3 = rigore parato
-// -3 = rigore sbagliato
 
 const rigoriValue =
   parseInt(valori[6]) || 0;
@@ -267,12 +218,6 @@ const rigoriSbagliati =
     ? Math.floor(Math.abs(rigoriValue) / 3)
     : 0;
 
-// =====================
-// AUTOGOL
-// =====================
-
-// -2 = 1 autogol
-
 const autogolValue =
   parseInt(valori[7]) || 0;
 
@@ -280,12 +225,6 @@ const autogol =
   autogolValue < 0
     ? Math.floor(Math.abs(autogolValue) / 2)
     : 0;
-
-// =====================
-// ASSIST
-// =====================
-
-// +1 = 1 assist
 
 const assistValue =
   parseInt(valori[8]) || 0;

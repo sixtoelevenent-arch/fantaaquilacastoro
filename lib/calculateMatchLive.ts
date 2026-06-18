@@ -66,7 +66,7 @@ const nationalFinalized = new Set<string>();
     .select("*")
     .eq("matchday_id", matchData.matchday_id);
 
-  const votesMap = new Map();
+  const votesMap = new Map<number, any>();
 
   (votes || []).forEach((v) => {
     votesMap.set(v.player_id, v);
@@ -114,30 +114,12 @@ const { data: loadedPlayers } =
     .trim()
     .toUpperCase();
 
-const exists =
+    const exists =
   nationalExists.has(nation);
 
 const finalized =
   nationalFinalized.has(nation);
-if (
-  r.players?.nome?.toUpperCase().includes("OLMO") ||
-  r.players?.nome?.toUpperCase().includes("SVENSSON")
-) {
-  console.log(
-    "DEBUG NORMALIZE",
-    r.players.nome,
-    nation,
-    "exists:",
-    exists,
-    "finalized:",
-    finalized,
-    "vote:",
-    voteData?.voto,
-    "sv:",
-    voteData?.sv
-  );
-}
-
+  
       return {
 
         player_id: r.player_id,
@@ -206,13 +188,7 @@ nationalFinalized: finalized,
     false
   );
 
-  console.log("MATCH RESULT", {
-  matchId,
-  homeGoals: homeCalc.projectedGoals,
-  awayGoals: awayCalc.projectedGoals,
-});
-
-const finalHomeGoals =
+  const finalHomeGoals =
   homeCalc.isFinal
     ? homeCalc.goals
     : homeCalc.projectedGoals;

@@ -32,6 +32,13 @@ const MODULI = [
   "5-4-1",
 ];
 
+const ROLE_ORDER = {
+  P: 1,
+  D: 2,
+  C: 3,
+  A: 4,
+};
+
 function getModuloCounts(modulo: string) {
   const [d, c, a] = modulo.split("-").map(Number);
 
@@ -87,17 +94,10 @@ export default function Page() {
     .select("*")
     .eq("team_id", teamId);
 
-  const ordineRuoli = {
-    P: 1,
-    D: 2,
-    C: 3,
-    A: 4,
-  };
-
-  const sortedPlayers = (data || []).sort(
+    const sortedPlayers = (data || []).sort(
   (a: Player, b: Player) =>
-    ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
-    ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
+    ROLE_ORDER[a.ruolo as keyof typeof ROLE_ORDER] -
+    ROLE_ORDER[b.ruolo as keyof typeof ROLE_ORDER]
 );
 
   setPlayers(sortedPlayers);
@@ -224,20 +224,13 @@ export default function Page() {
   (p) => !titolari.includes(p.id)
 );
 
-const ordineRuoli = {
-  P: 1,
-  D: 2,
-  C: 3,
-  A: 4,
-};
-
 const titolariOrdinati = players
   .filter((p) => titolari.includes(p.id))
   .sort(
-    (a: Player, b: Player) =>
-      ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
-      ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
-  );
+  (a: Player, b: Player) =>
+    ROLE_ORDER[a.ruolo as keyof typeof ROLE_ORDER] -
+    ROLE_ORDER[b.ruolo as keyof typeof ROLE_ORDER]
+);
 
 const rows = [
 
