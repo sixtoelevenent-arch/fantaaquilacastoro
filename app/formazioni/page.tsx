@@ -746,7 +746,7 @@ function getTitolariRuolo(
 <div
   style={{
     display: "flex",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly",
     textAlign: "center",
     fontWeight: 900,
   }}
@@ -823,6 +823,8 @@ function getTitolariRuolo(
   style={{
     background:
       "linear-gradient(to bottom,#15803d,#166534)",
+      boxShadow:
+  "inset 0 0 25px rgba(255,255,255,0.08)",
     borderRadius: 20,
     padding: 20,
     marginBottom: 20,
@@ -891,7 +893,8 @@ function getTitolariRuolo(
   <div
     style={{
       display: "flex",
-      justifyContent: "space-evenly",
+      justifyContent: "center",
+gap: 20,
       marginBottom: 35,
       flexWrap: "wrap",
       gap: 10,
@@ -915,7 +918,8 @@ function getTitolariRuolo(
   <div
     style={{
       display: "flex",
-      justifyContent: "space-evenly",
+      justifyContent: "center",
+gap: 20,
       marginBottom: 35,
       flexWrap: "wrap",
       gap: 10,
@@ -939,7 +943,8 @@ function getTitolariRuolo(
   <div
     style={{
       display: "flex",
-      justifyContent: "space-evenly",
+      justifyContent: "center",
+gap: 20,
       flexWrap: "wrap",
       gap: 10,
     }}
@@ -1155,8 +1160,9 @@ function getTitolariRuolo(
   disabled={locked}
   style={{
     padding: "8px 12px",
-    minWidth: 44,
-    minHeight: 44,
+    minWidth: 36,
+minHeight: 36,
+fontSize: "0.8rem",
   }}
   onClick={() =>
     moveBenchPlayer(
@@ -1173,8 +1179,9 @@ function getTitolariRuolo(
   disabled={locked}
   style={{
     padding: "8px 12px",
-    minWidth: 44,
-    minHeight: 44,
+    minWidth: 36,
+minHeight: 36,
+fontSize: "0.8rem",
   }}
   onClick={() =>
     moveBenchPlayer(
