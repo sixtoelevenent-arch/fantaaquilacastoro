@@ -1,6 +1,21 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function Page() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const isAdmin =
+      localStorage.getItem("fantasy_admin");
+
+    if (isAdmin !== "true") {
+      router.push("/login");
+    }
+  }, [router]);
+
   return (
     <main
       style={{
@@ -101,6 +116,29 @@ export default function Page() {
         >
           📥 Gestione Voti
         </Link>
+
+        <button
+          onClick={() => {
+            localStorage.removeItem(
+              "fantasy_admin"
+            );
+
+            router.push("/");
+          }}
+          style={{
+            width: "100%",
+            padding: "16px",
+            borderRadius: "14px",
+            border: "none",
+            color: "white",
+            fontWeight: 700,
+            fontSize: "18px",
+            background: "#dc2626",
+            cursor: "pointer",
+          }}
+        >
+          🚪 Logout Admin
+        </button>
 
         <Link
           href="/"
