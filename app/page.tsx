@@ -1,4 +1,13 @@
+"use client";
+import Link from "next/link";
 export default function Home() {
+  const user =
+  typeof window !== "undefined"
+    ? JSON.parse(
+        localStorage.getItem("fantasy_user") || "null"
+      )
+    : null;
+
   const buttonStyle = {
     display: "block",
     width: "100%",
@@ -13,7 +22,7 @@ export default function Home() {
     textAlign: "center" as const,
     boxSizing: "border-box" as const,
   };
-
+      
   return (
     <main
       style={{
@@ -27,6 +36,23 @@ export default function Home() {
         alignItems: "center",
       }}
     >
+      <Link
+  href={user ? "/account" : "/login"}
+  style={{
+    position: "absolute",
+    top: 20,
+    right: 20,
+    background: "#2563eb",
+    color: "white",
+    padding: "10px 16px",
+    borderRadius: 12,
+    textDecoration: "none",
+    fontWeight: 800,
+  }}
+>
+  {user ? "👤 ACCOUNT" : "🔑 ENTRA"}
+</Link>
+
       <img
         src="/Logo.jpg"
         alt="FantAquilaCastoro 2026"
