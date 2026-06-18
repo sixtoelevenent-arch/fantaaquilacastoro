@@ -16,6 +16,7 @@ type MatchRow = {
   fp_home: number | null;
   fp_away: number | null;
   completata: boolean;
+  matchday_id: number;
 };
 
 type Standing = {
@@ -40,8 +41,13 @@ export default async function ClassifichePage() {
     .order("gruppo");
 
   const { data: matches } = await supabase
-    .from("matches")
-    .select("*");
+  .from("matches")
+  .select(`
+    *,
+    matchdays (
+      chiusura_formazioni
+    )
+  `);
 
   const standings = new Map<number, Standing>();
 
@@ -62,11 +68,14 @@ export default async function ClassifichePage() {
 });
   });
 
-  (matches || []).forEach((match: MatchRow) => {
+  (matches || []).forEach((match: any) => {
+
+  const chiusura =
+    match.matchdays?.chiusura_formazioni;
 
   if (
-    match.fp_home === null ||
-    match.fp_away === null
+    chiusura &&
+    new Date() < new Date(chiusura)
   ) {
     return;
   }
