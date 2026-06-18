@@ -383,27 +383,29 @@ return (
     fontSize: "2.5rem",
     fontWeight: 900,
     lineHeight: 1,
-    color: liveData[match.id]?.isFinal
-      ? "#22c55e"
-      : "#facc15",
   }}
 >
-  {liveData[match.id]?.homeGoals ?? 0}
-  {" - "}
-  {liveData[match.id]?.awayGoals ?? 0}
-</div>
+  <span
+    style={{
+      color: liveData[match.id]?.homeFinal
+        ? "#22c55e"
+        : "#facc15",
+    }}
+  >
+    {liveData[match.id]?.homeGoals ?? 0}
+  </span>
 
-<div
-  style={{
-    marginTop: 8,
-    fontSize: "1rem",
-    color: "#94a3b8",
-    fontWeight: 600,
-  }}
->
-  {liveData[match.id]?.homeFP?.toFixed(1) ?? "0.0"}
-  {" • "}
-  {liveData[match.id]?.awayFP?.toFixed(1) ?? "0.0"}
+  {" - "}
+
+  <span
+    style={{
+      color: liveData[match.id]?.awayFinal
+        ? "#22c55e"
+        : "#facc15",
+    }}
+  >
+    {liveData[match.id]?.awayGoals ?? 0}
+  </span>
 </div>
 
     </div>

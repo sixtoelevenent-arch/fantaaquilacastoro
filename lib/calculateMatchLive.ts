@@ -246,6 +246,9 @@ return {
   homeGoals: finalHomeGoals,
   awayGoals: finalAwayGoals,
 
+  homeFinal: homeCalc.isFinal,
+  awayFinal: awayCalc.isFinal,
+
   isFinal: finalCompleted,
 };
 }
