@@ -6,7 +6,7 @@ import LiveMatchDetails from "@/components/LiveMatchDetails";
 import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
 import { calculateMatchLive } from "@/lib/calculateMatchLive";
-import { getActiveMatchday } from "@/lib/getActiveMatchday";
+import { getVisibleMatchday } from "@/lib/getVisibleMatchday";
 export default function LivePage() {
   const [openMatchId, setOpenMatchId] =
   useState<number | null>(null);
@@ -25,6 +25,12 @@ export default function LivePage() {
 >({});
 
   const [matchdayName, setMatchdayName] =
+  useState<string | null>(null);
+
+  const [preLive, setPreLive] =
+  useState(false);
+
+const [countdown, setCountdown] =
   useState("");
 
 const [liveData, setLiveData] = useState<
@@ -64,8 +70,10 @@ const giornataTerminata =
 };
 
 const currentBanner =
-  bannerImages[matchdayName] ||
-  "/images/pasquale-banner.png";
+  matchdayName
+    ? bannerImages[matchdayName] ||
+      "/images/pasquale-banner.png"
+    : null;
 
 useEffect(() => {
 
@@ -79,10 +87,54 @@ useEffect(() => {
 
 }, []);
 
+useEffect(() => {
+  if (!preLive) return;
+
+  let interval: NodeJS.Timeout;
+
+  const startCountdown = async () => {
+    const { data } = await supabase
+      .from("matchdays")
+      .select("chiusura_formazioni")
+      .eq("nome", matchdayName)
+      .single();
+
+    if (!data?.chiusura_formazioni) return;
+
+    interval = setInterval(() => {
+      const diff =
+        new Date(data.chiusura_formazioni).getTime() -
+        Date.now();
+
+      if (diff <= 0) {
+  setPreLive(false);
+  setCountdown("00:00:00");
+  return;
+}
+
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+
+      setCountdown(
+        `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+      );
+    }, 1000);
+  };
+
+  startCountdown();
+
+  return () => {
+    if (interval) clearInterval(interval);
+  };
+}, [preLive, matchdayName]);
+
   async function loadMatches() {
 
   const activeMatchday =
-    await getActiveMatchday();
+  await getVisibleMatchday();
+
+console.log("VISIBLE MATCHDAY", activeMatchday);
 
   if (!activeMatchday) {
     setMatches([]);
@@ -92,6 +144,10 @@ useEffect(() => {
   setMatchdayName(
     activeMatchday.nome || ""
   );
+
+  setPreLive(
+  activeMatchday.preLive || false
+);
 
   const { data } = await supabase
     .from("matches")
@@ -226,7 +282,36 @@ return (
             marginBottom: "35px",
           }}
         >
- {giornataTerminata ? (
+ {preLive && countdown !== "00:00:00" ? (
+
+  <div
+    style={{
+      textAlign: "center",
+    }}
+  >
+    <div
+      style={{
+        color: "#facc15",
+        fontWeight: 800,
+        fontSize: "1rem",
+        marginBottom: 6,
+      }}
+    >
+      ⏳ Chiusura inserimento formazioni
+    </div>
+
+    <div
+      style={{
+        fontSize: "2rem",
+        fontWeight: 900,
+        color: "#22c55e",
+      }}
+    >
+      {countdown}
+    </div>
+  </div>
+
+) : giornataTerminata ? (
 
   <div
     style={{
@@ -307,7 +392,7 @@ return (
           
         </div>   {/* chiusura del blocco LIVE */}
 
-{matches.length === 0 && (
+{matches.length === 0 && currentBanner && (
   <Card>
   <div
     style={{
