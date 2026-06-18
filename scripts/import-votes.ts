@@ -91,8 +91,8 @@ for (const p of players || []) {
 console.log("EXACT MAP:", exactMap.size);
 
   let importati = 0;
-  let nonTrovati = 0;
-
+  let ignorati = 0;
+ 
   const rows = $(".table-row");
 
   console.log("Righe trovate:", rows.length);
@@ -152,20 +152,19 @@ if (
   );
 }
 
-    if (!player) {
-  nonTrovati++;
+  if (!player) {
 
   console.log(
-  "NON TROVATO:",
-  nome,
-  "|",
-  nazioneFantapiu,
-  "| KEY:",
-  key
-);
+    "ROSA NON TROVATA:",
+    nome,
+    "|",
+    nazioneFantapiu
+  );
 
+  ignorati++;
   continue;
 }
+
     const valori = row
   .find(".table-text.bold")
   .map((_, el) => $(el).text().trim())
@@ -328,7 +327,8 @@ const assist = assistValue;
 
   console.log("");
   console.log("IMPORTATI:", importati);
-  console.log("NON TROVATI:", nonTrovati);
+  console.log("IGNORATI:", ignorati);
+ 
 }
 
 main().catch(console.error);

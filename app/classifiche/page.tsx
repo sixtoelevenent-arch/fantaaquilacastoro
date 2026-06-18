@@ -276,23 +276,8 @@ away.fp += Number(match.fp_away || 0);
         >
           Fase a Gironi • FantAquilaCastoro 2026
         </p>
-{(matches || []).some(
-  (m) =>
-    m.matchday_id === activeMatchday?.id &&
-    !m.completata
-) && (
-  <div
-    style={{
-      textAlign: "center",
-      marginBottom: "20px",
-      color: "#ef4444",
-      fontWeight: 800,
-      fontSize: "14px",
-    }}
-  >
-    🔴 Classifica Provvisoria
-  </div>
-)}
+
+
         {renderTable(
           "🟢 Girone A",
           "#22c55e",
