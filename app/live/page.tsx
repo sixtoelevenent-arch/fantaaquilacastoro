@@ -457,7 +457,7 @@ return (
     <LiveMatchDetails
       matchId={match.id}
       onUpdate={(data) =>
-        setLiveData((prev) => ({
+        setLiveData(prev) => ({
           ...prev,
           [match.id]: data,
         }))
