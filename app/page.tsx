@@ -40,14 +40,26 @@ export default function Home() {
   href={user ? "/account" : "/login"}
   style={{
     position: "absolute",
-    top: 20,
-    right: 20,
+    top: 10,
+    right: 10,
+
+    width: 120,
+    height: 48,
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
     background: "#2563eb",
     color: "white",
-    padding: "10px 16px",
-    borderRadius: 12,
+
+    borderRadius: 14,
     textDecoration: "none",
+
     fontWeight: 800,
+    fontSize: "1rem",
+
+    zIndex: 50,
   }}
 >
   {user ? "👤 ACCOUNT" : "🔑 ENTRA"}

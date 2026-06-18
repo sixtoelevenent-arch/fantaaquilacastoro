@@ -1,10 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import Card from "@/components/Card";
-import BackHome from "@/components/BackHome";
+import { useRouter } from "next/navigation";
 
 type Team = {
   id: number;
@@ -63,15 +62,37 @@ export default function Page() {
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const router = useRouter();
 
   const [locked, setLocked] = useState(false);
 
 const [lastUpdate, setLastUpdate] =
   useState("");
 
+    const [dirty, setDirty] = useState(false);
+
   useEffect(() => {
     loadData();
   }, []);
+  useEffect(() => {
+  const handler = (e: BeforeUnloadEvent) => {
+    if (!dirty) return;
+
+    e.preventDefault();
+    e.returnValue = "";
+  };
+
+  window.addEventListener(
+    "beforeunload",
+    handler
+  );
+
+  return () =>
+    window.removeEventListener(
+      "beforeunload",
+      handler
+    );
+}, [dirty]);
 
   async function loadData() {
 
@@ -284,6 +305,8 @@ const panchinaIds = (formationPlayers || [])
 setTitolari(titolariIds);
 setPanchina(panchinaIds);
 
+setDirty(false);
+
 }
 
   function togglePlayer(playerId: number) {
@@ -295,7 +318,8 @@ setPanchina(panchinaIds);
   if (!player) return;
 
   if (titolari.includes(playerId)) {
-
+    
+    setDirty(true);
     setTitolari((prev) =>
       prev.filter((id) => id !== playerId)
     );
@@ -345,7 +369,7 @@ setPanchina(panchinaIds);
   ) {
     return;
   }
-
+  setDirty(true);
   setTitolari((prev) => [
     ...prev,
     playerId,
@@ -382,7 +406,7 @@ function moveBenchPlayer(
     nuovaPanchina[targetIndex],
     nuovaPanchina[index],
   ];
-
+  setDirty(true);
   setPanchina(nuovaPanchina);
 }
 
@@ -563,11 +587,12 @@ console.log(
         throw playersError;
       }
 
-      alert("Formazione salvata correttamente");
+      alert("Formazione salvata correttamente"); setDirty(false);
+      setLastUpdate(new Date().toISOString());
     } catch (err: any) {
 
   console.error("ERRORE SALVATAGGIO", err);
-
+  
   alert(
     err?.message ||
     JSON.stringify(err, null, 2)
@@ -631,7 +656,33 @@ function getTitolariRuolo(
           margin: "0 auto",
         }}
       >
-        <BackHome />
+        <button
+  onClick={() => {
+    if (
+      dirty &&
+      !confirm(
+        "Hai modifiche non salvate. Uscire comunque?"
+      )
+    ) {
+      return;
+    }
+
+    router.push("/");
+  }}
+  style={{
+    display: "inline-block",
+    marginBottom: "20px",
+    padding: "10px 16px",
+    background: "#1f2937",
+    color: "white",
+    borderRadius: "12px",
+    fontWeight: "700",
+    border: "1px solid rgba(255,255,255,0.1)",
+    cursor: "pointer",
+  }}
+>
+  ← Home
+</button>
 
 <h1
   style={{
@@ -729,7 +780,10 @@ function getTitolariRuolo(
   value={modulo}
   
   disabled={locked}
-  onChange={(e) => setModulo(e.target.value)}
+  onChange={(e) => {
+  setModulo(e.target.value);
+  setDirty(true);
+}}
                 style={{
                   padding: "12px",
                   borderRadius: "8px",
