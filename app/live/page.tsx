@@ -387,7 +387,7 @@ return (
 >
   <span
     style={{
-      color: liveData[match.id]?.homeFinal
+      color: liveData[match.id]?.isFinal
         ? "#22c55e"
         : "#facc15",
     }}
@@ -399,7 +399,7 @@ return (
 
   <span
     style={{
-      color: liveData[match.id]?.awayFinal
+      color: liveData[match.id]?.isFinal
         ? "#22c55e"
         : "#facc15",
     }}
