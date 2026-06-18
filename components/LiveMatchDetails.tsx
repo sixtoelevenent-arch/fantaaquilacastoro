@@ -74,6 +74,8 @@ export default function LiveMatchDetails({
   homeGoals: number;
   awayGoals: number;
   isFinal: boolean;
+  homeFinal: boolean;
+  awayFinal: boolean;
 }) => void;
 
 }) {
@@ -448,15 +450,21 @@ await supabase
   .eq("id", matchId);
 */
 
-onUpdate?.({
-  homeFP: homeCalc.fantapoints,
-  awayFP: awayCalc.fantapoints,
+if (onUpdate) {
+  onUpdate({
+    homeFP: homeCalc.fantapoints,
+    awayFP: awayCalc.fantapoints,
 
-  homeGoals: finalHomeGoals,
-  awayGoals: finalAwayGoals,
+    homeGoals: finalHomeGoals,
+    awayGoals: finalAwayGoals,
 
-  isFinal: finalCompleted,
-});
+    homeFinal: homeCalc.isFinal,
+    awayFinal: awayCalc.isFinal,
+
+    isFinal: finalCompleted,
+  });
+}
+
     setMatch({
       id: matchData.id,
 
