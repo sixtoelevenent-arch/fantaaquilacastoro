@@ -31,12 +31,17 @@ const [liveData, setLiveData] = useState<
   Record<
     number,
     {
-      homeFP: number;
-      awayFP: number;
-      homeGoals: number;
-      awayGoals: number;
-      isFinal: boolean;
-    }
+  homeFP: number;
+  awayFP: number;
+
+  homeGoals: number;
+  awayGoals: number;
+
+  homeFinal: boolean;
+  awayFinal: boolean;
+
+  isFinal: boolean;
+}
   >
 >({});
     
@@ -386,26 +391,26 @@ return (
   }}
 >
   <span
-    style={{
-      color: liveData[match.id]?.isFinal
-        ? "#22c55e"
-        : "#facc15",
-    }}
-  >
-    {liveData[match.id]?.homeGoals ?? 0}
-  </span>
+  style={{
+    color: liveData[match.id]?.homeFinal
+      ? "#22c55e"
+      : "#facc15",
+  }}
+>
+  {liveData[match.id]?.homeGoals ?? 0}
+</span>
 
   {" - "}
 
   <span
-    style={{
-      color: liveData[match.id]?.isFinal
-        ? "#22c55e"
-        : "#facc15",
-    }}
-  >
-    {liveData[match.id]?.awayGoals ?? 0}
-  </span>
+  style={{
+    color: liveData[match.id]?.awayFinal
+      ? "#22c55e"
+      : "#facc15",
+  }}
+>
+  {liveData[match.id]?.awayGoals ?? 0}
+</span>
 </div>
 
     </div>
