@@ -62,14 +62,27 @@ console.log(
 const URL =
   `${BASE_URL}${activeMatchday.id}`;
 
-  const { data } = await axios.get(URL, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137 Safari/537.36",
-    },
-  });
+  console.log("URL:", URL);
 
-  const $ = cheerio.load(data);
+const response = await axios.get(URL, {
+  headers: {
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/137 Safari/537.36",
+  },
+});
+
+console.log("URL:", URL);
+
+console.log(
+  "HTML LENGTH:",
+  response.data.length
+);
+
+console.log(
+  response.data.substring(0, 1000)
+);
+
+const $ = cheerio.load(response.data);
 
   const { data: players, error: playersError } = await supabase
     .from("players")

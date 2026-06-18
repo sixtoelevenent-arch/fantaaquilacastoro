@@ -2,10 +2,28 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import { createClient } from "@supabase/supabase-js";
 
+console.log(
+  "SUPABASE URL:",
+  process.env.NEXT_PUBLIC_SUPABASE_URL
+);
+
+console.log(
+  "SERVICE KEY:",
+  !!process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
+
+const { data: activeMatchday, error: matchdayError } =
+  await supabase
+    .from("matchdays")
+    .select("id,nome,attiva");
+
+console.log("MATCHDAYS:", activeMatchday);
+console.log("ERROR:", matchdayError);
 
 const BASE_URL =
   "https://fantapiu3.com/voti-globali/fantacalcio-voti-gazzetta-sport-coppa-del-mondo.php?fonte=votifp3&giornata=";
@@ -155,6 +173,14 @@ const player = exactMap.get(key);
   .map((_, el) => $(el).text().trim())
   .get();
 
+  if (
+  normalize(nome).includes("CALHANOGLU")
+) {
+  console.log("CALHANOGLU");
+  console.log("VALORI:", valori);
+  console.log("VOTO RAW:", valori[1]);
+}
+  
 if (valori.length < 10) continue;
 
 const votoRaw = valori[1].trim();
