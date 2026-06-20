@@ -115,11 +115,11 @@ export default function CalendarioPage() {
   );
 
   const matchStyle = {
-    background: "#0f172a",
-    padding: "16px",
-    borderRadius: "12px",
-    border: "1px solid rgba(255,255,255,0.08)",
-  };
+  background: "#081225",
+  padding: "12px",
+  borderRadius: "16px",
+  border: "1px solid rgba(255,255,255,0.08)",
+};
 
   if (loading) {
     return <div>Caricamento...</div>;
@@ -132,12 +132,13 @@ export default function CalendarioPage() {
         minHeight: "100vh",
         background: "linear-gradient(to bottom, #2e1065, #1e1b4b)",
         color: "white",
-        padding: "20px",
+        padding: "12px",
       }}
     >
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "1400px",
+          width: "100%",
           margin: "0 auto",
         }}
       >
@@ -188,12 +189,25 @@ export default function CalendarioPage() {
           >
 
             <div
-              style={{
-                textAlign: "center",
-                fontWeight: 700,
-                marginBottom: 8,
-              }}
-            >
+  style={{
+    textAlign: "center",
+    fontWeight: 800,
+    fontSize: "1.15rem",
+    marginBottom: 4,
+  }}
+>
+  <div
+  style={{
+    fontSize: "0.78rem",
+    color: "#c4b5fd",
+    marginBottom: 4,
+    textTransform: "uppercase",
+    letterSpacing: "1px",
+  }}
+>
+  Girone {partita.home_name}
+</div>
+
               {partita.home_name}
               {" vs "}
               {partita.away_name}
@@ -216,8 +230,10 @@ export default function CalendarioPage() {
                 style={{
                   marginTop: 8,
                   textAlign: "center",
-                  fontWeight: 800,
-                  color: "#22c55e",
+                  fontWeight: 900,
+fontSize: "2rem",
+color: "#22c55e",
+letterSpacing: "2px",
                 }}
               >
                 {partita.gol_home}
@@ -226,7 +242,12 @@ export default function CalendarioPage() {
               </div>
             )}
           <Collapsible title="📋 Formazioni">
-  <div style={{ marginTop: 10 }}>
+  <div
+    style={{
+      marginTop: 8,
+      width: "100%",
+    }}
+  >
     <MatchDetails matchId={partita.id} />
   </div>
 </Collapsible>

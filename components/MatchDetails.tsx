@@ -476,7 +476,11 @@ function roleStyle(role: string) {
     display: "flex",
   }}
 >
-  <Card>
+  <Card
+  style={{
+    padding: "8px",
+  }}
+>
         
         {titolari.map((player) => {
 
@@ -495,7 +499,7 @@ function roleStyle(role: string) {
   style={{
     display: "flex",
     alignItems: "flex-start",
-    padding: "6px 0",
+    padding: "3px 0",
     borderBottom:
       "1px solid rgba(255,255,255,0.05)",
   }}
@@ -529,8 +533,9 @@ function roleStyle(role: string) {
   >
     <div
       style={{
-        fontSize: "0.95rem",
+        fontSize: "0.88rem",
 fontWeight: 700,
+lineHeight: 1.05,
 whiteSpace: "nowrap",
 overflow: "hidden",
 textOverflow: "ellipsis",
@@ -542,7 +547,7 @@ textOverflow: "ellipsis",
     <div
   style={{
     marginTop: 2,
-    fontSize: "0.85rem",
+    fontSize: "0.72rem",
     color: "#94a3b8",
     display: "flex",
     alignItems: "center",
@@ -566,7 +571,7 @@ textOverflow: "ellipsis",
 
   <div
   style={{
-    width: 22,
+    width: 18,
     textAlign: "right",
     fontWeight: 800,
     fontSize: "0.95rem",
@@ -630,7 +635,7 @@ textOverflow: "ellipsis",
       <div
         style={{
           marginTop: 2,
-          fontSize: "0.85rem",
+          fontSize: "0.72rem",
           color: "#94a3b8",
           display: "flex",
           alignItems: "center",
@@ -657,7 +662,7 @@ textOverflow: "ellipsis",
 
     <div
       style={{
-        width: 22,
+        width: 18,
         textAlign: "right",
         fontWeight: 800,
         fontSize: "0.95rem",
@@ -703,8 +708,9 @@ textOverflow: "ellipsis",
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
-    padding: "1px 0",
-    fontSize: "0.84rem",
+    padding: "0",
+fontSize: "0.74rem",
+lineHeight: 1.1,
     color: "#cbd5e1",
     whiteSpace: "nowrap",
   }}
@@ -802,8 +808,8 @@ textOverflow: "ellipsis",
 
   <div
     style={{
-      minWidth: 78,
-      height: 58,
+      minWidth: 62,
+      height: 46,
       borderRadius: 14,
       background:
         "rgba(34,197,94,0.12)",
@@ -814,7 +820,7 @@ textOverflow: "ellipsis",
       justifyContent: "center",
       color: "#22c55e",
       fontWeight: 900,
-      fontSize: "1.4rem",
+      fontSize: "1.15rem",
     }}
   >
     {fp.toFixed(1)}
@@ -842,7 +848,8 @@ return (
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: 4,
+gap: 2,
+alignItems: "start",
     width: "100%",
     boxSizing: "border-box",
   }}
@@ -864,37 +871,7 @@ return (
 
 </div>
 
-<div style={{ marginTop: 25 }}>
-
-        <Collapsible title="📖 Legenda">
-          <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 4,
-    width: "100%",
-    minWidth: 0,
-  }}
->
-  
-  <div>⚽ Gol</div>
-  <div>✨ Clean Sheet</div>
-  <div>🅰️ Assist</div>
-  <div>🧤 Rig. Parato</div>
-  <div>🟨 Giallo</div>
-  <div>❌ Rig. Sbagliato</div>
-  <div>🟥 Rosso</div>
-  <div></div>
-  <div>🥅 Gol Subito</div>
-  <div>🔴 Live</div>
-  <div>💥 Autogol</div>
-  <div>⏳ Attesa</div>
- 
-    
-  <div></div>
-</div>
-         </Collapsible>
-</div>
+{/* legenda nascosta nel calendario */}
 
 </>
 );
