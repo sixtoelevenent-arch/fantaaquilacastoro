@@ -1,7 +1,7 @@
 
 import { importVotes } from "@/lib/importVotes";
 
-export async function GET() {
+export async function POST() {
   try {
     const result = await importVotes();
 
