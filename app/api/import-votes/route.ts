@@ -1,3 +1,4 @@
+
 import { importVotes } from "@/lib/importVotes";
 
 export async function GET() {

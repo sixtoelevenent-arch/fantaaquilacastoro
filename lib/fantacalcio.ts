@@ -170,41 +170,66 @@ export function calculateTeam(
   continue;
 }
 
-    // giornata finita → cerca sostituto
+   // cerca sostituto dello stesso ruolo
     let replacement: any = null;
-    
-    for (const bench of panchina) {
-      if (usedBench.has(bench.player_id))
-        continue;
+let lastSameRoleBench: any = null;
 
-      if (bench.ruolo !== starter.ruolo)
-        continue;
+for (const bench of panchina) {
 
-      const benchVote = votesMap.get(
-        bench.player_id
-      );
+  if (usedBench.has(bench.player_id))
+    continue;
 
-      const benchResult = calcPlayerScore(
-        benchVote,
-        bench.ruolo
-      );
+  if (bench.ruolo !== starter.ruolo)
+    continue;
 
-      if (!benchResult) {
-  continue;
+  lastSameRoleBench = bench;
+
+  const benchVote = votesMap.get(
+    bench.player_id
+  );
+
+  const benchResult = calcPlayerScore(
+    benchVote,
+    bench.ruolo
+  );
+
+  const benchIsSv =
+  benchResult?.sv === true ||
+  bench.sv === true;
+
+  if (benchIsSv) {
+    continue;
+  }
+
+  replacement = {
+    player: bench,
+    result:
+      benchResult || {
+        sv: false,
+        voto: null,
+        bonus: 0,
+        totale: null,
+      },
+  };
+
+  break;
 }
 
-if (benchResult.sv) {
-  continue;
+if (
+  !replacement &&
+  lastSameRoleBench &&
+  substitutions < 5
+) {
+  replacement = {
+    player: lastSameRoleBench,
+    result: {
+      sv: false,
+      voto: 0,
+      bonus: 0,
+      totale: 0,
+    },
+  };
 }
-
-replacement = {
-  player: bench,
-  result: benchResult,
-};
-
-break;
-
-    }
 
     if (
       replacement &&
@@ -216,11 +241,15 @@ break;
 
       substitutions++;
 
-      if (replacement.result.voto !== null) {
+      if (
+  replacement.result.voto !== null &&
+  replacement.result.voto !== undefined
+) {
   votesTotal += replacement.result.voto;
 }
 
-bonusTotal += replacement.result.bonus;
+bonusTotal +=
+  replacement.result.bonus || 0;
 
       processedPlayers.push({
   ...starter,
