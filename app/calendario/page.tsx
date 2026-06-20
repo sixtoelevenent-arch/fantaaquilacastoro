@@ -116,7 +116,7 @@ export default function CalendarioPage() {
 
   const matchStyle = {
   background: "#081225",
-  padding: "12px",
+  padding: "8px",
   borderRadius: "16px",
   border: "1px solid rgba(255,255,255,0.08)",
 };
@@ -132,7 +132,7 @@ export default function CalendarioPage() {
         minHeight: "100vh",
         background: "linear-gradient(to bottom, #2e1065, #1e1b4b)",
         color: "white",
-        padding: "12px",
+        padding: "8px",
       }}
     >
       <div
@@ -192,8 +192,8 @@ export default function CalendarioPage() {
   style={{
     textAlign: "center",
     fontWeight: 800,
-    fontSize: "1.15rem",
-    marginBottom: 4,
+    export const dynamic = "force-dynamic";
+export const revalidate = 0;
   }}
 >
   <div
@@ -231,7 +231,7 @@ export default function CalendarioPage() {
                   marginTop: 8,
                   textAlign: "center",
                   fontWeight: 900,
-fontSize: "2rem",
+fontSize: "1.5rem",
 color: "#22c55e",
 letterSpacing: "2px",
                 }}

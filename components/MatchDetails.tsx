@@ -502,7 +502,7 @@ function roleStyle(role: string) {
 >
   <span
     style={{
-      width: 24,
+      width: 16,
       fontWeight: 800,
       fontSize: "1rem",
       color: roleInfo.color,
@@ -529,7 +529,7 @@ function roleStyle(role: string) {
   >
     <div
       style={{
-        fontSize: "0.88rem",
+        fontSize: "0.8rem",
 fontWeight: 700,
 lineHeight: 1.05,
 whiteSpace: "nowrap",
@@ -542,32 +542,28 @@ textOverflow: "ellipsis",
 
     <div
   style={{
-    marginTop: 2,
-    fontSize: "0.72rem",
-    color: "#94a3b8",
     display: "flex",
     alignItems: "center",
+    gap: 4,
+    fontSize: "0.68rem",
+    color: "#94a3b8",
+    marginTop: 1,
   }}
 >
   <span>
     {getNationalCode(player.nazionale)}
   </span>
 
-  <span
-    style={{
-      marginLeft: "auto",
-      paddingRight: 2,
-    }}
-  >
+  <span>
     {playerIcons(player)}
   </span>
 </div>
 
-  </div>
+    </div>
 
   <div
   style={{
-    width: 18,
+    width: 14,
     textAlign: "right",
     fontWeight: 800,
     fontSize: "0.95rem",
@@ -599,7 +595,7 @@ textOverflow: "ellipsis",
   >
     <span
       style={{
-        width: 24,
+        width: 16,
         flexShrink: 0,
         color: replacementRoleInfo.color,
         fontWeight: 900,
@@ -658,7 +654,7 @@ textOverflow: "ellipsis",
 
     <div
       style={{
-        width: 18,
+        width: 14,
         textAlign: "right",
         fontWeight: 800,
         fontSize: "0.95rem",
@@ -705,7 +701,7 @@ textOverflow: "ellipsis",
     justifyContent: "space-between",
     width: "100%",
     padding: "0",
-fontSize: "0.74rem",
+fontSize: "0.rem",
 lineHeight: 1.1,
     color: "#cbd5e1",
     whiteSpace: "nowrap",
