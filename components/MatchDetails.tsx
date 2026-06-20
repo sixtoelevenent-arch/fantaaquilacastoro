@@ -62,23 +62,13 @@ type PlayerRow = {
   clean_sheet?: boolean;
 };
 
-
-export default function LiveMatchDetails({
+export default function MatchDetails({
   matchId,
-  onUpdate,
 }: {
   matchId: number;
-  onUpdate?: (data: {
-  homeFP: number;
-  awayFP: number;
-  homeGoals: number;
-  awayGoals: number;
-  isFinal: boolean;
-  homeFinal: boolean;
-  awayFinal: boolean;
-}) => void;
+})
 
-}) {
+{
 
 const [loading, setLoading] = useState(true);
 
@@ -339,19 +329,6 @@ setAwayVotes(awayCalc.votesTotal);
 setAwayBonus(awayCalc.bonusTotal);
 setAwayFP(awayCalc.fantapoints);
 
-const finalHomeGoals = homeCalc.isFinal
-  ? homeCalc.goals
-  : homeCalc.projectedGoals;
-
-const finalAwayGoals = awayCalc.isFinal
-  ? awayCalc.goals
-  : awayCalc.projectedGoals;
-
-const finalCompleted =
-  homeCalc.isFinal &&
-  awayCalc.isFinal;
-
-
 /*
 await supabase
   .from("live_matches")
@@ -377,21 +354,6 @@ await supabase
   .eq("id", matchId);
 */
 
-if (onUpdate) {
-  onUpdate({
-    homeFP: homeCalc.fantapoints,
-    awayFP: awayCalc.fantapoints,
-
-    homeGoals: finalHomeGoals,
-    awayGoals: finalAwayGoals,
-
-    homeFinal: homeCalc.isFinal,
-    awayFinal: awayCalc.isFinal,
-
-    isFinal: finalCompleted,
-  });
-}
-
     setMatch({
       id: matchData.id,
 
@@ -414,15 +376,10 @@ if (onUpdate) {
     setLoading(false);
   }
 
-  useEffect(() => {
+ useEffect(() => {
   loadMatch();
-
-  const interval = setInterval(() => {
-    loadMatch();
-  }, 30000);
-
-  return () => clearInterval(interval);
 }, [matchId]);
+
 
 function playerIcons(player: any) {
   let icons = "";
@@ -484,13 +441,13 @@ function roleStyle(role: string) {
 }
 
   function renderTeam(
-  title: string,
-  owner: string,
   players: PlayerRow[],
   votes: number,
   bonus: number,
   fp: number
-) {
+)
+
+{
 
     const titolari = players
   .filter((p) => p.titolare)
@@ -892,34 +849,17 @@ return (
 >
 
 {renderTeam(
-
-match.home_name,
-
-match.home_owner,
-
-homePlayers,
-
-homeVotes,
-
-homeBonus,
-
-homeFP
+  homePlayers,
+  homeVotes,
+  homeBonus,
+  homeFP
 )}
 
 {renderTeam(
-
-match.away_name,
-
-match.away_owner,
-
-awayPlayers,
-
-awayVotes,
-
-awayBonus,
-
-awayFP
-
+  awayPlayers,
+  awayVotes,
+  awayBonus,
+  awayFP
 )}
 
 </div>
