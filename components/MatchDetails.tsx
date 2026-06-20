@@ -476,11 +476,7 @@ function roleStyle(role: string) {
     display: "flex",
   }}
 >
-  <Card
-  style={{
-    padding: "8px",
-  }}
->
+  <Card>
         
         {titolari.map((player) => {
 
