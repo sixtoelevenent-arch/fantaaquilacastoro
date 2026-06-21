@@ -419,9 +419,13 @@ return (
 {matches.map((match) => (
 
   <Card
+
   key={match.id}
+
   highlight={openMatchId === match.id}
+
   onClick={() =>
+
     setOpenMatchId(
       openMatchId === match.id
         ? null
@@ -486,9 +490,15 @@ return (
   }}
 >
 
-        {match.home?.nome}
-      </div>
-      
+<div 
+  style= {{
+      fontWeight: 700,
+      fontSize: "1.50rem",
+  }}
+>
+     {match.home?.nome}
+     </div>
+
 <div
   style={{
     color: "#facc15",
@@ -554,7 +564,6 @@ return (
     minWidth: 0,
   }}
 >
-
       <div
         style={{
           fontWeight: 700,
@@ -606,8 +615,7 @@ return (
 )}
 
 </Card>
-
-        ))}
+))}
 
 
         <div

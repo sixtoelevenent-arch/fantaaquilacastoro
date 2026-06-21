@@ -31,7 +31,7 @@ height: "100%",
 
   borderRadius: "20px",
 
-  padding: 2px,
+  padding: "2px",
 
   marginLeft: 0,
 marginRight: 0,
