@@ -79,12 +79,14 @@ const [lastUpdate, setLastUpdate] =
   }, []);
 
   useEffect(() => {
-  if (!matchday?.chiusura_formazioni) return;
+  const chiusura =
+    matchday?.chiusura_formazioni;
+
+  if (!chiusura) return;
 
   const timer = setInterval(() => {
-    const end = new Date(
-      matchday.chiusura_formazioni
-    ).getTime();
+    const end =
+      new Date(chiusura).getTime();
 
     const now = Date.now();
 
@@ -100,12 +102,14 @@ const [lastUpdate, setLastUpdate] =
     );
 
     const ore = Math.floor(
-      (diff % (1000 * 60 * 60 * 24)) /
+      (diff %
+        (1000 * 60 * 60 * 24)) /
       (1000 * 60 * 60)
     );
 
     const minuti = Math.floor(
-      (diff % (1000 * 60 * 60)) /
+      (diff %
+        (1000 * 60 * 60)) /
       (1000 * 60)
     );
 
