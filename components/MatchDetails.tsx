@@ -495,7 +495,7 @@ function roleStyle(role: string) {
   style={{
     display: "flex",
     alignItems: "flex-start",
-    padding: "2px 2px",
+    padding: "4px 4px",
     borderBottom:
       "1px solid rgba(255,255,255,0.05)",
   }}
@@ -507,7 +507,7 @@ function roleStyle(role: string) {
     fontSize: "1rem",
     color: roleInfo.color,
     flexShrink: 0,
-    marginRight: 8,
+    marginRight: 10,
   }}
 >
     {player.ruolo}
@@ -518,72 +518,84 @@ function roleStyle(role: string) {
     flex: 1,
     minWidth: 0,
     display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "flex-start",
+  }}
+>
+  <div
+  style={{
+    flex: 1,
+    minWidth: 0,
   }}
 >
   <div
     style={{
-      flex: 1,
-      minWidth: 0,
+      display: "flex",
+      alignItems: "center",
     }}
   >
     <div
       style={{
+        flex: 1,
         fontSize: "0.95rem",
-fontWeight: 700,
-lineHeight: 1.05,
-whiteSpace: "nowrap",
-overflow: "hidden",
-textOverflow: "ellipsis",
+        fontWeight: 700,
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
       }}
     >
       {livePlayerName(player.nome)}
     </div>
 
     <div
-  style={{
-    display: "flex",
-    alignItems: "center",
-    gap: 4,
-    fontSize: "0.68rem",
-    color: "#94a3b8",
-    marginTop: 1,
-  }}
->
-  <span>
-    {getNationalCode(player.nazionale)}
-  </span>
-
-  <span>
-    {playerIcons(player)}
-  </span>
-</div>
-
+      style={{
+        width: 34,
+        textAlign: "right",
+        fontWeight: 800,
+        fontSize: "1rem",
+        flexShrink: 0,
+      }}
+    >
+      {!player.hasVoteRow
+        ? player.nationalFinalized
+          ? "SV"
+          : player.nationalExists
+          ? "⏳"
+          : ""
+        : player.sv
+        ? "SV"
+        : player.voto === null
+        ? "⏳"
+        : player.voto}
     </div>
+  </div>
 
   <div
-  style={{
-    width: 32,
-    textAlign: "right",
-    fontWeight: 800,
-    fontSize: "0.95rem",
-    flexShrink: 0,
-    marginLeft: 0,
-  }}
->
-    {!player.hasVoteRow
-      ? player.nationalFinalized
-        ? "SV"
-        : player.nationalExists
-        ? "⏳"
-        : ""
-      : player.sv
-      ? "SV"
-      : player.voto === null
-      ? "⏳"
-      : player.voto}
-  </div>
+    style={{
+      display: "flex",
+      alignItems: "center",
+      marginTop: 2,
+    }}
+  >
+    <span
+      style={{
+        fontSize: "0.70rem",
+        color: "#94a3b8",
+      }}
+    >
+      {getNationalCode(player.nazionale)}
+    </span>
+
+    <span
+      style={{
+        marginLeft: "auto",
+        fontSize: "0.90rem",
+        letterSpacing: "2px",
+      }}
+    >
+      {playerIcons(player)}
+    </span>
+</div>
+</div>
 </div>
 </div>
       {player.replacementPlayer && (
@@ -626,32 +638,37 @@ textOverflow: "ellipsis",
       </div>
 
       <div
-        style={{
-          marginTop: 2,
-          fontSize: "0.72rem",
-          color: "#94a3b8",
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <span>
-          {getNationalCode(
-            player.replacementPlayer.nazionale
-          )}
-        </span>
+  style={{
+    marginTop: 2,
+    display: "flex",
+    alignItems: "center",
+  }}
+>
+  <span
+    style={{
+      fontSize: "0.70rem",
+      color: "#94a3b8",
+      minWidth: 28,
+    }}
+  >
+    {getNationalCode(
+      player.replacementPlayer.nazionale
+    )}
+  </span>
 
-        <span
-          style={{
-            marginLeft: "auto",
-            paddingRight: 8,
-          }}
-        >
-          {playerIcons(
-            player.replacementPlayer
-          )}
-        </span>
-      </div>
-    </div>
+  <span
+    style={{
+      marginLeft: 10,
+      fontSize: "0.90rem",
+      letterSpacing: "2px",
+    }}
+  >
+    {playerIcons(
+      player.replacementPlayer
+    )}
+  </span>
+</div>
+</div>
 
     <div
       style={{
