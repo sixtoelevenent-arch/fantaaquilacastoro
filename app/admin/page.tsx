@@ -76,22 +76,23 @@ export default function Page() {
         <Link
           href="/admin/formazioni"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            padding: "14px",
-            borderRadius: "14px",
-            textDecoration: "none",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "1rem",
-            background: "#2563eb",
-            boxShadow:
-  "0 8px 20px rgba(0,0,0,0.25)",
-border:
-  "1px solid rgba(255,255,255,0.08)",
-          }}
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  padding: "16px",
+  borderRadius: "14px",
+  textDecoration: "none",
+  color: "white",
+  fontWeight: 700,
+  fontSize: "18px",
+  cursor: "pointer",
+  background: "#2563eb",
+  boxShadow:
+    "0 8px 20px rgba(0,0,0,0.25)",
+  border:
+    "1px solid rgba(255,255,255,0.08)",
+}}
         >
           ⚽ Formazioni
         </Link>
@@ -99,22 +100,23 @@ border:
         <Link
           href="/admin/giornate"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            padding: "14px",
-            borderRadius: "14px",
-            textDecoration: "none",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "1rem",
-            background: "#7c3aed",
-            boxShadow:
-  "0 8px 20px rgba(0,0,0,0.25)",
-border:
-  "1px solid rgba(255,255,255,0.08)",
-          }}
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  padding: "16px",
+  borderRadius: "14px",
+  textDecoration: "none",
+  color: "white",
+  fontWeight: 700,
+  fontSize: "18px",
+  cursor: "pointer",
+  background: "#7c3aed",
+  boxShadow:
+    "0 8px 20px rgba(0,0,0,0.25)",
+  border:
+    "1px solid rgba(255,255,255,0.08)",
+}}
         >
           📅 Gestione Giornate
         </Link>
@@ -170,19 +172,24 @@ Non trovati: ${data.nonTrovati}`
     }
   }}
   style={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    width: "100%",
-    padding: "16px",
-    borderRadius: "14px",
-    border: "none",
-    color: "white",
-    fontWeight: 700,
-    fontSize: "18px",
-    background: "#16a34a",
-    cursor: "pointer",
-  }}
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  padding: "16px",
+  borderRadius: "14px",
+  appearance: "none",
+  WebkitAppearance: "none",
+  color: "white",
+  fontWeight: 700,
+  fontSize: "18px",
+  background: "#16a34a",
+  cursor: "pointer",
+  boxShadow:
+    "0 8px 20px rgba(0,0,0,0.25)",
+  border:
+    "1px solid rgba(255,255,255,0.08)",
+}}
 >
   {importing
     ? "⏳ Import in corso..."
@@ -198,19 +205,24 @@ Non trovati: ${data.nonTrovati}`
             router.push("/");
           }}
           style={{
-            width: "100%",
-            padding: "14px",
-            borderRadius: "14px",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "1rem",
-            background: "#dc2626",
-            cursor: "pointer",
-            boxShadow:
-  "0 8px 20px rgba(0,0,0,0.25)",
-border:
-  "1px solid rgba(255,255,255,0.08)",
-          }}
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  padding: "16px",
+  borderRadius: "14px",
+  appearance: "none",
+  WebkitAppearance: "none",
+  color: "white",
+  fontWeight: 700,
+  fontSize: "18px",
+  background: "#dc2626",
+  cursor: "pointer",
+  boxShadow:
+    "0 8px 20px rgba(0,0,0,0.25)",
+  border:
+    "1px solid rgba(255,255,255,0.08)",
+}}
         >
           🚪 Logout Admin
         </button>
@@ -218,22 +230,23 @@ border:
         <Link
           href="/"
           style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            padding: "14px",
-            borderRadius: "14px",
-            textDecoration: "none",
-            color: "white",
-            fontWeight: 700,
-            fontSize: "1rem",
-            background: "#334155",
-            boxShadow:
-  "0 8px 20px rgba(0,0,0,0.25)",
-border:
-  "1px solid rgba(255,255,255,0.08)",
-          }}
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  padding: "16px",
+  borderRadius: "14px",
+  textDecoration: "none",
+  color: "white",
+  fontWeight: 700,
+  fontSize: "18px",
+  cursor: "pointer",
+  background: "#334155",
+  boxShadow:
+    "0 8px 20px rgba(0,0,0,0.25)",
+  border:
+    "1px solid rgba(255,255,255,0.08)",
+}}
         >
           🏠 Torna alla Home
         </Link>
