@@ -679,27 +679,16 @@ textOverflow: "ellipsis",
     marginRight: 4,
     flexShrink: 0,
     display: "flex",
-    flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
   }}
 >
   <span
     style={{
       color: replacementRoleInfo.color,
-      fontWeight: 800,
-      lineHeight: 1,
-    }}
-  >
-    {player.replacementPlayer.ruolo}
-  </span>
-
-  <span
-    style={{
-      color: replacementRoleInfo.color,
       fontWeight: 900,
-      fontSize: "0.9rem",
+      fontSize: "1rem",
       lineHeight: 1,
-      marginTop: 2,
     }}
   >
     ↪
