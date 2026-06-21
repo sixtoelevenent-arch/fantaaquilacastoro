@@ -89,7 +89,6 @@ const [awayIsFinal, setAwayIsFinal] =
 
     async function loadMatch() {
     const matchId = Number(params.id);
-    console.log("MATCH ID", matchId);
 
     const { data: matchData, error: matchError } = await supabase
   .from("matches")
@@ -145,9 +144,6 @@ setOtherMatches(
   .eq("matchday_id", matchData.matchday_id)
   .single();
 
-console.log("HOME FORMATION", homeFormation);
-console.log("AWAY FORMATION", awayFormation);
-
     const { data: homeRows } = await supabase
   .from("formation_players")
   .select(`
@@ -189,8 +185,6 @@ console.log("AWAY FORMATION", awayFormation);
 (votes || []).forEach((v) => {
   votesMap.set(v.player_id, v);
 });
-
-console.log(homeRows?.[0]);
 
 const normalize = (rows: any[]) =>
   (rows || []).map((r) => {

@@ -258,16 +258,18 @@ fontSize: "0.85rem",
     </div>
 
     <div
-      style={{
-        padding: "0 10px",
-fontSize: "2rem",
-fontWeight: 900,
-lineHeight: 1,
-        color: "#16a34a",
-      }}
-    >
-      {partita.gol_home} - {partita.gol_away}
-    </div>
+  style={{
+    padding: "0 10px",
+    fontSize: "2rem",
+    fontWeight: 900,
+    lineHeight: 1,
+    color: partita.completata ? "#16a34a" : "#94a3b8",
+  }}
+>
+  {partita.completata
+    ? `${partita.gol_home} - ${partita.gol_away}`
+    : "—"}
+</div>
 
     <div style={{ textAlign: "center" }}>
       <div style={{ fontSize: "3rem" }}>
