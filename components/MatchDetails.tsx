@@ -474,9 +474,10 @@ function roleStyle(role: string) {
     minWidth: 0,
     width: "100%",
     display: "flex",
+    flex: 1,
   }}
 >
-  <Card>
+  <Card highlight={false}>
         
         {titolari.map((player) => {
 
@@ -529,7 +530,7 @@ function roleStyle(role: string) {
   >
     <div
       style={{
-        fontSize: "0.8rem",
+        fontSize: "0.95rem",
 fontWeight: 700,
 lineHeight: 1.05,
 whiteSpace: "nowrap",
@@ -563,7 +564,7 @@ textOverflow: "ellipsis",
 
   <div
   style={{
-    width: 14,
+    width: 32,
     textAlign: "right",
     fontWeight: 800,
     fontSize: "0.95rem",
@@ -654,7 +655,7 @@ textOverflow: "ellipsis",
 
     <div
       style={{
-        width: 14,
+        width: 32,
         textAlign: "right",
         fontWeight: 800,
         fontSize: "0.95rem",
@@ -688,8 +689,8 @@ textOverflow: "ellipsis",
 >
   <div
     style={{
-      marginLeft: "-12px",
-      marginRight: "-12px",
+      marginLeft: 0,
+      marginRight: 0,
     }}
   >
     {panchina.map((player, index) => (
@@ -840,7 +841,7 @@ return (
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-gap: 2,
+gap: 12,
 alignItems: "start",
     width: "100%",
     boxSizing: "border-box",
