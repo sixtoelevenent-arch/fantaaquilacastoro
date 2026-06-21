@@ -8,7 +8,6 @@ import Card from "@/components/Card";
 import { supabase } from "@/lib/supabase";
 import MatchDetails from "@/components/MatchDetails";
 import Collapsible from "@/components/Collapsible";
-
 type MatchRow = {
   id: number;
   matchday_id: number;
@@ -26,6 +25,9 @@ type MatchRow = {
 
   home_owner: string;
   away_owner: string;
+
+  home_group: string;
+  away_group: string;
 };
 
 export default function CalendarioPage() {
@@ -90,10 +92,17 @@ export default function CalendarioPage() {
         teamMap.get(m.team_away_id)?.nome || "",
 
       home_owner:
-        teamMap.get(m.team_home_id)?.proprietario || "",
+  teamMap.get(m.team_home_id)?.proprietario || "",
 
-      away_owner:
-        teamMap.get(m.team_away_id)?.proprietario || "",
+away_owner:
+  teamMap.get(m.team_away_id)?.proprietario || "",
+
+home_group:
+  teamMap.get(m.team_home_id)?.gruppo || "",
+
+away_group:
+  teamMap.get(m.team_away_id)?.gruppo || "",
+
     }));
 
     setMatches(rows);
@@ -192,8 +201,6 @@ export default function CalendarioPage() {
   style={{
     textAlign: "center",
     fontWeight: 800,
-    export const dynamic = "force-dynamic";
-export const revalidate = 0;
   }}
 >
   <div
@@ -205,7 +212,7 @@ export const revalidate = 0;
     letterSpacing: "1px",
   }}
 >
-  Girone {partita.home_name}
+  Girone {partita.home_group}
 </div>
 
               {partita.home_name}
