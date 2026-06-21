@@ -63,6 +63,16 @@ export async function importVotes() {
     .eq("attiva", true)
     .single();
 
+    console.log(
+  "ACTIVE MATCHDAY:",
+  activeMatchday
+);
+
+console.log(
+  "MATCHDAY ERROR:",
+  matchdayError
+);
+
 if (matchdayError || !activeMatchday) {
   throw new Error(
     "Nessuna giornata attiva trovata"
