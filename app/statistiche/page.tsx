@@ -8,7 +8,6 @@ import Collapsible from "@/components/Collapsible";
 
 import { supabase } from "@/lib/supabase";
 import React from "react";
-import { livePlayerName } from "@/lib/livePlayerName";
 
 type Player = {
   id: number;
@@ -402,19 +401,6 @@ const roles = [
   }
 }
 
-  function handleSort(field: string) {
-  if (sortField === field) {
-    setSortDirection(
-      sortDirection === "asc"
-        ? "desc"
-        : "asc"
-    );
-  } else {
-    setSortField(field);
-    setSortDirection("asc");
-  }
-}
-
 function formatFullName(nome: string) {
   return nome
     .trim()
@@ -515,7 +501,7 @@ const selectedPlayer =
                 <tr key={p.player.id}>
                   <td style={tdStyle}>{i + 1}</td>
                   <td style={tdStyle}>
-                    {livePlayerName(formatFullName(p.player.nome))}
+                    {formatFullName(p.player.nome)}
                   </td>
                   <td style={tdStyle}>
                     {p.teamName}
@@ -536,7 +522,7 @@ const selectedPlayer =
                 <tr key={p.player.id}>
                   <td style={tdStyle}>{i + 1}</td>
                   <td style={tdStyle}>
-                    {livePlayerName(formatFullName(p.player.nome))}
+                    {formatFullName(p.player.nome)}
                   </td>
                   <td style={tdStyle}>
                     {p.teamName}
@@ -557,7 +543,7 @@ const selectedPlayer =
                 <tr key={p.player.id}>
                   <td style={tdStyle}>{i + 1}</td>
                   <td style={tdStyle}>
-                    {livePlayerName(formatFullName(p.player.nome))}
+                    {formatFullName(p.player.nome)}
                   </td>
                   <td style={tdStyle}>
                     {p.teamName}
@@ -578,7 +564,7 @@ const selectedPlayer =
                 <tr key={p.player.id}>
                   <td style={tdStyle}>{i + 1}</td>
                   <td style={tdStyle}>
-                    {livePlayerName(formatFullName(p.player.nome))}
+                    {formatFullName(p.player.nome)}
                   </td>
                   <td style={tdStyle}>
                     {p.teamName}
@@ -599,7 +585,7 @@ const selectedPlayer =
                 <tr key={p.player.id}>
                   <td style={tdStyle}>{i + 1}</td>
                   <td style={tdStyle}>
-                    {livePlayerName(formatFullName(p.player.nome))}
+                    {formatFullName(p.player.nome)}
                   </td>
                   <td style={tdStyle}>
                     {p.teamName}
@@ -620,7 +606,7 @@ const selectedPlayer =
                 <tr key={p.player.id}>
                   <td style={tdStyle}>{i + 1}</td>
                   <td style={tdStyle}>
-                    {livePlayerName(formatFullName(p.player.nome))}
+                    {formatFullName(p.player.nome)}
                   </td>
                   <td style={tdStyle}>
                     {p.teamName}
@@ -786,7 +772,7 @@ const selectedPlayer =
                     }}
                   >
                     <td style={tdStyle}>
-                      {livePlayerName(formatFullName(p.player.nome))}
+                      {formatFullName(p.player.nome)}
                     </td>
 
                     <td style={tdStyle}>
