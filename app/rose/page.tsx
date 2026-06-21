@@ -37,20 +37,22 @@ export default function Home() {
 <div
   style={{
     marginTop: 12,
-    paddingTop: 12,
-    borderTop:
-      "1px solid rgba(255,255,255,0.08)",
+    width: "100%",
+    maxWidth: "420px",
+    display: "flex",
+    gap: 10,
+    alignItems: "center",
   }}
 >
   <input
     type="text"
-    placeholder="🔍 Cerca squadra o giocatore..."
+    placeholder="Cerca giocatore..."
     value={search}
     onChange={(e) => setSearch(e.target.value)}
     style={{
-      width: "100%",
-      padding: "12px 16px",
-      borderRadius: 12,
+      flex: 1,
+      padding: "14px 16px",
+      borderRadius: 14,
       border: "1px solid rgba(255,255,255,0.15)",
       background: "rgba(255,255,255,0.08)",
       color: "white",
@@ -58,6 +60,30 @@ export default function Home() {
       outline: "none",
     }}
   />
+
+  <button
+    onClick={() => {
+      if (!search.trim()) return;
+
+      window.location.href =
+        `/ricerca?q=${encodeURIComponent(
+          search.trim()
+        )}`;
+    }}
+    style={{
+      padding: "14px 18px",
+      borderRadius: 14,
+      border: "2px solid #f59e0b",
+      background: "#111827",
+      color: "white",
+      fontWeight: 800,
+      fontSize: "1rem",
+      cursor: "pointer",
+      whiteSpace: "nowrap",
+    }}
+  >
+    🔍 Cerca
+  </button>
 </div>
 
       <div

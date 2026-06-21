@@ -12,6 +12,8 @@ import { livePlayerName } from "@/lib/livePlayerName";
 
 type MatchData = {
   id: number;
+  matchday_id: number;
+
   gol_home: number | null;
   gol_away: number | null;
   fp_home: number | null;
@@ -98,6 +100,12 @@ const [awayBonus, setAwayBonus] = useState(0);
 
 const [awayFP, setAwayFP] = useState(0);
 
+const [homeUpdatedAt, setHomeUpdatedAt] =
+  useState("");
+
+const [awayUpdatedAt, setAwayUpdatedAt] =
+  useState("");
+
     async function loadMatch() {
    
     const { data: matchData } = await supabase
@@ -125,18 +133,40 @@ if (!matchData) {
       .single();
 
     const { data: homeFormation } = await supabase
-      .from("formations")
-      .select("id")
-      .eq("team_id", matchData.team_home_id)
-      .eq("matchday_id", matchData.matchday_id)
-      .single();
-    
-    const { data: awayFormation } = await supabase
+  .from("formations")
+  .select("id")
+  .eq("team_id", matchData.team_home_id)
+  .eq("matchday_id", matchData.matchday_id)
+  .single();
+
+const { data: awayFormation } = await supabase
   .from("formations")
   .select("id")
   .eq("team_id", matchData.team_away_id)
   .eq("matchday_id", matchData.matchday_id)
   .single();
+
+  const { data: homeCreated } = await supabase
+  .from("formation_players")
+  .select("created_at")
+  .eq("formation_id", homeFormation?.id)
+  .order("created_at", { ascending: false })
+  .limit(1);
+
+const { data: awayCreated } = await supabase
+  .from("formation_players")
+  .select("created_at")
+  .eq("formation_id", awayFormation?.id)
+  .order("created_at", { ascending: false })
+  .limit(1);
+
+  setHomeUpdatedAt(
+  homeCreated?.[0]?.created_at || ""
+);
+
+setAwayUpdatedAt(
+  awayCreated?.[0]?.created_at || ""
+);
 
     const { data: homeRows } = await supabase
   .from("formation_players")
@@ -390,24 +420,24 @@ if (onUpdate) {
 }
 
     setMatch({
-      id: matchData.id,
+  id: matchData.id,
+  matchday_id: matchData.matchday_id,
 
-      gol_home: matchData.gol_home,
-      gol_away: matchData.gol_away,
+  gol_home: matchData.gol_home,
+  gol_away: matchData.gol_away,
 
-      fp_home: matchData.fp_home,
-      fp_away: matchData.fp_away,
+  fp_home: matchData.fp_home,
+  fp_away: matchData.fp_away,
 
-      team_home_id: matchData.team_home_id,
-      team_away_id: matchData.team_away_id,
+  team_home_id: matchData.team_home_id,
+  team_away_id: matchData.team_away_id,
 
-      home_name: homeTeam?.nome || "",
-      away_name: awayTeam?.nome || "",
+  home_name: homeTeam?.nome || "",
+  away_name: awayTeam?.nome || "",
 
-      home_owner: homeTeam?.proprietario || "",
-      away_owner: awayTeam?.proprietario || "",
-    });
-
+  home_owner: homeTeam?.proprietario || "",
+  away_owner: awayTeam?.proprietario || "",
+});
     setLoading(false);
   }
 
@@ -486,8 +516,10 @@ function roleStyle(role: string) {
   players: PlayerRow[],
   votes: number,
   bonus: number,
-  fp: number
-) {
+  fp: number,
+  updatedAt: string
+)
+ {
 
     const titolari = players
   .filter((p) => p.titolare)
@@ -833,6 +865,43 @@ letterSpacing: "2px",
   </div>
 </Collapsible>
 
+{updatedAt && (
+  <div
+    style={{
+      textAlign: "center",
+      color: "#94a3b8",
+      fontSize: "0.72rem",
+      marginTop: 8,
+      marginBottom: 8,
+    }}
+  >
+    🕒 Ultimo inserimento
+
+    <div
+      style={{
+        marginTop: 2,
+      }}
+    >
+      {new Date(updatedAt)
+        .toLocaleString("it-IT")}
+    </div>
+
+    {match?.matchday_id === 2 &&
+      new Date(updatedAt) >=
+        new Date("2026-06-18T18:00:00Z") && (
+      <div
+        style={{
+          marginTop: 2,
+          color: "#facc15",
+          fontWeight: 700,
+        }}
+      >
+        Inserita da admin
+      </div>
+    )}
+  </div>
+)}
+
 <div
   style={{
     marginTop: "auto",
@@ -920,34 +989,23 @@ return (
 >
 
 {renderTeam(
-
-match.home_name,
-
-match.home_owner,
-
-homePlayers,
-
-homeVotes,
-
-homeBonus,
-
-homeFP
+  match.home_name,
+  match.home_owner,
+  homePlayers,
+  homeVotes,
+  homeBonus,
+  homeFP,
+  homeUpdatedAt
 )}
 
 {renderTeam(
-
-match.away_name,
-
-match.away_owner,
-
-awayPlayers,
-
-awayVotes,
-
-awayBonus,
-
-awayFP
-
+  match.away_name,
+  match.away_owner,
+  awayPlayers,
+  awayVotes,
+  awayBonus,
+  awayFP,
+  awayUpdatedAt
 )}
 
 </div>

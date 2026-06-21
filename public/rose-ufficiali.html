@@ -573,6 +573,26 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
         Stampa
       </button>
     </div>
+    <div style="
+  display:flex;
+  justify-content:center;
+  margin-top:20px;
+  margin-bottom:10px;
+">
+  <input
+    id="searchPlayer"
+    type="text"
+    placeholder="🔍 Cerca giocatore..."
+    style="
+      width:min(500px,90%);
+      padding:14px 18px;
+      border-radius:14px;
+      border:none;
+      font-size:16px;
+      outline:none;
+    "
+  >
+</div>
   </header>
 
   <div class="wrap">
@@ -2427,5 +2447,40 @@ embed[type="application/pdf"][src="about:blank"] { filter: invert(100%) contrast
 })();
 </script>
 <script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+<script>
+const searchInput =
+  document.getElementById("searchPlayer");
 
+if (searchInput) {
+  searchInput.addEventListener("input", function () {
+    const value =
+      this.value.toLowerCase().trim();
+
+    document
+      .querySelectorAll(".player")
+      .forEach(player => {
+
+        const row = player.closest("tr");
+
+        if (!row) return;
+
+        const text =
+          player.textContent.toLowerCase();
+
+        if (
+          value === "" ||
+          text.includes(value)
+        ) {
+          row.style.display = "";
+          row.style.background =
+            value && text.includes(value)
+              ? "#fff7cc"
+              : "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+  });
+}
+</script>
 </body></html>
