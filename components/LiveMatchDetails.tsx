@@ -521,7 +521,7 @@ function roleStyle(role: string) {
   }}
 >
 
-  <Card>
+  <Card highlight={false}>
         
         {titolari.map((player) => {
 
@@ -540,20 +540,21 @@ function roleStyle(role: string) {
   style={{
     display: "flex",
     alignItems: "flex-start",
-    padding: "6px 0",
+    padding: "4px 4px",
     borderBottom:
       "1px solid rgba(255,255,255,0.05)",
   }}
 >
   <span
-    style={{
-      width: 18,
-      fontWeight: 800,
-      fontSize: "1rem",
-      color: roleInfo.color,
-      flexShrink: 0,
-    }}
-  >
+  style={{
+    width: 24,
+    fontWeight: 800,
+    fontSize: "1rem",
+    color: roleInfo.color,
+    flexShrink: 0,
+    marginRight: 10,
+  }}
+>
     {player.ruolo}
   </span>
 
@@ -600,7 +601,7 @@ textOverflow: "ellipsis",
   <span
     style={{
       marginLeft: "auto",
-      paddingRight: 2,
+      paddingRight: 0,
     }}
   >
     {playerIcons(player)}
@@ -690,7 +691,8 @@ textOverflow: "ellipsis",
         <span
           style={{
             marginLeft: "auto",
-            paddingRight: 8,
+fontSize: "0.90rem",
+letterSpacing: "2px",
           }}
         >
           {playerIcons(
@@ -702,7 +704,8 @@ textOverflow: "ellipsis",
 
     <div
       style={{
-        width: 28,
+        width: 34,
+fontSize: "1rem",
         textAlign: "right",
         fontWeight: 800,
         fontSize: "0.95rem",
@@ -736,8 +739,8 @@ textOverflow: "ellipsis",
 >
   <div
     style={{
-      marginLeft: "-12px",
-      marginRight: "-12px",
+      marginLeft: 0,
+      marginRight: 0,
     }}
   >
     {panchina.map((player, index) => (
@@ -887,7 +890,7 @@ return (
   style={{
     display: "grid",
     gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)",
-    gap: 2,
+    gap: 8,
     width: "100%",
     boxSizing: "border-box",
   }}
