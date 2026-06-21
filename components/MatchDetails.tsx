@@ -475,9 +475,18 @@ function roleStyle(role: string) {
     width: "100%",
     display: "flex",
     flex: 1,
+    paddingLeft: 2,
+    paddingRight: 2,
   }}
 >
-  <Card highlight={false}>
+
+  <Card
+  highlight={false}
+  style={{
+    width: "100%",
+    padding: "10px 8px",
+  }}
+>
         
         {titolari.map((player) => {
 
@@ -502,14 +511,15 @@ function roleStyle(role: string) {
   }}
 >
   <span
-    style={{
-      width: 16,
-      fontWeight: 800,
-      fontSize: "1rem",
-      color: roleInfo.color,
-      flexShrink: 0,
-    }}
-  >
+  style={{
+    width: 22,
+    fontWeight: 800,
+    fontSize: "1rem",
+    color: roleInfo.color,
+    flexShrink: 0,
+    marginRight: 8,
+  }}
+>
     {player.ruolo}
   </span>
 
@@ -841,10 +851,13 @@ return (
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-gap: 12,
-alignItems: "start",
+    gap: 12,
+    alignItems: "start",
     width: "100%",
     boxSizing: "border-box",
+    margin: "0 auto",
+    paddingLeft: 4,
+    paddingRight: 4,
   }}
 >
 
