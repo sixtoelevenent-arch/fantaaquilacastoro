@@ -8,6 +8,15 @@ import Card from "@/components/Card";
 import { supabase } from "@/lib/supabase";
 import MatchDetails from "@/components/MatchDetails";
 import Collapsible from "@/components/Collapsible";
+
+<div
+  style={{
+    fontSize: "3rem",
+  }}
+>
+  TEST
+</div>
+
 type MatchRow = {
   id: number;
   matchday_id: number;
@@ -199,56 +208,90 @@ away_group:
 
             <div
   style={{
-    textAlign: "center",
-    fontWeight: 800,
+    marginTop: 6,
+    marginBottom: 10,
   }}
 >
   <div
-  style={{
-    fontSize: "0.78rem",
-    color: "#c4b5fd",
-    marginBottom: 4,
-    textTransform: "uppercase",
-    letterSpacing: "1px",
-  }}
->
-  Girone {partita.home_group}
+    style={{
+      textAlign: "center",
+      fontSize: "0.85rem",
+      color: "#c4b5fd",
+      fontWeight: 800,
+      letterSpacing: "2px",
+      marginBottom: 12,
+    }}
+  >
+    GIRONE {partita.home_group}
+  </div>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "1fr auto 1fr",
+      alignItems: "center",
+    }}
+  >
+    <div style={{ textAlign: "center" }}>
+      <div style={{ fontSize: "3rem" }}>
+              </div>
+
+      <div
+        style={{
+          fontSize: "1.8rem",
+          fontWeight: 800,
+        }}
+      >
+        {partita.home_name}
+      </div>
+
+      <div
+        style={{
+          color: "#94a3b8",
+          marginTop: 4,
+        }}
+      >
+        👤 {partita.home_owner}
+      </div>
+    </div>
+
+    <div
+      style={{
+        padding: "0 18px",
+        fontSize: "3rem",
+        fontWeight: 900,
+        color: "#16a34a",
+      }}
+    >
+      {partita.gol_home} - {partita.gol_away}
+    </div>
+
+    <div style={{ textAlign: "center" }}>
+      <div style={{ fontSize: "3rem" }}>
+             </div>
+
+      <div
+        style={{
+          fontSize: "1.8rem",
+          fontWeight: 800,
+        }}
+      >
+        {partita.away_name}
+      </div>
+
+      <div
+        style={{
+          color: "#94a3b8",
+          marginTop: 4,
+        }}
+      >
+        👤 {partita.away_owner}
+      </div>
+    </div>
+  </div>
 </div>
 
-              {partita.home_name}
-              {" vs "}
-              {partita.away_name}
-            </div>
-
-            <div
-              style={{
-                textAlign: "center",
-                fontSize: "0.85rem",
-                color: "#94a3b8",
-              }}
-            >
-              👤 {partita.home_owner}
-              {" vs "}
-              {partita.away_owner}
-            </div>
-
-            {partita.completata && (
-              <div
-                style={{
-                  marginTop: 8,
-                  textAlign: "center",
-                  fontWeight: 900,
-fontSize: "1.5rem",
-color: "#22c55e",
-letterSpacing: "2px",
-                }}
-              >
-                {partita.gol_home}
-                {" - "}
-                {partita.gol_away}
-              </div>
-            )}
-          <Collapsible title="📋 Formazioni">
+             <Collapsible title="📋 Formazioni">
   <div
     style={{
       marginTop: 8,

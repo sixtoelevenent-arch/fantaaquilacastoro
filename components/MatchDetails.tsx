@@ -607,16 +607,17 @@ function roleStyle(role: string) {
     }}
   >
     <span
-      style={{
-        width: 16,
-        flexShrink: 0,
-        color: replacementRoleInfo.color,
-        fontWeight: 900,
-        textAlign: "center",
-      }}
-    >
-      ⤷
-    </span>
+  style={{
+    width: 24,
+    marginRight: 10,
+    flexShrink: 0,
+    color: replacementRoleInfo.color,
+    fontWeight: 900,
+    textAlign: "center",
+  }}
+>
+  ⤷
+</span>
 
     <div
       style={{

@@ -516,7 +516,6 @@ function roleStyle(role: string) {
   style={{
     minWidth: 0,
     width: "100%",
-    display: "flex",
     flex: 1,
   }}
 >
@@ -547,12 +546,12 @@ function roleStyle(role: string) {
 >
   <span
   style={{
-    width: 24,
+    width: 18,
     fontWeight: 800,
     fontSize: "1rem",
     color: roleInfo.color,
     flexShrink: 0,
-    marginRight: 10,
+    marginRight: 4,
   }}
 >
     {player.ruolo}
@@ -643,16 +642,17 @@ textOverflow: "ellipsis",
     }}
   >
     <span
-      style={{
-        width: 18,
-        flexShrink: 0,
-        color: replacementRoleInfo.color,
-        fontWeight: 900,
-        textAlign: "center",
-      }}
-    >
-      ⤷
-    </span>
+  style={{
+    width: 18,
+    marginRight: 4,
+    flexShrink: 0,
+    color: replacementRoleInfo.color,
+    fontWeight: 900,
+    textAlign: "center",
+  }}
+>
+  ⤷
+</span>
 
     <div
       style={{
