@@ -62,7 +62,6 @@ type PlayerRow = {
   clean_sheet?: boolean;
 };
 
-
 export default function LiveMatchDetails({
   matchId,
   onUpdate,
@@ -189,10 +188,8 @@ const { data: loadedPlayers } =
     .from("players")
     .select("id,nazionale")
     .in("id", playerIds);
-
  
   const votesMap = new Map();
-
 
 (votes || []).forEach((v: any) => {
   votesMap.set(v.player_id, v);

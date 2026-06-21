@@ -215,10 +215,10 @@ away_group:
   <div
     style={{
       textAlign: "center",
-      fontSize: "0.85rem",
+      fontSize: "0.75rem",
       color: "#c4b5fd",
       fontWeight: 800,
-      letterSpacing: "2px",
+      letterSpacing: "1px",
       marginBottom: 12,
     }}
   >
@@ -238,8 +238,9 @@ away_group:
 
       <div
         style={{
-          fontSize: "1.8rem",
-          fontWeight: 800,
+          fontSize: "1.15rem",
+fontWeight: 800,
+lineHeight: 1.1,
         }}
       >
         {partita.home_name}
@@ -248,7 +249,8 @@ away_group:
       <div
         style={{
           color: "#94a3b8",
-          marginTop: 4,
+marginTop: 2,
+fontSize: "0.85rem",
         }}
       >
         👤 {partita.home_owner}
@@ -257,9 +259,10 @@ away_group:
 
     <div
       style={{
-        padding: "0 18px",
-        fontSize: "3rem",
-        fontWeight: 900,
+        padding: "0 10px",
+fontSize: "2rem",
+fontWeight: 900,
+lineHeight: 1,
         color: "#16a34a",
       }}
     >
@@ -272,8 +275,9 @@ away_group:
 
       <div
         style={{
-          fontSize: "1.8rem",
-          fontWeight: 800,
+          fontSize: "1.15rem",
+fontWeight: 800,
+lineHeight: 1.1,
         }}
       >
         {partita.away_name}
@@ -282,7 +286,8 @@ away_group:
       <div
         style={{
           color: "#94a3b8",
-          marginTop: 4,
+marginTop: 2,
+fontSize: "0.85rem",
         }}
       >
         👤 {partita.away_owner}
