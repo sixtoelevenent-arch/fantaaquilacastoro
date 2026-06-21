@@ -70,11 +70,53 @@ export default function Page() {
 const [lastUpdate, setLastUpdate] =
   useState("");
 
+  const [countdown, setCountdown] = useState("");
+
     const [dirty, setDirty] = useState(false);
 
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+  if (!matchday?.chiusura_formazioni) return;
+
+  const timer = setInterval(() => {
+    const end = new Date(
+      matchday.chiusura_formazioni
+    ).getTime();
+
+    const now = Date.now();
+
+    const diff = end - now;
+
+    if (diff <= 0) {
+      setCountdown("⏰ Chiusura imminente");
+      return;
+    }
+
+    const giorni = Math.floor(
+      diff / (1000 * 60 * 60 * 24)
+    );
+
+    const ore = Math.floor(
+      (diff % (1000 * 60 * 60 * 24)) /
+      (1000 * 60 * 60)
+    );
+
+    const minuti = Math.floor(
+      (diff % (1000 * 60 * 60)) /
+      (1000 * 60)
+    );
+
+    setCountdown(
+      `${giorni}g ${ore}h ${minuti}m`
+    );
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [matchday]);
+
   useEffect(() => {
   const handler = (e: BeforeUnloadEvent) => {
     if (!dirty) return;
@@ -706,6 +748,17 @@ function getTitolariRuolo(
         }}
       >
         📅 Inserisci Formazione per: {matchday.nome}
+
+<div
+  style={{
+    marginTop: 10,
+    color: "#38bdf8",
+    fontSize: "1rem",
+    fontWeight: 800,
+  }}
+>
+  ⏳ Tempo rimanente: {countdown}
+</div>
 
         {locked && (
   <div
