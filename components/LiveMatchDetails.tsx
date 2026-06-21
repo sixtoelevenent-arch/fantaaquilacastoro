@@ -517,8 +517,10 @@ function roleStyle(role: string) {
     minWidth: 0,
     width: "100%",
     display: "flex",
+    flex: 1,
   }}
 >
+
   <Card>
         
         {titolari.map((player) => {
@@ -545,7 +547,7 @@ function roleStyle(role: string) {
 >
   <span
     style={{
-      width: 24,
+      width: 18,
       fontWeight: 800,
       fontSize: "1rem",
       color: roleInfo.color,
@@ -609,7 +611,7 @@ textOverflow: "ellipsis",
 
   <div
   style={{
-    width: 22,
+    width: 28,
     textAlign: "right",
     fontWeight: 800,
     fontSize: "0.95rem",
@@ -641,7 +643,7 @@ textOverflow: "ellipsis",
   >
     <span
       style={{
-        width: 24,
+        width: 18,
         flexShrink: 0,
         color: replacementRoleInfo.color,
         fontWeight: 900,
@@ -700,7 +702,7 @@ textOverflow: "ellipsis",
 
     <div
       style={{
-        width: 22,
+        width: 28,
         textAlign: "right",
         fontWeight: 800,
         fontSize: "0.95rem",
@@ -824,7 +826,7 @@ textOverflow: "ellipsis",
       flexDirection: "column",
       alignItems: "center",
       justifyContent: "center",
-      gap: 4,
+      gap: 0,
       fontSize: "0.95rem",
       fontWeight: 700,
     }}
@@ -884,8 +886,8 @@ return (
 <div
   style={{
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 4,
+    gridTemplateColumns: "minmax(0,1fr) minmax(0,1fr)",
+    gap: 2,
     width: "100%",
     boxSizing: "border-box",
   }}
@@ -931,9 +933,9 @@ awayFP
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: 4,
+    gap: 0,
     width: "100%",
-    minWidth: 0,
+    boxSizing: "border-box",
   }}
 >
   

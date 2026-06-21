@@ -393,7 +393,7 @@ return (
         </div>   {/* chiusura del blocco LIVE */}
 
 {matches.length === 0 && currentBanner && (
-  <Card>
+  <Card highlight={false}>
   <div
     style={{
       display: "flex",
@@ -469,22 +469,23 @@ return (
   }}
 >
         <div
-    style={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: 0,
-    }}
-  >
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr auto 1fr",
+    alignItems: "center",
+    gap: 8,
+    marginBottom: 0,
+  }}
+>
     
     
-    <div style={{ flex: 1 }}>
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: "1.50rem",
-        }}
-      >
+    <div
+  style={{
+    textAlign: "center",
+    minWidth: 0,
+  }}
+>
+
         {match.home?.nome}
       </div>
       
@@ -511,7 +512,7 @@ return (
 
     <div
       style={{
-        minWidth: 100,
+        minWidth: 120,
         textAlign: "center",
       }}
     >
@@ -547,7 +548,13 @@ return (
 
     </div>
 
-    <div style={{ flex: 1 }}>
+    <div
+  style={{
+    textAlign: "center",
+    minWidth: 0,
+  }}
+>
+
       <div
         style={{
           fontWeight: 700,
