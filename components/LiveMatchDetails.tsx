@@ -608,14 +608,17 @@ textOverflow: "ellipsis",
 
   <div
   style={{
-    width: 28,
-    textAlign: "right",
+    width: 42,
+    textAlign: "center",
     fontWeight: 800,
     fontSize: "0.95rem",
     flexShrink: 0,
-    marginLeft: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   }}
 >
+
     {!player.hasVoteRow
       ? player.nationalFinalized
         ? "SV"
@@ -638,18 +641,38 @@ textOverflow: "ellipsis",
       paddingBottom: 8,
     }}
   >
-    <span
+    <div
   style={{
-    width: 1,
+    width: 18,
     marginRight: 4,
     flexShrink: 0,
-    color: replacementRoleInfo.color,
-    fontWeight: 900,
-    textAlign: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   }}
 >
-  ⤷
-</span>
+  <span
+    style={{
+      color: replacementRoleInfo.color,
+      fontWeight: 800,
+      lineHeight: 1,
+    }}
+  >
+    {player.replacementPlayer.ruolo}
+  </span>
+
+  <span
+    style={{
+      color: replacementRoleInfo.color,
+      fontWeight: 900,
+      fontSize: "0.9rem",
+      lineHeight: 1,
+      marginTop: 2,
+    }}
+  >
+    ↪
+  </span>
+</div>
 
     <div
       style={{
@@ -658,17 +681,18 @@ textOverflow: "ellipsis",
       }}
     >
       <div
-        style={{
-          fontSize: "0.95rem",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {livePlayerName(
-          player.replacementPlayer.nome
-        )}
-      </div>
+  style={{
+    fontSize: "0.95rem",
+    fontWeight: 700,
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  }}
+>
+  {livePlayerName(
+    player.replacementPlayer.nome
+  )}
+</div>
 
       <div
         style={{
@@ -700,14 +724,17 @@ letterSpacing: "2px",
     </div>
 
     <div
-      style={{
-        width: 34,
-        fontSize: "1rem",
-        textAlign: "right",
-        fontWeight: 800,
-        flexShrink: 0,
-      }}
-    >
+  style={{
+    width: 42,
+    fontSize: "1rem",
+    fontWeight: 800,
+    flexShrink: 0,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }}
+>
+  
       {!player.replacementPlayer.hasVoteRow
         ? player.replacementPlayer.nationalFinalized
           ? "SV"
