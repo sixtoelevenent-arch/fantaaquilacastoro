@@ -471,12 +471,12 @@ function roleStyle(role: string) {
         
  <div
   style={{
-    minWidth: 0,
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: 2,
+    alignItems: "start",
     width: "100%",
-    display: "flex",
-    flex: 1,
-    paddingLeft: 2,
-    paddingRight: 2,
+    boxSizing: "border-box",
   }}
 >
 
@@ -847,13 +847,10 @@ return (
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: 6,
+    gap: 2,
     alignItems: "start",
     width: "100%",
     boxSizing: "border-box",
-    margin: "0 auto",
-    paddingLeft: 6,
-    paddingRight: 6,
   }}
 >
 
