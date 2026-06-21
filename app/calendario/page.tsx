@@ -125,7 +125,7 @@ away_group:
 
   const matchStyle = {
   background: "#081225",
-  padding: "8px 2px",
+  padding: "6px 0px",
   borderRadius: "16px",
   border: "1px solid rgba(255,255,255,0.08)",
 };

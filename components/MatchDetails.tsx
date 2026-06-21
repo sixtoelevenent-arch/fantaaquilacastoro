@@ -466,20 +466,16 @@ function roleStyle(role: string) {
       
   );
 
-       
+      
     return (
-        
- <div
+
+<div
   style={{
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: 2,
-    alignItems: "start",
     width: "100%",
-    boxSizing: "border-box",
+    minWidth: 0,
+    flex: 1,
   }}
 >
-
   <Card highlight={false}>
         
         {titolari.map((player) => {
@@ -847,10 +843,9 @@ return (
   style={{
     display: "grid",
     gridTemplateColumns: "1fr 1fr",
-    gap: 2,
-    alignItems: "start",
+    gap: 4,
     width: "100%",
-    boxSizing: "border-box",
+    alignItems: "start",
   }}
 >
 

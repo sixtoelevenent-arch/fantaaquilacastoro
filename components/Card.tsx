@@ -29,7 +29,7 @@ height: "100%",
     ? "2px solid #facc15"
     : "1px solid rgba(255,255,255,0.15)",
 
-  borderRadius: "20px",
+  borderRadius: "16px",
 
   padding: "2px",
 
