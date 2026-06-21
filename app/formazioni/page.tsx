@@ -23,6 +23,7 @@ type Matchday = {
   nome: string;
   ordine?: number;
   chiusura_formazioni?: string;
+  formazione_aperta?: boolean;
 };
 
 const MODULI = [
@@ -111,31 +112,24 @@ const [lastUpdate, setLastUpdate] =
 
   setSelectedTeam(loggedUser.team_id);
 
-  const { data: activeMatchday } = await supabase
-  .from("matchdays")
-.select(
-  "id,nome,ordine,chiusura_formazioni"
-)
-.eq("attiva", true)
-.single();
-if (!activeMatchday) {
-  alert("Nessuna giornata attiva");
-  setLoading(false);
-  return;
-}
-let targetMatchday = activeMatchday;
-
-const { data: nextMatchday } = await supabase
+  const { data: targetMatchday } = await supabase
   .from("matchdays")
   .select(
-    "id,nome,ordine,chiusura_formazioni"
+    "id,nome,ordine,chiusura_formazioni,formazione_aperta"
   )
-  .gt("ordine", activeMatchday.ordine)
-  .order("ordine")
-  .limit(1)
-  .maybeSingle();
+  .eq("formazione_aperta", true)
+  .single();
 
- targetMatchday = activeMatchday; 
+if (!targetMatchday) {
+
+  alert("Nessuna giornata aperta");
+
+  setLoading(false);
+
+  return;
+}
+
+setMatchday(targetMatchday); 
 
 if (!targetMatchday) {
 
@@ -146,17 +140,9 @@ if (!targetMatchday) {
   return;
 }
 
-setMatchday(targetMatchday);
-
-if (
-  targetMatchday.chiusura_formazioni &&
-  new Date() >
-    new Date(
-      targetMatchday.chiusura_formazioni
-    )
-) {
-  setLocked(true);
-}
+setLocked(
+  !targetMatchday.formazione_aperta
+);
 
 await loadPlayers(
   loggedUser.team_id,
@@ -719,7 +705,7 @@ function getTitolariRuolo(
           fontSize: "1.1rem",
         }}
       >
-        📅 {matchday.nome}
+        📅 Inserisci Formazione per: {matchday.nome}
 
         {locked && (
   <div
