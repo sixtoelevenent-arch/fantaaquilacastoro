@@ -222,6 +222,16 @@ export default function Home() {
         </a>
 
         <a
+  href="/statistiche"
+  style={{
+    ...buttonStyle,
+    background: "#9333ea",
+  }}
+>
+  📈 STATISTICHE
+</a>
+
+        <a
           href="/svincolati"
           style={{
             ...buttonStyle,
