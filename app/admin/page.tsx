@@ -19,6 +19,34 @@ export default function Page() {
     }
   }, [router]);
 
+  const buttonStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+
+  width: "100%",
+  height: "78px",
+
+  borderRadius: "14px",
+
+  color: "white",
+  textDecoration: "none",
+
+  fontWeight: 700,
+  fontSize: "18px",
+
+  cursor: "pointer",
+
+  boxShadow:
+    "0 8px 20px rgba(0,0,0,0.25)",
+
+  border:
+    "1px solid rgba(255,255,255,0.08)",
+
+  appearance: "none" as const,
+  WebkitAppearance: "none" as const,
+};
+
   return (
     <main
       style={{
@@ -66,7 +94,7 @@ export default function Page() {
       <div
         style={{
           width: "100%",
-          maxWidth: "320px",
+          maxWidth: "650px",
           display: "flex",
           flexDirection: "column",
           gap: "12px",
@@ -76,22 +104,8 @@ export default function Page() {
         <Link
           href="/admin/formazioni"
           style={{
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "100%",
-  padding: "16px",
-  borderRadius: "14px",
-  textDecoration: "none",
-  color: "white",
-  fontWeight: 700,
-  fontSize: "18px",
-  cursor: "pointer",
+  ...buttonStyle,
   background: "#2563eb",
-  boxShadow:
-    "0 8px 20px rgba(0,0,0,0.25)",
-  border:
-    "1px solid rgba(255,255,255,0.08)",
 }}
         >
           ⚽ Formazioni
@@ -100,22 +114,8 @@ export default function Page() {
         <Link
           href="/admin/giornate"
           style={{
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "100%",
-  padding: "16px",
-  borderRadius: "14px",
-  textDecoration: "none",
-  color: "white",
-  fontWeight: 700,
-  fontSize: "18px",
-  cursor: "pointer",
+  ...buttonStyle,
   background: "#7c3aed",
-  boxShadow:
-    "0 8px 20px rgba(0,0,0,0.25)",
-  border:
-    "1px solid rgba(255,255,255,0.08)",
 }}
         >
           📅 Gestione Giornate
@@ -172,23 +172,8 @@ Non trovati: ${data.nonTrovati}`
     }
   }}
   style={{
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "100%",
-  padding: "16px",
-  borderRadius: "14px",
-  appearance: "none",
-  WebkitAppearance: "none",
-  color: "white",
-  fontWeight: 700,
-  fontSize: "18px",
+  ...buttonStyle,
   background: "#16a34a",
-  cursor: "pointer",
-  boxShadow:
-    "0 8px 20px rgba(0,0,0,0.25)",
-  border:
-    "1px solid rgba(255,255,255,0.08)",
 }}
 >
   {importing
@@ -205,23 +190,8 @@ Non trovati: ${data.nonTrovati}`
             router.push("/");
           }}
           style={{
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "100%",
-  padding: "16px",
-  borderRadius: "14px",
-  appearance: "none",
-  WebkitAppearance: "none",
-  color: "white",
-  fontWeight: 700,
-  fontSize: "18px",
+  ...buttonStyle,
   background: "#dc2626",
-  cursor: "pointer",
-  boxShadow:
-    "0 8px 20px rgba(0,0,0,0.25)",
-  border:
-    "1px solid rgba(255,255,255,0.08)",
 }}
         >
           🚪 Logout Admin
@@ -230,22 +200,8 @@ Non trovati: ${data.nonTrovati}`
         <Link
           href="/"
           style={{
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: "100%",
-  padding: "16px",
-  borderRadius: "14px",
-  textDecoration: "none",
-  color: "white",
-  fontWeight: 700,
-  fontSize: "18px",
-  cursor: "pointer",
+  ...buttonStyle,
   background: "#334155",
-  boxShadow:
-    "0 8px 20px rgba(0,0,0,0.25)",
-  border:
-    "1px solid rgba(255,255,255,0.08)",
 }}
         >
           🏠 Torna alla Home
