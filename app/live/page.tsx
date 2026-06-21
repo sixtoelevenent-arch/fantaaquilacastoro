@@ -416,9 +416,12 @@ return (
 
 )}
 
-{matches.map((match) => (
+{matches.map((match) => {
 
-  <Card
+  console.log("MATCH", match);
+
+  return (
+    <Card
 
   key={match.id}
 
@@ -453,15 +456,18 @@ return (
   }}
 >
   <div
-    style={{
-            padding: "4px 10px",
-      background: "#854d0e",
-      borderRadius: 999,
-            fontSize: "0.8rem",
-      fontWeight: 700,
-      
-    }}
-  >
+  style={{
+    padding: "4px 14px",
+    background: "#854d0e",
+    borderRadius: 999,
+    fontSize: "0.8rem",
+    fontWeight: 700,
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 4,
+    whiteSpace: "nowrap",
+  }}
+>
        {openMatchId === match.id ? "▼" : "▶"} 🏆 GIRONE {match.gruppo}
   </div>
 </div>
@@ -477,11 +483,10 @@ return (
     display: "grid",
     gridTemplateColumns: "1fr auto 1fr",
     alignItems: "center",
-    gap: 8,
+    gap: 12,
     marginBottom: 0,
   }}
->
-    
+>    
     
     <div
   style={{
@@ -491,10 +496,13 @@ return (
 >
 
 <div 
-  style= {{
-      fontWeight: 700,
-      fontSize: "1.50rem",
-  }}
+  style={{
+  fontWeight: 700,
+  fontSize: "1.50rem",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+}}
 >
      {match.home?.nome}
      </div>
@@ -521,11 +529,11 @@ return (
     </div>
 
     <div
-      style={{
-        minWidth: 120,
-        textAlign: "center",
-      }}
-    >
+  style={{
+    padding: "0 10px",
+    textAlign: "center",
+  }}
+>
       <div
   style={{
     fontSize: "2.5rem",
@@ -566,9 +574,12 @@ return (
 >
       <div
         style={{
-          fontWeight: 700,
-          fontSize: "1.50rem",
-        }}
+  fontWeight: 700,
+  fontSize: "1.50rem",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+}}
       >
         {match.away?.nome}
       </div>
@@ -615,7 +626,8 @@ return (
 )}
 
 </Card>
-))}
+);
+})}
 
 
         <div

@@ -643,7 +643,7 @@ textOverflow: "ellipsis",
   >
     <span
   style={{
-    width: 18,
+    width: 1,
     marginRight: 4,
     flexShrink: 0,
     color: replacementRoleInfo.color,

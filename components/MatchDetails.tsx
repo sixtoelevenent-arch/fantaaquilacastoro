@@ -570,30 +570,26 @@ function roleStyle(role: string) {
   </div>
 
   <div
+  style={{
+    marginTop: 2,
+    fontSize: "0.85rem",
+    color: "#94a3b8",
+    display: "flex",
+    alignItems: "center",
+  }}
+>
+  <span>
+    {getNationalCode(player.nazionale)}
+  </span>
+
+  <span
     style={{
-      display: "flex",
-      alignItems: "center",
-      marginTop: 2,
+      marginLeft: "auto",
+      paddingRight: 0,
     }}
   >
-    <span
-      style={{
-        fontSize: "0.70rem",
-        color: "#94a3b8",
-      }}
-    >
-      {getNationalCode(player.nazionale)}
-    </span>
-
-    <span
-      style={{
-        marginLeft: "auto",
-        fontSize: "0.90rem",
-        letterSpacing: "2px",
-      }}
-    >
-      {playerIcons(player)}
-    </span>
+    {playerIcons(player)}
+  </span>
 </div>
 </div>
 </div>
@@ -641,17 +637,13 @@ function roleStyle(role: string) {
       <div
   style={{
     marginTop: 2,
+    fontSize: "0.85rem",
+    color: "#94a3b8",
     display: "flex",
     alignItems: "center",
   }}
 >
-  <span
-    style={{
-      fontSize: "0.70rem",
-      color: "#94a3b8",
-      minWidth: 28,
-    }}
-  >
+  <span>
     {getNationalCode(
       player.replacementPlayer.nazionale
     )}
@@ -659,7 +651,7 @@ function roleStyle(role: string) {
 
   <span
     style={{
-      marginLeft: 10,
+      marginLeft: "auto",
       fontSize: "0.90rem",
       letterSpacing: "2px",
     }}
