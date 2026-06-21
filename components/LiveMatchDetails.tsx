@@ -705,10 +705,9 @@ letterSpacing: "2px",
     <div
       style={{
         width: 34,
-fontSize: "1rem",
+        fontSize: "1rem",
         textAlign: "right",
         fontWeight: 800,
-        fontSize: "0.95rem",
         flexShrink: 0,
       }}
     >
