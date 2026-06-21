@@ -495,7 +495,7 @@ function roleStyle(role: string) {
   style={{
     display: "flex",
     alignItems: "flex-start",
-    padding: "3px 0",
+    padding: "2px 2px",
     borderBottom:
       "1px solid rgba(255,255,255,0.05)",
   }}
