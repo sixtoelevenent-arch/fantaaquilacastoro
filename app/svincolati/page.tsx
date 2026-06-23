@@ -1,19 +1,148 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+
 import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
 
+import { supabase } from "@/lib/supabase";
+
+type FreeAgent = {
+  id: number;
+  player_name: string;
+  display_name?: string | null;
+  nazionale: string;
+  ruolo: string;
+  quotazione: number;
+  disponibile: boolean;
+};
+
+type DisplayName = {
+  fantapiu3_name: string;
+  display_name: string;
+};
+
 export default function SvincolatiPage() {
+  const [loading, setLoading] = useState(true);
+
+  const [players, setPlayers] = useState<FreeAgent[]>([]);
+  const [displayMap, setDisplayMap] =
+  useState<Record<string, string>>({});
+
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("Tutti");
+  const [nationFilter, setNationFilter] = useState("Tutte");
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  async function loadData() {
+  setLoading(true);
+
+  const { data } = await supabase
+    .from("free_agents")
+    .select("*")
+    .order("player_name");
+
+  const { data: mappings } = await supabase
+    .from("player_display_names")
+    .select("*");
+  
+  const map: Record<string, string> = {};
+
+  (mappings as DisplayName[] | null)?.forEach(
+    (m) => {
+      map[m.fantapiu3_name] = m.display_name;
+    }
+  );
+
+  setDisplayMap(map);
+
+  setPlayers((data || []) as FreeAgent[]);
+
+  setLoading(false);
+}
+
+  const roles = [
+    "Tutti",
+    "P",
+    "D",
+    "C",
+    "A",
+  ];
+
+  const nations = [
+    "Tutte",
+    ...Array.from(
+      new Set(
+        players.map((p) => p.nazionale)
+      )
+    ).sort(),
+  ];
+
+  const filteredPlayers = useMemo(() => {
+    let rows = [...players];
+
+    rows = rows.filter((p) => {
+  const displayName =
+    displayMap[p.player_name] ||
+    p.player_name;
+
+  return displayName
+    .toLowerCase()
+    .includes(search.toLowerCase());
+});
+
+    if (roleFilter !== "Tutti") {
+      rows = rows.filter(
+        (p) => p.ruolo === roleFilter
+      );
+    }
+
+    if (nationFilter !== "Tutte") {
+      rows = rows.filter(
+        (p) => p.nazionale === nationFilter
+      );
+    }
+
+    return rows;
+  }, [
+    players,
+    search,
+    roleFilter,
+    nationFilter,
+  ]);
+
+  if (loading) {
+    return (
+      <main
+        style={{
+          minHeight: "100vh",
+          background:
+            "linear-gradient(to bottom,#1f2937,#0f172a)",
+          color: "white",
+          padding: 20,
+        }}
+      >
+        Caricamento...
+      </main>
+    );
+  }
+
   return (
     <main
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom, #1f2937, #0f172a)",
+        background:
+          "linear-gradient(to bottom,#1f2937,#0f172a)",
         color: "white",
         padding: "20px",
       }}
     >
       <div
         style={{
-          maxWidth: "900px",
+          maxWidth: "1200px",
           margin: "0 auto",
         }}
       >
@@ -22,10 +151,9 @@ export default function SvincolatiPage() {
         <h1
           style={{
             textAlign: "center",
-            fontSize: "clamp(2.2rem, 6vw, 3.5rem)",
-            marginTop: "10px",
-            marginBottom: "10px",
-            fontWeight: "800",
+            fontSize: "clamp(2rem,6vw,3.5rem)",
+            fontWeight: 800,
+            marginBottom: 10,
           }}
         >
           📑 Listone Svincolati
@@ -35,61 +163,152 @@ export default function SvincolatiPage() {
           style={{
             textAlign: "center",
             color: "#cbd5e1",
-            marginBottom: "35px",
-            fontSize: "1rem",
+            marginBottom: 20,
           }}
         >
           Elenco ufficiale dei calciatori disponibili sul mercato.
         </p>
 
-        <Card title="📄 Documento Ufficiale">
+        <Card title="📋 Svincolati">
           <div
             style={{
               textAlign: "center",
-              padding: "10px 0",
+              color: "#facc15",
+              fontWeight: 800,
+              fontSize: "1.15rem",
+              marginBottom: 16,
             }}
           >
-            <p
-              style={{
-                color: "#cbd5e1",
-                marginBottom: "24px",
-                lineHeight: 1.6,
-              }}
-            >
-              Consulta il listone completo degli svincolati del
-              FantAquilaCastoro 2026.
-            </p>
+            📑 Svincolati disponibili: 948
+          </div>
 
-            <a
-              href="/svincolati.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
+          <input
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            placeholder="Cerca giocatore..."
+            style={{
+              width: "100%",
+              padding: 10,
+              borderRadius: 10,
+              border: "none",
+              marginBottom: 12,
+            }}
+          />
+
+          <div
+            style={{
+              display: "flex",
+              gap: 10,
+              flexWrap: "wrap",
+              marginBottom: 15,
+            }}
+          >
+            <select
+              value={roleFilter}
+              onChange={(e) =>
+                setRoleFilter(e.target.value)
+              }
               style={{
-                display: "inline-block",
-                padding: "14px 24px",
-                background: "#2563eb",
-                color: "white",
-                textDecoration: "none",
-                borderRadius: "12px",
-                fontWeight: "700",
-                fontSize: "1rem",
-                boxShadow: "0 4px 12px rgba(37,99,235,0.35)",
-                transition: "all 0.2s ease",
+                padding: 8,
+                borderRadius: 8,
               }}
             >
-              📥 Apri il PDF degli Svincolati
-            </a>
+              {roles.map((r) => (
+                <option
+                  key={r}
+                  value={r}
+                >
+                  {r}
+                </option>
+              ))}
+            </select>
+
+            <select
+              value={nationFilter}
+              onChange={(e) =>
+                setNationFilter(e.target.value)
+              }
+              style={{
+                padding: 8,
+                borderRadius: 8,
+              }}
+            >
+              {nations.map((n) => (
+                <option
+                  key={n}
+                  value={n}
+                >
+                  {n}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div
+            style={{
+              overflowX: "auto",
+            }}
+          >
+            <table
+              style={{
+                width: "100%",
+                borderCollapse: "collapse",
+              }}
+            >
+              <thead>
+                <tr>
+                  <th style={thStyle}>
+                    Giocatore
+                  </th>
+                  <th style={thStyle}>
+                    Nazionale
+                  </th>
+                  <th style={thStyle}>
+                    Ruolo
+                  </th>
+                  <th style={thStyle}>
+                    Quot.
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {filteredPlayers.map((p) => (
+                  <tr key={p.id}>
+                    <td style={tdStyle}>
+                      {displayMap[p.player_name] ||
+  p.player_name}
+                    </td>
+
+                    <td style={tdStyle}>
+                      {p.nazionale}
+                    </td>
+
+                    <td style={tdStyle}>
+                      {p.ruolo}
+                    </td>
+
+                    <td style={tdStyle}>
+                      {p.quotazione}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </Card>
 
         <div
           style={{
-            marginTop: "50px",
-            paddingTop: "20px",
-            borderTop: "1px solid #374151",
+            marginTop: 50,
+            paddingTop: 20,
+            borderTop:
+              "1px solid rgba(255,255,255,0.1)",
             textAlign: "center",
             color: "#94a3b8",
-            fontSize: "14px",
+            fontSize: 14,
           }}
         >
           FantAquilaCastoro 2026 • Road to New York 🗽
@@ -98,3 +317,17 @@ export default function SvincolatiPage() {
     </main>
   );
 }
+
+const thStyle: React.CSSProperties = {
+  padding: "10px",
+  borderBottom:
+    "1px solid rgba(255,255,255,0.15)",
+  color: "#facc15",
+  textAlign: "left",
+};
+
+const tdStyle: React.CSSProperties = {
+  padding: "10px",
+  borderBottom:
+    "1px solid rgba(255,255,255,0.08)",
+};
