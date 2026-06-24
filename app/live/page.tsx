@@ -406,7 +406,7 @@ return (
       src={currentBanner}
       alt="Pasquale l'Aquila Reale"
       style={{
-        width: "92%",
+        width: "85%",
         maxWidth: "520px",
         borderRadius: 16,
       }}
