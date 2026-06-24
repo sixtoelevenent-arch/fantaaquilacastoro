@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import Card from "@/components/Card";
 import { useRouter } from "next/navigation";
+import { calcPlayerScore }
+from "@/lib/fantacalcio";
 
 type Team = {
   id: number;
@@ -232,11 +234,20 @@ setLoading(false);
 
 const { data: votes } = await supabase
   .from("player_votes")
-  .select(
-    "player_id,voto,sv"
-  )
+  .select(`
+    player_id,
+    voto,
+    sv,
+    gol,
+    assist,
+    ammonizione,
+    espulsione,
+    autogol,
+    rigori_parati,
+    rigori_sbagliati,
+    gol_subiti
+  `)
   .in("player_id", playerIds);
-
 const statsMap = new Map();
 
 for (const player of data || []) {
@@ -252,10 +263,20 @@ for (const player of data || []) {
   pv.length > 0
     ? Number(
         (
-          pv.reduce(
-            (s, v) => s + Number(v.voto),
-            0
-          ) / pv.length
+          pv.reduce((s, v) => {
+
+            const result =
+              calcPlayerScore(
+                v,
+                player.ruolo
+              );
+
+            return (
+              s +
+              (result?.totale || 0)
+            );
+
+          }, 0) / pv.length
         ).toFixed(2)
       )
     : 0;
