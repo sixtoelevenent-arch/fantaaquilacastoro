@@ -705,10 +705,7 @@ const rows = [
       const { error: playersError } = await supabase
         .from("formation_players")
         .insert(rows);
-console.log(
-  "PLAYERS ERROR",
-  playersError
-);
+
       if (playersError) {
         throw playersError;
       }

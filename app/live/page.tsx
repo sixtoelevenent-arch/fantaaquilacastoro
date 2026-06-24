@@ -134,8 +134,6 @@ useEffect(() => {
   const activeMatchday =
   await getVisibleMatchday();
 
-console.log("VISIBLE MATCHDAY", activeMatchday);
-
   if (!activeMatchday) {
     setMatches([]);
     return;
@@ -417,8 +415,6 @@ return (
 )}
 
 {matches.map((match) => {
-
-  console.log("MATCH", match);
 
   return (
     <Card

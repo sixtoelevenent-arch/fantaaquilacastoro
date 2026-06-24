@@ -39,7 +39,6 @@ function normalizeNation(nation: string) {
 }
 
 async function main() {
-  console.log("Download Fantapiu3...");
 
   const { data: activeMatchday, error: matchdayError } =
   await supabase
@@ -51,11 +50,6 @@ async function main() {
 console.log(
   "ACTIVE MATCHDAY:",
   activeMatchday
-);
-
-console.log(
-  "MATCHDAY ERROR:",
-  matchdayError
 );
 
 if (matchdayError || !activeMatchday) {

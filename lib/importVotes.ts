@@ -12,9 +12,6 @@ const { data: activeMatchday, error: matchdayError } =
     .from("matchdays")
     .select("id,nome,attiva");
 
-console.log("MATCHDAYS:", activeMatchday);
-console.log("ERROR:", matchdayError);
-
 const BASE_URL =
   "https://fantapiu3.com/voti-globali/fantacalcio-voti-gazzetta-sport-coppa-del-mondo.php?fonte=votifp3&giornata=";
 
@@ -44,7 +41,6 @@ function normalizeNation(nation: string) {
 }
 
 export async function importVotes() {
-  console.log("Download Fantapiu3...");
 
   const { data: activeMatchday, error: matchdayError } =
   await supabase
@@ -53,26 +49,11 @@ export async function importVotes() {
     .eq("attiva", true)
     .single();
 
-    console.log(
-  "ACTIVE MATCHDAY:",
-  activeMatchday
-);
-
-console.log(
-  "MATCHDAY ERROR:",
-  matchdayError
-);
-
-if (matchdayError || !activeMatchday) {
+ if (matchdayError || !activeMatchday) {
   throw new Error(
     "Nessuna giornata attiva trovata"
   );
 }
-
-console.log(
-  "GIORNATA ATTIVA:",
-  activeMatchday.nome
-);
 
 const URL =
   `${BASE_URL}${activeMatchday.id}`;
@@ -103,14 +84,10 @@ for (const p of players || []) {
   );
 }
 
-console.log("EXACT MAP:", exactMap.size);
-
   let importati = 0;
   let nonTrovati = 0;
 
   const rows = $(".table-row");
-
-  console.log("Righe trovate:", rows.length);
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows.eq(i);
@@ -157,15 +134,6 @@ const player = exactMap.get(key);
     if (!player) {
   nonTrovati++;
 
-  console.log(
-  "NON TROVATO:",
-  nome,
-  "|",
-  nazioneFantapiu,
-  "| KEY:",
-  key
-);
-
   continue;
 }
     const valori = row
@@ -175,12 +143,7 @@ const player = exactMap.get(key);
 
   if (
   normalize(nome).includes("CALHANOGLU")
-) {
-  console.log("CALHANOGLU");
-  console.log("VALORI:", valori);
-  console.log("VOTO RAW:", valori[1]);
-}
-  
+)   
 if (valori.length < 10) continue;
 
 const votoRaw = valori[1].trim();

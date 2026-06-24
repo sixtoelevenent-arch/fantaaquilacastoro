@@ -193,11 +193,24 @@ for (const bench of panchina) {
     bench.ruolo
   );
 
-  const benchIsSv =
+ const benchIsSv =
   benchResult?.sv === true ||
+
+  (
+    bench.hasVoteRow &&
+    bench.voto === null &&
+    bench.sv !== true &&
+    bench.nationalFinalized
+  ) ||
+
+  (
+    !bench.hasVoteRow &&
+    bench.nationalFinalized
+  ) ||
+
   bench.sv === true;
 
-  if (benchIsSv) {
+    if (benchIsSv) {
     continue;
   }
 
@@ -211,8 +224,8 @@ for (const bench of panchina) {
         totale: null,
       },
   };
-
   break;
+ 
 }
 
 if (
