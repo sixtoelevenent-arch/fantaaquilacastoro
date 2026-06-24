@@ -16,6 +16,10 @@ type Player = {
   nome: string;
   ruolo: string;
   team_id: number;
+  nazionale: string;
+  media?: number;
+  partite?: number;
+  prossima?: string;
 };
 
 type Matchday = {
@@ -216,13 +220,83 @@ setLoading(false);
     A: 4,
   };
 
-  const sortedPlayers = (data || []).sort(
+  const sortedPlayers = (data || []).sort(  
     (a, b) =>
       ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
       ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
   );
 
-  setPlayers(sortedPlayers);
+  const playerIds = (data || []).map(
+  (p) => p.id
+);
+
+const { data: votes } = await supabase
+  .from("player_votes")
+  .select(
+    "player_id,voto,sv"
+  )
+  .in("player_id", playerIds);
+
+const statsMap = new Map();
+
+for (const player of data || []) {
+
+  const pv =
+    (votes || []).filter(
+      (v) =>
+        v.player_id === player.id &&
+        v.voto !== null
+    );
+
+  const media =
+  pv.length > 0
+    ? Number(
+        (
+          pv.reduce(
+            (s, v) => s + Number(v.voto),
+            0
+          ) / pv.length
+        ).toFixed(2)
+      )
+    : 0;
+
+  statsMap.set(player.id, {
+    media,
+    partite: pv.length,
+  });
+}
+
+const fixtureMap = new Map();
+
+for (const player of data || []) {
+
+  const { data: fixtureData } =
+    await supabase.rpc(
+      "get_fixture_info",
+      {
+        p_nation: player.nazionale,
+      }
+    );
+
+  fixtureMap.set(
+    player.nazionale,
+    fixtureData?.[0]?.fixture || ""
+  );
+}
+
+const enrichedPlayers =
+  sortedPlayers.map((p) => ({
+    ...p,
+    media:
+      statsMap.get(p.id)?.media || 0,
+    partite:
+      statsMap.get(p.id)?.partite || 0,
+
+    prossima:
+      fixtureMap.get(p.nazionale) || "",
+  }));
+
+setPlayers(enrichedPlayers);
 
   const { data: formation } = await supabase
     .from("formations")
@@ -1146,15 +1220,15 @@ textAlign: "center",
             >
 
               <input
-                type="checkbox"
-                disabled={locked}
-                checked={titolari.includes(player.id)}
-                onChange={() =>
-                  togglePlayer(player.id)
-                }
-              />
+  type="checkbox"
+  disabled={locked}
+  checked={titolari.includes(player.id)}
+  onChange={() =>
+    togglePlayer(player.id)
+  }
+/>
 
-              <div
+<div
   style={{
     marginTop: 4,
     fontWeight: 700,
@@ -1165,7 +1239,34 @@ textAlign: "center",
   {player.nome}
 </div>
 
-            </label>
+<div
+  style={{
+    marginTop: 4,
+    fontSize: "0.60rem",
+    color: "#cbd5e1",
+    fontWeight: 600,
+    lineHeight: 1.2,
+  }}
+>
+  {(player.media || 0)
+    .toFixed(2)
+    .replace(".", ",")}
+  {" | "}
+  {player.partite || 0}
+</div>
+
+<div
+  style={{
+    marginTop: 2,
+    fontSize: "0.60rem",
+    color: "#facc15",
+    fontWeight: 800,
+    lineHeight: 1.2,
+  }}
+>
+  {player.prossima}
+</div>
+</label>
 
           ))}
 

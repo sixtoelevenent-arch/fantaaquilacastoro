@@ -33,10 +33,14 @@ type PlayerRow = {
   player_id?: number;
 
   nome: string;
-  ruolo: string;
-  nazionale: string;
+ruolo: string;
+nazionale: string;
 
-  titolare: boolean;
+fixture?: string;
+liveNow?: boolean;
+kickoff?: string;
+
+titolare: boolean;
 
   posizione: number | null;
   ordine_panchina: number | null;
@@ -219,6 +223,46 @@ const { data: loadedPlayers } =
     .select("id,nazionale")
     .in("id", playerIds);
  
+    const fixtureMap = new Map<
+  string,
+  {
+    fixture: string;
+    kickoff: string;
+  }
+>();
+
+const nazioni = [
+  ...new Set(
+    [
+      ...(homeRows || []),
+      ...(awayRows || [])
+    ].map(
+      (r: any) =>
+        r.players?.nazionale
+    )
+  ),
+];
+
+for (const nation of nazioni) {
+
+  if (!nation) continue;
+
+  const { data } = await supabase.rpc(
+    "get_fixture_info",
+    {
+      p_nation: nation,
+    }
+  );
+
+  if (data?.length) {
+
+    fixtureMap.set(nation, {
+      fixture: data[0].fixture,
+      kickoff: data[0].kickoff,
+    });
+
+  }
+}
   const votesMap = new Map();
 
 (votes || []).forEach((v: any) => {
@@ -227,6 +271,23 @@ const { data: loadedPlayers } =
 
 const nationalExists = new Set<string>();
 const nationalFinalized = new Set<string>();
+
+const isPlayerLive = (
+  kickoff?: string
+) => {
+
+  if (!kickoff) return false;
+
+  const start =
+    new Date(kickoff).getTime();
+
+  const end =
+    start + 2 * 60 * 60 * 1000;
+
+  const now = Date.now();
+
+  return now >= start && now <= end;
+};
 
 (votes || []).forEach((v: any) => {
   const player = (loadedPlayers || []).find(
@@ -265,13 +326,28 @@ const exists =
 const finalized =
   nationalFinalized.has(nation);
 
+  const fixtureInfo =
+  fixtureMap.get(
+    r.players?.nazionale ?? ""
+  );
+
       return {
 
       player_id: r.player_id,
 
+      liveNow: isPlayerLive(
+  fixtureInfo?.kickoff
+),
+
       nome: r.players?.nome ?? "",
-      ruolo: r.players?.ruolo ?? "",
-      nazionale: r.players?.nazionale ?? "",
+ruolo: r.players?.ruolo ?? "",
+nazionale: r.players?.nazionale ?? "",
+
+fixture:
+  fixtureInfo?.fixture ?? "",
+
+kickoff:
+  fixtureInfo?.kickoff ?? "",
 
       titolare: r.titolare,
       posizione: r.posizione,
@@ -652,16 +728,18 @@ textOverflow: "ellipsis",
 >
 
     {!player.hasVoteRow
-      ? player.nationalFinalized
-        ? "SV"
-        : player.nationalExists
-        ? "⏳"
-        : ""
-      : player.sv
-      ? "SV"
-      : player.voto === null
-      ? "⏳"
-      : player.voto}
+  ? player.liveNow
+    ? "🔴"
+    : player.nationalFinalized
+    ? "SV"
+    : ""
+  : player.sv
+  ? "SV"
+  : player.voto === null
+  ? player.liveNow
+    ? "🔴"
+    : "⏳"
+  : player.voto}
   </div>
 </div>
 </div>
@@ -757,16 +835,19 @@ letterSpacing: "2px",
 >
   
       {!player.replacementPlayer.hasVoteRow
-        ? player.replacementPlayer.nationalFinalized
-          ? "SV"
-          : player.replacementPlayer.nationalExists
-          ? "⏳"
-          : ""
-        : player.replacementPlayer.sv
-        ? "SV"
-        : player.replacementPlayer.voto === null
-        ? "⏳"
-        : player.replacementPlayer.voto}
+  ? player.replacementPlayer.liveNow
+    ? "🔴"
+    : player.replacementPlayer.nationalFinalized
+    ? "SV"
+    : ""
+  : player.replacementPlayer.sv
+  ? "SV"
+  : player.replacementPlayer.voto === null
+  ? player.replacementPlayer.liveNow
+    ? "🔴"
+    : "⏳"
+  : player.replacementPlayer.voto}
+  
     </div>
   </div>
 )}

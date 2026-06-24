@@ -162,6 +162,17 @@ if (
 
 let player = exactMap.get(key);
 
+if (
+  normalize(nome).includes("WILLIAMS")
+) {
+  console.log("DEBUG WILLIAMS");
+  console.log("NOME FP3:", nome);
+  console.log("NAZIONE FP3:", nazioneFantapiu);
+  console.log("KEY:", key);
+  console.log("TROVATO:", !!player);
+  console.log("PLAYER:", player);
+}
+
   if (!player) {
 
   console.log(
