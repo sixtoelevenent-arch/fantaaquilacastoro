@@ -83,7 +83,7 @@ console.log(
 );
 
 console.log(
-  response.data.substring(0, 1000)
+  "Pagina caricata correttamente"
 );
 
 const $ = cheerio.load(response.data);
@@ -110,6 +110,7 @@ console.log("EXACT MAP:", exactMap.size);
   let importati = 0;
   let ignorati = 0;
  
+  const rowsToUpsert: any[] = [];
   const rows = $(".table-row");
 
   console.log("Righe trovate:", rows.length);
@@ -155,17 +156,6 @@ if (
   `${normalize(nome)}|${normalizeNation(nazioneFantapiu)}`;
 
 let player = exactMap.get(key);
-
-if (
-  normalize(nome).includes("WILLIAMS")
-) {
-  console.log("DEBUG WILLIAMS");
-  console.log("NOME FP3:", nome);
-  console.log("NAZIONE FP3:", nazioneFantapiu);
-  console.log("KEY:", key);
-  console.log("TROVATO:", !!player);
-  console.log("PLAYER:", player);
-}
 
   if (!player) {
 
@@ -309,36 +299,34 @@ const assistValue =
 
 const assist = assistValue;
 
-    const { error } = await supabase
-  .from("player_votes")
-  .upsert(
-    {
-      matchday_id: activeMatchday.id,
-      player_id: player.id,
-      voto,
-      gol: golSegnati + (golRigore > 0 ? 1 : 0),
-      assist,
-      ammonizione,
-      espulsione,
-      autogol,
-      rigori_parati: rigoriParati,
-      rigori_sbagliati: rigoriSbagliati,
-      gol_subiti: Math.abs(golSubiti),
-      clean_sheet: golSubiti === 0,
-      sv: isSv,
-    },
-    {
-      onConflict: "matchday_id,player_id",
-    }
-  );
-
-      if (error) {
-  console.log("ERRORE:", nome, error.message);
-  continue;
-}
-
+    rowsToUpsert.push({
+  matchday_id: activeMatchday.id,
+  player_id: player.id,
+  voto,
+  gol: golSegnati + golRigore,
+  assist,
+  ammonizione,
+  espulsione,
+  autogol,
+  rigori_parati: rigoriParati,
+  rigori_sbagliati: rigoriSbagliati,
+  gol_subiti: Math.abs(golSubiti),
+  clean_sheet: golSubiti === 0,
+  sv: isSv,
+});
     importati++;
   }
+const { error: upsertError } =
+  await supabase
+    .from("player_votes")
+    .upsert(rowsToUpsert, {
+      onConflict:
+        "matchday_id,player_id",
+    });
+
+if (upsertError) {
+  throw upsertError;
+}
 
   console.log("");
   console.log("IMPORTATI:", importati);

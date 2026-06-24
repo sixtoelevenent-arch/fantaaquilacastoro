@@ -244,6 +244,26 @@ if (
   };
 }
 
+/*
+if (
+  !replacement &&
+  lastSameRoleBench &&
+  substitutions < 5
+) {
+
+  replacement = {
+    player: lastSameRoleBench,
+    result: {
+      sv: false,
+      voto: 0,
+      bonus: 0,
+      totale: 0,
+    },
+  };
+
+}
+*/
+
     if (
       replacement &&
       substitutions < 5
@@ -359,18 +379,48 @@ projectedFP += player.bonus || 0;
 const projectedGoals =
   fantasyGoals(projectedFP);
 
+console.log(
+  "TEAM FINAL CHECK",
+  processedPlayers.map((p) => ({
+    nome: p.nome,
+    sv: p.sv,
+    replacement: p.replacementPlayer?.nome,
+    replacementVote:
+      p.replacementPlayer?.voto,
+  }))
+);
+
+console.log(
+  "COMPLETED SLOTS",
+  completedSlots
+);
+
+console.log(
+  "TEAM FINAL CHECK",
+  processedPlayers.map((p) => ({
+    nome: p.nome,
+    sv: p.sv,
+    replacement: p.replacementPlayer?.nome,
+    replacementVote:
+      p.replacementPlayer?.voto,
+  }))
+);
+
+console.log(
+  "COMPLETED SLOTS",
+  completedSlots
+);
+
 return {
   players: processedPlayers,
-
   substitutions,
-
   votesTotal:
     Math.round(votesTotal * 10) / 10,
 
   bonusTotal:
-  Math.round(
-    (bonusTotal + liveBonusWithoutVote) * 10
-  ) / 10,
+    Math.round(
+      (bonusTotal + liveBonusWithoutVote) * 10
+    ) / 10,
 
   fantapoints:
     Math.round(fantapoints * 10) / 10,
@@ -380,7 +430,7 @@ return {
   projectedGoals,
 
   isFinal:
-  completedSlots >= 11,
+    completedSlots >= 11,
 };
 
 }

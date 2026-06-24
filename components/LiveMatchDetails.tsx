@@ -213,6 +213,15 @@ setAwayUpdatedAt(
   .select("*")
   .eq("matchday_id", matchData.matchday_id);
 
+  console.log(
+  "MATCH",
+  matchId,
+  "MATCHDAY",
+  matchData.matchday_id,
+  "VOTES",
+  votes?.length
+);
+
 const playerIds = (votes || []).map(
   (v: any) => v.player_id
 );
@@ -268,6 +277,11 @@ for (const nation of nazioni) {
 (votes || []).forEach((v: any) => {
   votesMap.set(v.player_id, v);
 });
+
+console.log(
+  "VOTES MAP SIZE",
+  votesMap.size
+);
 
 const nationalExists = new Set<string>();
 const nationalFinalized = new Set<string>();

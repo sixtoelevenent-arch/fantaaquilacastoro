@@ -622,17 +622,48 @@ function roleStyle(role: string) {
       }}
     >
       <div
-        style={{
-          fontSize: "0.95rem",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {livePlayerName(
-          player.replacementPlayer.nome
-        )}
-      </div>
+  style={{
+    display: "flex",
+    alignItems: "center",
+  }}
+>
+  <div
+    style={{
+      flex: 1,
+      minWidth: 0,
+      fontSize: "0.95rem",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    }}
+  >
+    {livePlayerName(
+      player.replacementPlayer.nome
+    )}
+  </div>
+
+  <div
+    style={{
+      width: 34,
+      textAlign: "right",
+      fontWeight: 800,
+      fontSize: "1rem",
+      flexShrink: 0,
+    }}
+  >
+    {!player.replacementPlayer.hasVoteRow
+      ? player.replacementPlayer.nationalFinalized
+        ? "SV"
+        : player.replacementPlayer.nationalExists
+        ? "⏳"
+        : ""
+      : player.replacementPlayer.sv
+      ? "SV"
+      : player.replacementPlayer.voto === null
+      ? "⏳"
+      : player.replacementPlayer.voto}
+  </div>
+</div>
 
       <div
   style={{
@@ -662,29 +693,7 @@ function roleStyle(role: string) {
   </span>
 </div>
 </div>
-
-    <div
-      style={{
-        width: 32,
-        textAlign: "right",
-        fontWeight: 800,
-        fontSize: "0.95rem",
-        flexShrink: 0,
-      }}
-    >
-      {!player.replacementPlayer.hasVoteRow
-        ? player.replacementPlayer.nationalFinalized
-          ? "SV"
-          : player.replacementPlayer.nationalExists
-          ? "⏳"
-          : ""
-        : player.replacementPlayer.sv
-        ? "SV"
-        : player.replacementPlayer.voto === null
-        ? "⏳"
-        : player.replacementPlayer.voto}
-    </div>
-  </div>
+</div>
 )}
 
 
