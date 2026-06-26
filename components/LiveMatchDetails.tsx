@@ -38,9 +38,11 @@ nazionale: string;
 
 fixture?: string;
 liveNow?: boolean;
+waitingVotes?: boolean;
 kickoff?: string;
 
 titolare: boolean;
+
 
   posizione: number | null;
   ordine_panchina: number | null;
@@ -289,7 +291,6 @@ const nationalFinalized = new Set<string>();
 const isPlayerLive = (
   kickoff?: string
 ) => {
-
   if (!kickoff) return false;
 
   const start =
@@ -300,7 +301,24 @@ const isPlayerLive = (
 
   const now = Date.now();
 
-  return now >= start && now <= end;
+  return (
+    now >= start &&
+    now < end
+  );
+};
+
+const isPlayerWaitingVotes = (
+  kickoff?: string
+) => {
+  if (!kickoff) return false;
+
+  const start =
+    new Date(kickoff).getTime();
+
+  const end =
+    start + 2 * 60 * 60 * 1000;
+
+  return Date.now() >= end;
 };
 
 (votes || []).forEach((v: any) => {
@@ -345,6 +363,57 @@ const finalized =
     r.players?.nazionale ?? ""
   );
 
+  console.log(
+  r.players?.nome,
+  {
+    kickoff:
+      fixtureInfo?.kickoff,
+
+    live:
+      isPlayerLive(
+        fixtureInfo?.kickoff
+      ),
+
+    waiting:
+      isPlayerWaitingVotes(
+        fixtureInfo?.kickoff
+      ),
+
+    now:
+      new Date()
+        .toLocaleString("it-IT"),
+
+    parsed:
+      fixtureInfo?.kickoff
+        ? new Date(
+            fixtureInfo.kickoff
+          ).toLocaleString("it-IT")
+        : null,
+  }
+);
+
+  if (
+  r.players?.nome === "V. Gyökeres" ||
+  r.players?.nome === "M. Van De Ven"
+) {
+  console.log(
+    r.players.nome,
+    {
+      kickoff: fixtureInfo?.kickoff,
+      parsed: fixtureInfo?.kickoff
+        ? new Date(
+            fixtureInfo.kickoff
+          ).toLocaleString("it-IT")
+        : null,
+      now: new Date().toLocaleString(
+        "it-IT"
+      ),
+      live: isPlayerLive(
+        fixtureInfo?.kickoff
+      ),
+    }
+  );
+}
       return {
 
       player_id: r.player_id,
@@ -352,6 +421,11 @@ const finalized =
       liveNow: isPlayerLive(
   fixtureInfo?.kickoff
 ),
+
+waitingVotes:
+  isPlayerWaitingVotes(
+    fixtureInfo?.kickoff
+  ),
 
       nome: r.players?.nome ?? "",
 ruolo: r.players?.ruolo ?? "",
@@ -741,19 +815,17 @@ textOverflow: "ellipsis",
   }}
 >
 
-    {!player.hasVoteRow
-  ? player.liveNow
-    ? "🔴"
-    : player.nationalFinalized
-    ? "SV"
-    : ""
+    {player.liveNow
+  ? "🔴"
+  : player.voto !== null &&
+    player.voto !== undefined
+  ? player.voto
   : player.sv
   ? "SV"
-  : player.voto === null
-  ? player.liveNow
-    ? "🔴"
-    : "⏳"
-  : player.voto}
+  : player.waitingVotes
+  ? "⏳"
+  : ""}
+
   </div>
 </div>
 </div>
@@ -848,19 +920,16 @@ letterSpacing: "2px",
   }}
 >
   
-      {!player.replacementPlayer.hasVoteRow
-  ? player.replacementPlayer.liveNow
-    ? "🔴"
-    : player.replacementPlayer.nationalFinalized
-    ? "SV"
-    : ""
+      {player.replacementPlayer.liveNow
+  ? "🔴"
+  : player.replacementPlayer.voto !== null &&
+    player.replacementPlayer.voto !== undefined
+  ? player.replacementPlayer.voto
   : player.replacementPlayer.sv
   ? "SV"
-  : player.replacementPlayer.voto === null
-  ? player.replacementPlayer.liveNow
-    ? "🔴"
-    : "⏳"
-  : player.replacementPlayer.voto}
+  : player.replacementPlayer.waitingVotes
+  ? "⏳"
+  : ""}
   
     </div>
   </div>
