@@ -69,6 +69,18 @@ export default function MercatoPage() {
   const [assignments, setAssignments] =
     useState<Assignment[]>([]);
 
+    type ReturnedPlayer = {
+  nome: string;
+  ruolo: string;
+  nazionale: string;
+};
+
+const [returnedPlayers, setReturnedPlayers] =
+  useState<ReturnedPlayer[]>([]);
+
+const [eliminatedTeams, setEliminatedTeams] =
+  useState<string[]>([]);
+
    const [teamBudgets, setTeamBudgets] =
   useState<TeamBudget[]>([]);
 
@@ -206,6 +218,32 @@ setTeamBudgets(
   (budgetsData as TeamBudget[]) ?? []
 );
 
+if (
+  active.id === 1 &&
+  (eliminatedData ?? []).length >= 16
+) {
+  const {
+    data: returnedData,
+  } = await supabase
+    .from("available_free_agents")
+    .select(`
+      nome,
+      ruolo,
+      nazionale
+    `)
+    .order("ruolo")
+    .order("nome");
+
+  setReturnedPlayers(
+    (returnedData as ReturnedPlayer[]) ??
+      []
+  );
+
+  // per ora vuoto, domani
+  // lo collegheremo alle 4 squadre eliminate
+  setEliminatedTeams([]);
+}
+
   } catch (e) {
   console.error(e);
 } finally {
@@ -283,6 +321,10 @@ setTeamBudgets(
 
   const eliminatedCount =
     eliminated.length;
+
+    const showReturnedPlayers =
+  currentRound?.id === 1 &&
+  eliminatedCount >= 16;
 
     const releasesByTeam =
   useMemo(() => {
@@ -426,6 +468,59 @@ setTeamBudgets(
                 {eliminatedCount}/
                 {currentRound.eliminated_nationals_count}
               </div>
+
+              {showReturnedPlayers && (
+  <Card title="🏆 Squadre eliminate dal FantAquilaCastoro">
+    <div
+      style={{
+        color: "#cbd5e1",
+        marginBottom: 14,
+        lineHeight: 1.7,
+      }}
+    >
+      {eliminatedTeams.join(" • ")}
+    </div>
+
+    <div
+      style={{
+        borderTop:
+          "1px solid rgba(255,255,255,.08)",
+        paddingTop: 14,
+      }}
+    >
+      <div
+        style={{
+          color: "#facc15",
+          fontWeight: 700,
+          marginBottom: 12,
+        }}
+      >
+        🌍 Giocatori rientrati nel
+        Listone Svincolati
+      </div>
+
+      <div
+        style={{
+          fontSize: ".88rem",
+          lineHeight: 1.7,
+          color: "#cbd5e1",
+        }}
+      >
+        {returnedPlayers.map(
+          (p, i) => (
+            <div key={i}>
+              {p.ruolo} {p.nome}{" "}
+              {p.nazionale
+                .substring(0, 3)
+                .toUpperCase()}
+            </div>
+          )
+        )}
+      </div>
+    </div>
+  </Card>
+)}
+
             </div>
           </Card>
         )}
@@ -439,14 +534,15 @@ setTeamBudgets(
               }}
             >
               ⚠️ Sono già disponibili gli
-              svincoli automatici delle
-              nazionali eliminate.
+svincoli automatici delle
+nazionali eliminate.
 
-              <br />
-              <br />
+<br />
+<br />
 
-              Puoi già preparare e salvare
-              la tua lista svincolati.
+Puoi già preparare e salvare
+la tua lista svincolati
+nella tua Area Riservata.
             </div>
           </Card>
         )}
