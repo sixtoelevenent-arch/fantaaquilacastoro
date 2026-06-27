@@ -1,6 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+  type CSSProperties,
+} from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import BackHome from "@/components/BackHome";
@@ -25,23 +29,29 @@ type Team = {
 const [user, setUser] = useState<User | null>(null);
 const [team, setTeam] = useState<Team | null>(null);
 
+const secondaryButton: CSSProperties = {
+  width: "100%",
+  padding: 18,
+  border: "none",
+  borderRadius: 16,
+  color: "white",
+  fontWeight: 800,
+  cursor: "pointer",
+};
+
   useEffect(() => {
+  const raw = localStorage.getItem("fantasy_user");
 
-    const raw =
-      localStorage.getItem("fantasy_user");
+  if (!raw) {
+    router.push("/login");
+    return;
+  }
 
-    if (!raw) {
-      router.push("/login");
-      return;
-    }
+  const u = JSON.parse(raw);
 
-    const u = JSON.parse(raw);
-
-    setUser(u);
-
-    loadTeam(u.team_id);
-
-  }, []);
+  setUser(u);
+  loadTeam(u.team_id);
+}, []);
 
   async function loadTeam(
     teamId: number
@@ -119,26 +129,31 @@ const [team, setTeam] = useState<Team | null>(null);
           }}
         >
           <div>
-            <strong>Username:</strong>
-            {" "}
-            {user.username}
-          </div>
+  <strong>Username:</strong>{" "}
+  {user.username}
+</div>
 
-          <br />
+<br />
 
-          <div>
-            <strong>Squadra:</strong>
-            {" "}
-            {team.nome}
-          </div>
+<div>
+  <strong>Squadra:</strong>{" "}
+  {team.nome}
+</div>
 
-          <br />
+<br />
 
-          <div>
-            <strong>Allenatore:</strong>
-            {" "}
-            {team.proprietario}
-          </div>
+<div>
+  <strong>Allenatore:</strong>{" "}
+  {team.proprietario}
+</div>
+
+<br />
+
+<div>
+  <strong>Girone:</strong>{" "}
+  {team.gruppo}
+</div>
+
         </div>
 
         <button
@@ -160,6 +175,71 @@ const [team, setTeam] = useState<Team | null>(null);
         >
           ⚽ GESTISCI FORMAZIONE
         </button>
+
+        <button
+  onClick={() =>
+    router.push("/il-mio-mercato")
+  }
+  style={{
+    width: "100%",
+    padding: 22,
+    border: "none",
+    borderRadius: 16,
+    background: "#f59e0b",
+    color: "white",
+    fontWeight:900,
+    fontSize: "1.2rem",
+            marginBottom: 14,
+            cursor: "pointer",
+  }}
+>
+  💰 IL MIO MERCATO
+</button>
+
+<div
+  style={{
+    display: "flex",
+    flexDirection: "column",
+    gap: 14,
+    marginBottom: 14,
+  }}
+>
+  <button
+    onClick={() =>
+      router.push("/la-mia-rosa")
+    }
+    style={{
+      ...secondaryButton,
+      background: "#7c3aed",
+    }}
+  >
+    📋 LA MIA ROSA
+  </button>
+
+  <button
+    onClick={() =>
+      router.push("/i-miei-svincoli")
+    }
+    style={{
+      ...secondaryButton,
+      background: "#ca8a04",
+    }}
+  >
+    🔄 I MIEI SVINCOLI
+  </button>
+
+  <button
+    onClick={() =>
+      router.push("/risultati-mercato")
+    }
+    style={{
+      ...secondaryButton,
+      background: "#0ea5e9",
+    }}
+  >
+    🏆 RISULTATI MERCATO
+  </button>
+</div>
 
         <button
           onClick={() =>
