@@ -6,13 +6,15 @@ import Link from "next/link";
 
 export default function Page() {
   const [importing, setImporting] =
-  useState(false);
+    useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
     const isAdmin =
-      localStorage.getItem("fantasy_admin");
+      localStorage.getItem(
+        "fantasy_admin"
+      );
 
     if (isAdmin !== "true") {
       router.push("/login");
@@ -20,32 +22,33 @@ export default function Page() {
   }, [router]);
 
   const buttonStyle = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
 
-  width: "100%",
-  height: "78px",
+    width: "100%",
+    height: "78px",
 
-  borderRadius: "14px",
+    borderRadius: "14px",
 
-  color: "white",
-  textDecoration: "none",
+    color: "white",
+    textDecoration: "none",
 
-  fontWeight: 700,
-  fontSize: "18px",
+    fontWeight: 700,
+    fontSize: "18px",
 
-  cursor: "pointer",
+    cursor: "pointer",
 
-  boxShadow:
-    "0 8px 20px rgba(0,0,0,0.25)",
+    boxShadow:
+      "0 8px 20px rgba(0,0,0,0.25)",
 
-  border:
-    "1px solid rgba(255,255,255,0.08)",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
 
-  appearance: "none" as const,
-  WebkitAppearance: "none" as const,
-};
+    appearance: "none" as const,
+    WebkitAppearance:
+      "none" as const,
+  };
 
   return (
     <main
@@ -69,14 +72,14 @@ export default function Page() {
         }}
       >
         <img
-  src="/logo.png"
-  alt="FantAquilaCastoro"
-  style={{
-    width: 90,
-    height: 90,
-    marginBottom: 20,
-  }}
-/>
+          src="/logo.png"
+          alt="FantAquilaCastoro"
+          style={{
+            width: 90,
+            height: 90,
+            marginBottom: 20,
+          }}
+        />
         ⚙️ Area Admin
       </h1>
 
@@ -88,7 +91,8 @@ export default function Page() {
           fontSize: "18px",
         }}
       >
-        Gestione FantAquilaCastoro 2026
+        Gestione FantAquilaCastoro
+        2026
       </p>
 
       <div
@@ -100,13 +104,12 @@ export default function Page() {
           gap: "12px",
         }}
       >
-        
         <Link
           href="/admin/formazioni"
           style={{
-  ...buttonStyle,
-  background: "#2563eb",
-}}
+            ...buttonStyle,
+            background: "#2563eb",
+          }}
         >
           ⚽ Formazioni
         </Link>
@@ -114,72 +117,129 @@ export default function Page() {
         <Link
           href="/admin/giornate"
           style={{
-  ...buttonStyle,
-  background: "#7c3aed",
-}}
+            ...buttonStyle,
+            background: "#7c3aed",
+          }}
         >
           📅 Gestione Giornate
         </Link>
 
+        <Link
+          href="/admin/simulazione-mercato"
+          style={{
+            ...buttonStyle,
+            background: "#9333ea",
+          }}
+        >
+          🧪 Simulazione Mercato
+        </Link>
+
+        <Link
+          href="/admin/simulazione-mercato/rose"
+          style={{
+            ...buttonStyle,
+            background: "#2563eb",
+          }}
+        >
+          👥 Rose Simulazione
+        </Link>
+
+        <Link
+          href="/admin/simulazione-mercato/svincoli"
+          style={{
+            ...buttonStyle,
+            background: "#ca8a04",
+          }}
+        >
+          🔄 Svincoli Simulazione
+        </Link>
+
+        <Link
+          href="/admin/simulazione-mercato/buste"
+          style={{
+            ...buttonStyle,
+            background: "#16a34a",
+          }}
+        >
+          💰 Buste Simulazione
+        </Link>
+
+        <Link
+          href="/admin/simulazione-mercato/risultati"
+          style={{
+            ...buttonStyle,
+            background: "#0ea5e9",
+          }}
+        >
+          🏆 Risultati Simulazione
+        </Link>
+
+        <Link
+          href="/admin/simulazione-mercato/esegui"
+          style={{
+            ...buttonStyle,
+            background: "#dc2626",
+          }}
+        >
+          🚀 Esegui Simulazione
+        </Link>
+
         <button
-  disabled={importing}
-  onClick={async () => {
+          disabled={importing}
+          onClick={async () => {
+            const ok = confirm(
+              "Importare i voti adesso?"
+            );
 
-    const ok = confirm(
-      "Importare i voti adesso?"
-    );
+            if (!ok) return;
 
-    if (!ok) return;
+            try {
+              setImporting(true);
 
-    try {
+              const res =
+                await fetch(
+                  "/api/admin/import-votes",
+                  {
+                    method: "POST",
+                  }
+                );
 
-      setImporting(true);
+              const data =
+                await res.json();
 
-      const res = await fetch(
-        "/api/admin/import-votes",
-        {
-          method: "POST",
-        }
-      );
+              if (
+                !data.success
+              ) {
+                throw new Error(
+                  data.error
+                );
+              }
 
-      const data =
-        await res.json();
-
-      if (!data.success) {
-        throw new Error(
-          data.error
-        );
-      }
-
-      alert(
-        `✅ Import completato
+              alert(
+                `✅ Import completato
 
 Importati: ${data.importati}
+
 Non trovati: ${data.nonTrovati}`
-      );
-
-    } catch (err: any) {
-
-      alert(
-        err.message ||
-        "Errore import"
-      );
-
-    } finally {
-
-      setImporting(false);
-
-    }
-  }}
-  style={{
-  ...buttonStyle,
-  background: "#16a34a",
-}}
->
-  {importing
-    ? "⏳ Import in corso..."
-    : "📥 Importa Voti"}
-</button>
+              );
+            } catch (err: any) {
+              alert(
+                err.message ||
+                  "Errore import"
+              );
+            } finally {
+              setImporting(false);
+            }
+          }}
+          style={{
+            ...buttonStyle,
+            background: "#16a34a",
+          }}
+        >
+          {importing
+            ? "⏳ Import in corso..."
+            : "📥 Importa Voti"}
+        </button>
 
         <button
           onClick={() => {
@@ -190,9 +250,9 @@ Non trovati: ${data.nonTrovati}`
             router.push("/");
           }}
           style={{
-  ...buttonStyle,
-  background: "#dc2626",
-}}
+            ...buttonStyle,
+            background: "#dc2626",
+          }}
         >
           🚪 Logout Admin
         </button>
@@ -200,15 +260,13 @@ Non trovati: ${data.nonTrovati}`
         <Link
           href="/"
           style={{
-  ...buttonStyle,
-  background: "#334155",
-}}
+            ...buttonStyle,
+            background: "#334155",
+          }}
         >
           🏠 Torna alla Home
         </Link>
       </div>
     </main>
-
-    
   );
 }

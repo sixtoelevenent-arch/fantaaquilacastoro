@@ -1,13 +1,20 @@
 "use client";
+import {
+  useEffect,
+  useState,
+} from "react";
 import Link from "next/link";
 export default function Home() {
-  const user =
-  typeof window !== "undefined"
-    ? JSON.parse(
-        localStorage.getItem("fantasy_user") || "null"
-      )
-    : null;
+  const [logged, setLogged] =
+  useState(false);
 
+useEffect(() => {
+  setLogged(
+    !!localStorage.getItem(
+      "fantasy_user"
+    )
+  );
+}, []);
   const buttonStyle = {
     display: "block",
     width: "100%",
@@ -41,7 +48,7 @@ export default function Home() {
       }}
     >
       <Link
-  href={user ? "/account" : "/login"}
+  href={logged ? "/account" : "/login"}
   style={{
     position: "absolute",
     top: 10,
@@ -66,7 +73,7 @@ export default function Home() {
     zIndex: 50,
   }}
 >
-  {user ? "👤 ACCOUNT" : "🔑 ENTRA"}
+  {logged ? "👤 ACCOUNT" : "🔑 ENTRA"}
 </Link>
 
       <img

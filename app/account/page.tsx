@@ -31,11 +31,12 @@ const [team, setTeam] = useState<Team | null>(null);
 
 const secondaryButton: CSSProperties = {
   width: "100%",
-  padding: 18,
+  padding: 20,
   border: "none",
   borderRadius: 16,
   color: "white",
   fontWeight: 800,
+  fontSize: "1.05rem",
   cursor: "pointer",
 };
 
@@ -112,42 +113,52 @@ const secondaryButton: CSSProperties = {
         <BackHome />
 
         <h1
-          style={{
-            textAlign: "center",
-            marginBottom: 25,
-          }}
-        >
-          👤 ACCOUNT
-        </h1>
+  style={{
+    textAlign: "center",
+    marginBottom: 8,
+  }}
+>
+  🏟️ AREA RISERVATA
+</h1>
+
+<p
+  style={{
+    textAlign: "center",
+    color: "#94a3b8",
+    marginBottom: 24,
+    lineHeight: 1.5,
+  }}
+>
+  {team.nome}
+  <br />
+  Allenatore: {team.proprietario}
+</p>
 
         <div
           style={{
-            background: "#111827",
-            borderRadius: 16,
-            padding: 20,
-            marginBottom: 20,
-          }}
+  background: "#111827",
+  borderRadius: 20,
+  padding: 22,
+  marginBottom: 24,
+  border:
+    "1px solid rgba(255,255,255,.08)",
+  lineHeight: 1.9,
+}}
         >
           <div>
   <strong>Username:</strong>{" "}
   {user.username}
 </div>
 
-<br />
-
 <div>
   <strong>Squadra:</strong>{" "}
   {team.nome}
 </div>
 
-<br />
-
 <div>
   <strong>Allenatore:</strong>{" "}
   {team.proprietario}
 </div>
-
-<br />
 
 <div>
   <strong>Girone:</strong>{" "}
