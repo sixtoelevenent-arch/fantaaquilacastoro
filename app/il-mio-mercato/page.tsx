@@ -66,6 +66,12 @@ const marketClosed =
   const [myPlayers, setMyPlayers] =
     useState<Player[]>([]);
 
+    const [leftoverBudget, setLeftoverBudget] =
+  useState(0);
+
+const [automaticRefunds, setAutomaticRefunds] =
+  useState(0);
+
   const [automaticIds, setAutomaticIds] =
     useState<number[]>([]);
 
@@ -143,7 +149,25 @@ const [confirming, setConfirming] =
       (squad as Player[]) ?? [];
 
            setMyPlayers(squadRows);
+const { data: budget } =
+  await supabase
+    .from("market_budgets")
+    .select(`
+      leftover_budget,
+      automatic_refunds
+    `)
+    .eq("team_id", u.team_id)
+    .maybeSingle();
 
+if (budget) {
+  setLeftoverBudget(
+    budget.leftover_budget ?? 0
+  );
+
+  setAutomaticRefunds(
+    budget.automatic_refunds ?? 0
+  );
+}
         if (roundData) {
   const {
   data: release,
@@ -413,16 +437,26 @@ loadPage();
     ),
   [myPlayers, selectedIds]
 );
-
 const totalRefund =
-  releasedPlayers.reduce(
-    (sum, p) =>
-      sum +
-      Math.ceil(
-        (p.prezzo ?? 0) / 2
-      ),
-    0
-  );
+  releasedPlayers
+    .filter(
+      (p) =>
+        !automaticIds.includes(p.id)
+    )
+    .reduce(
+      (sum, p) =>
+        sum +
+        Math.ceil(
+          (p.prezzo ?? 0) / 2
+        ),
+      0
+    );
+
+  const availableCredits =
+  leftoverBudget +
+  automaticRefunds +
+  totalRefund;
+
   const filteredPlayers =
     useMemo(() => {
        
@@ -615,18 +649,34 @@ alignItems: "center",
         }}
       >
         <div>
-          Giocatori da svincolare:{" "}
-          {releasedPlayers.length}
-        </div>
+  Giocatori da svincolare:
+  {releasedPlayers.length}
+</div>
 
-        <div
-          style={{
-            color: "#4ade80",
-          }}
-        >
-          Recupero totale: +
-          {totalRefund} mln
-        </div>
+<div
+  style={{
+    color: "#4ade80",
+  }}
+>
+  Recupero totale:
+  +{totalRefund} mln
+</div>
+
+<div
+  style={{
+    width: "100%",
+    marginTop: 12,
+    paddingTop: 12,
+    borderTop:
+      "1px solid rgba(255,255,255,.08)",
+    color: "#facc15",
+    fontWeight: 800,
+    fontSize: "1.05rem",
+  }}
+>
+  💳 Crediti disponibili:
+  {availableCredits} mln
+</div>
       </div>
     </div>
 )}
