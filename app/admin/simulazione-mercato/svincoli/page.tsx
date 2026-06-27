@@ -48,10 +48,11 @@ export default function SimulaSvincoliPage() {
   }, []);
 
   useEffect(() => {
-    if (teamId) {
-      loadReleases(teamId);
-    }
-  }, [teamId]);
+  if (!teamId) return;
+
+  loadPlayers(teamId);
+  loadReleases(teamId);
+}, [teamId]);
 
   async function loadPage() {
     setLoading(true);
@@ -69,28 +70,22 @@ export default function SimulaSvincoliPage() {
     setTeams(teamsRows);
 
     if (teamsRows.length > 0) {
-      setTeamId(teamsRows[0].id);
-    }
+  const firstTeamId =
+    teamsRows[0].id;
 
-    const { data: playersData } =
-      await supabase
-        .from("players")
-        .select(`
-          id,
-          nome,
-          nazionale,
-          ruolo,
-          prezzo
-        `)
-        .order("ruolo")
-        .order("nome");
+  setTeamId(firstTeamId);
 
-    setPlayers(
-      (playersData as Player[]) ??
-        []
-    );
+  await loadPlayers(
+    firstTeamId
+  );
 
-    setLoading(false);
+   await loadReleases(
+    firstTeamId
+  );
+  
+}
+
+        setLoading(false);
   }
 
   async function loadReleases(
@@ -113,6 +108,32 @@ export default function SimulaSvincoliPage() {
       )
     );
   }
+ async function loadPlayers(
+  selectedTeamId: number
+) {
+  const {
+    data: playersData,
+  } = await supabase
+    .from("market_sim_players")
+    .select(`
+      id,
+      nome,
+      nazionale,
+      ruolo,
+      prezzo
+    `)
+    .eq(
+      "team_id",
+      selectedTeamId
+    )
+    .order("ruolo")
+    .order("nome");
+
+  setPlayers(
+    (playersData as Player[]) ??
+      []
+  );
+}
 
   async function toggleRelease(
     playerId: number
@@ -403,9 +424,9 @@ export default function SimulaSvincoliPage() {
                             4,
                         }}
                       >
-                        {
-                          p.nazionale
-                        }
+                        {(p.nazionale ?? "")
+  .substring(0, 3)
+  .toUpperCase()}
                       </div>
 
                       <label

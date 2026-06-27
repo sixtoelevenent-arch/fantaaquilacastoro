@@ -79,17 +79,29 @@ export default function SimulaBustePage() {
     }
 
     const {
-      data: playersData,
-    } = await supabase
-      .from("players")
-      .select(`
-        id,
-        nome,
-        nazionale,
-        ruolo
-      `)
-      .order("ruolo")
-      .order("nome");
+  data: releases,
+} = await supabase
+  .from("market_sim_releases")
+  .select("player_id");
+
+const releasedIds =
+  (releases ?? []).map(
+    (r: any) => r.player_id
+  );
+
+const {
+  data: playersData,
+} = await supabase
+  .from("players")
+  .select(`
+    id,
+    nome,
+    nazionale,
+    ruolo
+  `)
+  .in("id", releasedIds)
+  .order("ruolo")
+  .order("nome");
 
     setPlayers(
       (playersData as Player[]) ??
@@ -444,7 +456,9 @@ export default function SimulaBustePage() {
                         4,
                     }}
                   >
-                    {p.nazionale}
+                    {(p.nazionale ?? "")
+  .substring(0, 3)
+  .toUpperCase()}
                     {" • "}
                     {p.ruolo}
                   </div>

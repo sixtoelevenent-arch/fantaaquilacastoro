@@ -264,10 +264,12 @@ export default function RisultatiSimulazionePage() {
                           4,
                       }}
                     >
-                      {
-                        a.players?.[0]
-                          ?.nazionale
-                      }
+                      {(
+  a.players?.[0]
+    ?.nazionale ?? ""
+)
+  .substring(0, 3)
+  .toUpperCase()}
                     </div>
 
                     <div

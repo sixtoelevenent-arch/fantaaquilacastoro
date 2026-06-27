@@ -14,6 +14,14 @@ export default function ResetPage() {
   async function resetSimulation() {
     setLoading(true);
     setMessage("");
+    const ok = window.confirm(
+  "Resettare completamente la simulazione?"
+);
+
+if (!ok) {
+  setLoading(false);
+  return;
+}
 
     try {
       await supabase
@@ -25,6 +33,11 @@ export default function ResetPage() {
         .from("market_sim_bids")
         .delete()
         .gt("id", 0);
+
+        await supabase
+  .from("market_sim_releases")
+  .delete()
+  .gt("id", 0);
 
       const {
         data: defaults,

@@ -21,6 +21,14 @@ export default function EseguiSimulazionePage() {
   async function executeSimulation() {
   setLoading(true);
   setMessage("");
+  const ok = window.confirm(
+  "Eseguire la simulazione?"
+);
+
+if (!ok) {
+  setLoading(false);
+  return;
+}
 
   try {
     await supabase
@@ -192,7 +200,18 @@ export default function EseguiSimulazionePage() {
         throw error;
       }
     }
-
+for (const [
+  teamId,
+  team,
+] of teams.entries()) {
+  await supabase
+    .from("market_sim_teams")
+    .update({
+      budget: team.budget,
+      slots: team.slots,
+    })
+    .eq("team_id", teamId);
+}
     setMessage(
       `✅ Simulazione completata. Assegnati ${assignments.length} giocatori.`
     );
