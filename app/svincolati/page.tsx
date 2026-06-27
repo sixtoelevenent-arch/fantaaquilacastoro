@@ -41,9 +41,10 @@ export default function SvincolatiPage() {
   setLoading(true);
 
   const { data } = await supabase
-    .from("free_agents")
-    .select("*")
-    .order("player_name");
+  .from("free_agents")
+  .select("*")
+  .eq("disponibile", true)
+  .order("player_name");
 
   const { data: mappings } = await supabase
     .from("player_display_names")
@@ -171,16 +172,16 @@ export default function SvincolatiPage() {
 
         <Card title="📋 Svincolati">
           <div
-            style={{
-              textAlign: "center",
-              color: "#facc15",
-              fontWeight: 800,
-              fontSize: "1.15rem",
-              marginBottom: 16,
-            }}
-          >
-            📑 Svincolati disponibili: 948
-          </div>
+  style={{
+    textAlign: "center",
+    color: "#facc15",
+    fontWeight: 800,
+    fontSize: "1.15rem",
+    marginBottom: 16,
+  }}
+>
+  📑 Svincolati disponibili: {players.length}
+</div>
 
           <input
             value={search}

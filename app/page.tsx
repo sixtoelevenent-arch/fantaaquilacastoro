@@ -23,6 +23,10 @@ export default function Home() {
     boxSizing: "border-box" as const,
   };
       
+  const showMarketButton =
+  new Date() <
+  new Date("2026-06-28T18:00:00+02:00");
+
   return (
     <main
       style={{
@@ -180,6 +184,44 @@ export default function Home() {
         >
           🔴 LIVE GIORNATA
         </a>
+
+{showMarketButton && (
+  <>
+    <style jsx>{`
+      @keyframes blinkMarket {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.55;
+          transform: scale(1.02);
+        }
+      }
+    `}</style>
+
+    <a
+      href="/mercato"
+      style={{
+        ...buttonStyle,
+        background:
+          "linear-gradient(90deg,#facc15,#f59e0b)",
+        color: "#111827",
+        marginTop: "-8px",
+        marginBottom: "20px",
+        fontSize: "18px",
+        fontWeight: 800,
+        boxShadow:
+          "0 0 20px rgba(250,204,21,0.45)",
+        animation:
+          "blinkMarket 1s infinite",
+      }}
+    >
+      💰 MERCATO APERTO
+    </a>
+  </>
+)}
 
         <a
           href="/classifiche"
