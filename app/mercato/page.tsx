@@ -44,6 +44,11 @@ type Assignment = {
   prezzo: number;
 };
 
+type TeamBudget = {
+  team_id: number;
+  total_budget: number;
+};
+
 export default function MercatoPage() {
   const [loading, setLoading] = useState(true);
 
@@ -63,6 +68,9 @@ export default function MercatoPage() {
 
   const [assignments, setAssignments] =
     useState<Assignment[]>([]);
+
+   const [teamBudgets, setTeamBudgets] =
+  useState<TeamBudget[]>([]);
 
   const [roleFilter, setRoleFilter] =
     useState<string>("ALL");
@@ -181,6 +189,21 @@ if (assignmentsError) {
 
 setAssignments(
   (assignmentsData as Assignment[]) ?? []
+);
+
+const {
+  data: budgetsData,
+  error: budgetsError,
+} = await supabase
+  .from("market_budgets")
+  .select("team_id,total_budget");
+
+if (budgetsError) {
+  throw budgetsError;
+}
+
+setTeamBudgets(
+  (budgetsData as TeamBudget[]) ?? []
 );
 
   } catch (e) {
@@ -491,6 +514,12 @@ setAssignments(
           sum + p.prezzo_recuperato,
         0
       );
+const teamId = players[0]?.team_id;
+
+const credits =
+  teamBudgets.find(
+    (b) => b.team_id === teamId
+  )?.total_budget ?? 0;
 
       const roles = {
         P: 0,
@@ -594,6 +623,18 @@ setAssignments(
           }}
         >
           💰 Totale recuperato: {refund} mln
+
+          <div
+  style={{
+    marginTop: 8,
+    color: "#4ade80",
+    fontWeight: 700,
+    fontSize: ".9rem",
+  }}
+>
+  💳 Crediti residui: {credits} mln
+</div>
+
         </div>
       </div>
 

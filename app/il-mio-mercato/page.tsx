@@ -406,9 +406,26 @@ alert(
 
 loadPage();
 }
+ const releasedPlayers = useMemo(
+  () =>
+    myPlayers.filter((p) =>
+      selectedIds.includes(p.id)
+    ),
+  [myPlayers, selectedIds]
+);
 
+const totalRefund =
+  releasedPlayers.reduce(
+    (sum, p) =>
+      sum +
+      Math.ceil(
+        (p.prezzo ?? 0) / 2
+      ),
+    0
+  );
   const filteredPlayers =
     useMemo(() => {
+       
       let rows = [
         ...myPlayers,
       ];
@@ -491,6 +508,121 @@ loadPage();
         >
           💰 IL MIO MERCATO
         </h1>
+{releasePhase &&
+  releasedPlayers.length > 0 && (
+    <div
+      style={{
+        background:
+          "rgba(15,23,42,.9)",
+        border:
+          "1px solid rgba(250,204,21,.25)",
+        borderRadius: 16,
+        padding: 16,
+        marginBottom: 20,
+      }}
+    >
+      <div
+        style={{
+          color: "#facc15",
+          fontWeight: 800,
+          fontSize: "1.05rem",
+          marginBottom: 14,
+        }}
+      >
+        📋 Riepilogo svincoli
+      </div>
+
+      {releasedPlayers.map((p) => (
+        <div
+          key={p.id}
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "1.5fr auto auto auto auto",
+            gap: 10,
+            padding: "10px 0",
+            borderTop:
+              "1px solid rgba(255,255,255,.08)",
+            alignItems: "center",
+            fontSize: ".95rem",
+          }}
+        >
+          <div
+            style={{
+              fontWeight: 700,
+            }}
+          >
+            {p.nome}
+          </div>
+
+          <div
+            style={{
+              color: "#94a3b8",
+            }}
+          >
+            {(p.nazionale ?? "")
+  .substring(0, 3)
+  .toUpperCase()}
+          </div>
+
+          <div>
+            {p.ruolo}
+          </div>
+
+          <div
+            style={{
+              color: "#facc15",
+              fontWeight: 700,
+            }}
+          >
+            {p.prezzo} mln
+          </div>
+
+          <div
+            style={{
+              color: "#4ade80",
+              fontWeight: 700,
+            }}
+          >
+            +
+            {Math.ceil(
+              (p.prezzo ?? 0) / 2
+            )}{" "}
+            mln
+          </div>
+        </div>
+      ))}
+
+      <div
+        style={{
+          marginTop: 16,
+          paddingTop: 16,
+          borderTop:
+            "1px solid rgba(255,255,255,.1)",
+          display: "flex",
+          justifyContent:
+            "space-between",
+          flexWrap: "wrap",
+          gap: 10,
+          fontWeight: 800,
+        }}
+      >
+        <div>
+          Giocatori da svincolare:{" "}
+          {releasedPlayers.length}
+        </div>
+
+        <div
+          style={{
+            color: "#4ade80",
+          }}
+        >
+          Recupero totale: +
+          {totalRefund} mln
+        </div>
+      </div>
+    </div>
+)}
 
         {confirmed && (
   <div
