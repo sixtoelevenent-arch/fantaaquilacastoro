@@ -29,7 +29,7 @@ export default function LaMiaRosaPage() {
     useState<Player[]>([]);
 
   const [automaticIds, setAutomaticIds] =
-    useState<number[]>([];
+    useState<number[]>([]);
 
   const [search, setSearch] =
     useState("");
