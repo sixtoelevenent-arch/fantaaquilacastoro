@@ -217,7 +217,7 @@ const secondaryButton: CSSProperties = {
 >
   <button
     onClick={() =>
-      router.push("/la-mia-rosa")
+      router.push("/account/la-mia-rosa")
     }
     style={{
       ...secondaryButton,
@@ -229,7 +229,7 @@ const secondaryButton: CSSProperties = {
 
   <button
     onClick={() =>
-      router.push("/i-miei-svincoli")
+      router.push("/account/i-miei-svincoli")
     }
     style={{
       ...secondaryButton,
@@ -241,7 +241,7 @@ const secondaryButton: CSSProperties = {
 
   <button
     onClick={() =>
-      router.push("/risultati-mercato")
+      router.push("/account/risultati-mercato")
     }
     style={{
       ...secondaryButton,
