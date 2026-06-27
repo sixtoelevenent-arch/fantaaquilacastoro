@@ -32,10 +32,34 @@ export default function SvincolatiPage() {
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("Tutti");
   const [nationFilter, setNationFilter] = useState("Tutte");
+const [sortField, setSortField] = useState<
+  "giocatore" | "nazionale" | "ruolo" | "quotazione"
+>("giocatore");
+
+const [sortDirection, setSortDirection] = useState<
+  "asc" | "desc"
+>("asc");
 
   useEffect(() => {
-    loadData();
-  }, []);
+  loadData();
+}, []);
+
+function handleSort(
+  field:
+    | "giocatore"
+    | "nazionale"
+    | "ruolo"
+    | "quotazione"
+) {
+  if (sortField === field) {
+    setSortDirection((prev) =>
+      prev === "asc" ? "desc" : "asc"
+    );
+  } else {
+    setSortField(field);
+    setSortDirection("asc");
+  }
+}
 
   async function loadData() {
   setLoading(true);
@@ -107,13 +131,77 @@ export default function SvincolatiPage() {
       );
     }
 
-    return rows;
-  }, [
-    players,
-    search,
-    roleFilter,
-    nationFilter,
-  ]);
+rows.sort((a, b) => {
+  let valueA: string | number = "";
+  let valueB: string | number = "";
+
+  switch (sortField) {
+    case "giocatore":
+      valueA =
+        displayMap[a.player_name] ||
+        a.player_name;
+
+      valueB =
+        displayMap[b.player_name] ||
+        b.player_name;
+      break;
+
+    case "nazionale":
+      valueA = a.nazionale;
+      valueB = b.nazionale;
+      break;
+
+    case "ruolo":
+  const order = {
+    P: 1,
+    D: 2,
+    C: 3,
+    A: 4,
+  };
+
+  valueA =
+    order[a.ruolo as keyof typeof order];
+
+  valueB =
+    order[b.ruolo as keyof typeof order];
+
+  break;
+
+    case "quotazione":
+      valueA = a.quotazione;
+      valueB = b.quotazione;
+      break;
+  }
+
+  if (
+    typeof valueA === "number" &&
+    typeof valueB === "number"
+  ) {
+    return sortDirection === "asc"
+      ? valueA - valueB
+      : valueB - valueA;
+  }
+
+  return sortDirection === "asc"
+    ? String(valueA).localeCompare(
+        String(valueB),
+        "it"
+      )
+    : String(valueB).localeCompare(
+        String(valueA),
+        "it"
+      );
+});
+
+return rows;  }, [
+  players,
+  displayMap,
+  search,
+  roleFilter,
+  nationFilter,
+  sortField,
+  sortDirection,
+]);
 
   if (loading) {
     return (
@@ -260,18 +348,57 @@ export default function SvincolatiPage() {
             >
               <thead>
                 <tr>
-                  <th style={thStyle}>
-                    Giocatore
-                  </th>
-                  <th style={thStyle}>
-                    Nazionale
-                  </th>
-                  <th style={thStyle}>
-                    Ruolo
-                  </th>
-                  <th style={thStyle}>
-                    Quot.
-                  </th>
+                  <th
+  style={thClickable}
+  onClick={() =>
+    handleSort("giocatore")
+  }
+>
+  Giocatore
+  {sortField === "giocatore" &&
+    (sortDirection === "asc"
+      ? " ▲"
+      : " ▼")}
+</th>
+
+<th
+  style={thClickable}
+  onClick={() =>
+    handleSort("nazionale")
+  }
+>
+  Nazionale
+  {sortField === "nazionale" &&
+    (sortDirection === "asc"
+      ? " ▲"
+      : " ▼")}
+</th>
+
+<th
+  style={thClickable}
+  onClick={() =>
+    handleSort("ruolo")
+  }
+>
+  Ruolo
+  {sortField === "ruolo" &&
+    (sortDirection === "asc"
+      ? " ▲"
+      : " ▼")}
+</th>
+
+<th
+  style={thClickable}
+  onClick={() =>
+    handleSort("quotazione")
+  }
+>
+  Q.
+  {sortField === "quotazione" &&
+    (sortDirection === "asc"
+      ? " ▲"
+      : " ▼")}
+</th>
                 </tr>
               </thead>
 
@@ -325,6 +452,12 @@ const thStyle: React.CSSProperties = {
     "1px solid rgba(255,255,255,0.15)",
   color: "#facc15",
   textAlign: "left",
+};
+
+const thClickable: React.CSSProperties = {
+  ...thStyle,
+  cursor: "pointer",
+  userSelect: "none",
 };
 
 const tdStyle: React.CSSProperties = {
