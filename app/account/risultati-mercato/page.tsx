@@ -19,7 +19,7 @@ type Assignment = {
     nome: string;
     nazionale: string;
     ruolo: string;
-  } | null;
+  }[];
 };
 
 export default function RisultatiMercatoPage() {
@@ -78,9 +78,17 @@ export default function RisultatiMercatoPage() {
         );
 
     setAssignments(
-      (data as Assignment[]) ??
-        []
-    );
+  (data ?? []).map((r: any) => ({
+    player_id: r.player_id,
+    price: r.price,
+    created_at: r.created_at,
+    players: Array.isArray(r.players)
+      ? r.players
+      : r.players
+      ? [r.players]
+      : [],
+  }))
+);
 
     setLoading(false);
   }
@@ -211,9 +219,7 @@ export default function RisultatiMercatoPage() {
                           "1.05rem",
                       }}
                     >
-                      {a.players
-                        ?.nome ??
-                        "Giocatore"}
+                      {a.players?.[0]?.nome ?? "Giocatore"}
                     </div>
 
                     <div
@@ -224,10 +230,7 @@ export default function RisultatiMercatoPage() {
                           4,
                       }}
                     >
-                      {
-                        a.players
-                          ?.nazionale
-                      }
+                      {a.players?.[0]?.nazionale}
                     </div>
 
                     <div
@@ -251,10 +254,7 @@ export default function RisultatiMercatoPage() {
                     }}
                   >
                     <div>
-                      {
-                        a.players
-                          ?.ruolo
-                      }
+                      {a.players?.[0]?.ruolo}
                     </div>
 
                     <div

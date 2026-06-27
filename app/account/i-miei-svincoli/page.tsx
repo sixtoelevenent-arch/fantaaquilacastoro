@@ -19,7 +19,7 @@ type ReleasedPlayer = {
     nome: string;
     nazionale: string;
     ruolo: string;
-  } | null;
+  }[];
 };
 
 export default function IMieiSvincoliPage() {
@@ -107,9 +107,8 @@ export default function IMieiSvincoliPage() {
       );
 
     setPlayers(
-      (data as ReleasedPlayer[]) ??
-        []
-    );
+  ((data ?? []) as unknown as ReleasedPlayer[])
+);
 
     setLoading(false);
   }
@@ -239,7 +238,7 @@ export default function IMieiSvincoliPage() {
                         "1.05rem",
                     }}
                   >
-                    {p.players?.nome ??
+                    {p.players?.[0]?.nome ??
                       "Giocatore"}
                   </div>
 
@@ -252,8 +251,7 @@ export default function IMieiSvincoliPage() {
                     }}
                   >
                     {
-                      p.players
-                        ?.nazionale
+                     p.players?.[0]?.nazionale
                     }
                   </div>
 
@@ -283,8 +281,7 @@ export default function IMieiSvincoliPage() {
                 >
                   <div>
                     {
-                      p.players
-                        ?.ruolo
+                      p.players?.[0]?.ruolo
                     }
                   </div>
 
