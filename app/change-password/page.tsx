@@ -69,7 +69,7 @@ export default function ChangePasswordPage() {
 
     alert("Password aggiornata");
 
-    router.push("/formazioni");
+    router.push("/account");
   }
 
   return (
