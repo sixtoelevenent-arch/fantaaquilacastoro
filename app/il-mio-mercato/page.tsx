@@ -106,17 +106,11 @@ const [confirming, setConfirming] =
 
       setUser(u);
 
-    const {
-      data: roundData,
-    } = await supabase
-      .from("market_rounds")
-      .select("*")
-      .neq("status", "closed")
-      .order("id", {
-        ascending: false,
-      })
-      .limit(1)
-      .single();
+    const { data: roundData } = await supabase
+  .from("market_rounds")
+  .select("*")
+  .or("status.eq.svincoli,status.eq.buste")
+  .single();
 
     setRound(
       roundData as MarketRound
@@ -152,16 +146,21 @@ const [confirming, setConfirming] =
 
         if (roundData) {
   const {
-    data: release,
-  } = await supabase
-    .from("market_releases")
-    .select(`
-      id,
-      confirmed
-    `)
-    .eq("round_id", roundData.id)
-    .eq("team_id", u.team_id)
-    .single();
+  data: release,
+  error: releaseError,
+} = await supabase
+  .from("market_releases")
+  .select(`
+    id,
+    confirmed
+  `)
+  .eq("round_id", roundData.id)
+  .eq("team_id", u.team_id)
+  .maybeSingle();
+
+if (releaseError) {
+  console.error(releaseError);
+}
 
   if (release) {
   setConfirmed(
@@ -176,38 +175,39 @@ const [confirming, setConfirming] =
   .from("market_release_players")
   .select(`
     player_id,
-    automatic,
-    market_releases!inner (
-      team_id
-    )
+    automatic
   `)
-  .eq("automatic", true)
   .eq(
-    "market_releases.team_id",
-    u.team_id
+    "release_id",
+    release.id
   );
 
-  const releasedRows =
-    playersReleased ?? [];
+if (playersReleasedError) {
+  console.error(
+    playersReleasedError
+  );
+}
 
-  const automaticPlayerIds =
-    releasedRows
-      .filter(
-        (r) => r.automatic
-      )
-      .map(
-        (r) => r.player_id
-      );
+const releasedRows =
+  playersReleased ?? [];
 
-       setSelectedIds(
-    releasedRows.map(
+setSelectedIds(
+  releasedRows.map(
+    (r) => r.player_id
+  )
+);
+
+setAutomaticIds(
+  releasedRows
+    .filter(
+      (r) => r.automatic
+    )
+    .map(
       (r) => r.player_id
     )
-  );
+);
 
-  setAutomaticIds(
-    automaticPlayerIds
-  );
+  
 }
 }
 
@@ -241,7 +241,7 @@ setLoading(false);
   .select("id")
   .eq("round_id", round.id)
   .eq("team_id", user.team_id)
-  .single();
+  .maybeSingle();
 
 if (release) {
   await supabase
@@ -275,13 +275,13 @@ alert(
   let releaseId: number | null = null;
 
   const {
-    data: release,
-  } = await supabase
-    .from("market_releases")
-    .select("id")
-    .eq("round_id", round.id)
-    .eq("team_id", user.team_id)
-    .single();
+  data: release,
+} = await supabase
+  .from("market_releases")
+  .select("id")
+  .eq("round_id", round.id)
+  .eq("team_id", user.team_id)
+  .maybeSingle();
 
   if (release) {
     releaseId = release.id;
@@ -337,12 +337,12 @@ alert(
   setSaving(true);
 
   const { data: release } =
-    await supabase
-      .from("market_releases")
-      .select("id")
-      .eq("round_id", round.id)
-      .eq("team_id", user.team_id)
-      .single();
+  await supabase
+    .from("market_releases")
+    .select("id")
+    .eq("round_id", round.id)
+    .eq("team_id", user.team_id)
+    .maybeSingle();
 
   if (release) {
     await supabase
@@ -371,13 +371,13 @@ async function confirmReleases() {
 
   setConfirming(true);
 
-  const { data: release } =
-    await supabase
-      .from("market_releases")
-      .select("id")
-      .eq("round_id", round.id)
-      .eq("team_id", user.team_id)
-      .single();
+ const { data: release } =
+  await supabase
+    .from("market_releases")
+    .select("id")
+    .eq("round_id", round.id)
+    .eq("team_id", user.team_id)
+    .maybeSingle();
 
   if (!release) {
     alert(
@@ -537,23 +537,26 @@ const totalRefund =
           key={p.id}
           style={{
             display: "grid",
-            gridTemplateColumns:
-              "1.5fr auto auto auto auto",
-            gap: 10,
+gridTemplateColumns:
+  "105px 43px 20px 58px 68px",
+columnGap: 8,
+alignItems: "center",
             padding: "10px 0",
             borderTop:
               "1px solid rgba(255,255,255,.08)",
-            alignItems: "center",
-            fontSize: ".95rem",
+             fontSize: ".95rem",
           }}
         >
           <div
-            style={{
-              fontWeight: 700,
-            }}
-          >
-            {p.nome}
-          </div>
+  style={{
+    fontWeight: 700,
+    width: 110,
+    lineHeight: 1.15,
+    whiteSpace: "normal",
+  }}
+>
+  {p.nome}
+</div>
 
           <div
             style={{
@@ -573,6 +576,8 @@ const totalRefund =
             style={{
               color: "#facc15",
               fontWeight: 700,
+              textAlign: "right",
+    fontVariantNumeric: "tabular-nums",
             }}
           >
             {p.prezzo} mln
@@ -582,6 +587,8 @@ const totalRefund =
             style={{
               color: "#4ade80",
               fontWeight: 700,
+              textAlign: "right",
+    fontVariantNumeric: "tabular-nums",
             }}
           >
             +
