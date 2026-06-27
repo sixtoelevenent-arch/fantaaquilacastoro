@@ -19,7 +19,7 @@ type ReleasedPlayer = {
     nome: string;
     nazionale: string;
     ruolo: string;
-  }[];
+  } | null;
 };
 
 export default function IMieiSvincoliPage() {
@@ -238,8 +238,7 @@ export default function IMieiSvincoliPage() {
                         "1.05rem",
                     }}
                   >
-                    {p.players?.[0]?.nome ??
-                      "Giocatore"}
+                    {p.players?.nome ?? "Giocatore"}
                   </div>
 
                   <div
@@ -250,10 +249,10 @@ export default function IMieiSvincoliPage() {
                         4,
                     }}
                   >
-                    {
-                     p.players?.[0]?.nazionale
-                    }
-                  </div>
+                    
+                     {p.players?.nazionale}
+                    
+                                      </div>
 
                   <div
                     style={{
@@ -280,9 +279,9 @@ export default function IMieiSvincoliPage() {
                   }}
                 >
                   <div>
-                    {
-                      p.players?.[0]?.ruolo
-                    }
+                    
+                      {p.players?.ruolo}
+                    
                   </div>
 
                   <div
