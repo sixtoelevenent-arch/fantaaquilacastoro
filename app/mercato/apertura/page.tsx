@@ -118,7 +118,7 @@ const openingRef =
 
   const OPEN_TIME =
   new Date(
-    "2026-06-28T18:25:00+02:00"
+    "2026-06-28T16:30:00+02:00"
   );
 
   const [now, setNow] =
@@ -703,7 +703,7 @@ return (
             >
               Le buste si apriranno
               automaticamente alle
-              ore 18:25.
+              ore 18:30.
             </div>
           </div>
         </Card>
