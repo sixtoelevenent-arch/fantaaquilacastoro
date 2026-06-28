@@ -319,19 +319,28 @@ setReturnedPlayers(
 
     const releasesByTeam =
   useMemo(() => {
+    const hiddenTeams = [
+      "Argentina",
+      "Germania",
+      "Curacao",
+      "Uzbekistan",
+    ];
+
     const map =
       new Map<
         string,
         AutomaticRelease[]
       >();
 
-    automaticReleases.forEach(
-      (p) => {
-        if (
-          !map.has(
+    automaticReleases
+      .filter(
+        (p) =>
+          !hiddenTeams.includes(
             p.squadra
           )
-        ) {
+      )
+      .forEach((p) => {
+        if (!map.has(p.squadra)) {
           map.set(
             p.squadra,
             []
@@ -339,12 +348,9 @@ setReturnedPlayers(
         }
 
         map
-          .get(
-            p.squadra
-          )!
+          .get(p.squadra)!
           .push(p);
-      }
-    );
+      });
 
     return Array.from(
       map.entries()

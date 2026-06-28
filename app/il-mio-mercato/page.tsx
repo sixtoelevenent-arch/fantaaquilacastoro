@@ -863,7 +863,19 @@ alignItems: "center",
           gap: 10,
         }}
       >
-        {teamConfirmations.map((t) => (
+        {teamConfirmations
+  .filter(
+    (t) =>
+      ![
+        "erny",
+        "martin",
+        "fava",
+        "michel",
+      ].includes(
+        t.username.toLowerCase()
+      )
+  )
+  .map((t) => (
           <div
             key={t.username}
             style={{
