@@ -710,21 +710,29 @@ async function confirmOffers() {
   setConfirmingOffers(true);
 
   const { data: release } =
-    await supabase
-      .from("market_releases")
-      .select("id")
-      .eq("round_id", round.id)
-      .eq("team_id", user.team_id)
-      .single();
-
   await supabase
     .from("market_releases")
-    .update({
-      bids_confirmed: true,
-      bids_confirmed_at:
-        new Date().toISOString(),
-    })
-    .eq("id", release.id);
+    .select("id")
+    .eq("round_id", round.id)
+    .eq("team_id", user.team_id)
+    .maybeSingle();
+
+if (!release) {
+  alert(
+    "Impossibile trovare la sessione di mercato."
+  );
+  setConfirmingOffers(false);
+  return;
+}
+
+await supabase
+  .from("market_releases")
+  .update({
+    bids_confirmed: true,
+    bids_confirmed_at:
+      new Date().toISOString(),
+  })
+  .eq("id", release.id);
 
   setOffersConfirmed(true);
   setConfirmingOffers(false);
@@ -789,7 +797,16 @@ const minimumReserve =
   playersToBuy - selectedCount,
   0
 );
-  
+
+const selectedFreeAgents =
+  selectedAgents
+    .map((id) =>
+      freeAgents.find(
+        (p) => p.id === id
+      )
+    )
+    .filter(Boolean) as Player[];
+      
   const filteredAgents =
   useMemo(() => {
     let rows = [
@@ -1788,14 +1805,7 @@ alignItems: "center",
     : "✅ CONFERMA BUSTE"}
 </button>
 
-    {selectedAgents
-  .map((id) =>
-    freeAgents.find(
-      (p) => p.id === id
-    )
-  )
-  .filter(Boolean)
-  .map((p) => (
+    {selectedFreeAgents.map((p) => (
         <div
           key={p.id}
           style={{
