@@ -1266,7 +1266,7 @@ alignItems: "center",
     È ora possibile inserire
     le offerte in busta fino
     alla deadline delle ore
-    17:30.
+    18:00.
   </div>
 )}
 
