@@ -803,6 +803,27 @@ const selectedFreeAgents =
       )
     )
     .filter(Boolean) as Player[];
+
+    const releasedByRole = {
+  P: releasedPlayers.filter((p) => p.ruolo === "P").length,
+  D: releasedPlayers.filter((p) => p.ruolo === "D").length,
+  C: releasedPlayers.filter((p) => p.ruolo === "C").length,
+  A: releasedPlayers.filter((p) => p.ruolo === "A").length,
+};
+
+const boughtByRole = {
+  P: selectedFreeAgents.filter((p) => p.ruolo === "P").length,
+  D: selectedFreeAgents.filter((p) => p.ruolo === "D").length,
+  C: selectedFreeAgents.filter((p) => p.ruolo === "C").length,
+  A: selectedFreeAgents.filter((p) => p.ruolo === "A").length,
+};
+
+const missingByRole = {
+  P: Math.max(releasedByRole.P - boughtByRole.P, 0),
+  D: Math.max(releasedByRole.D - boughtByRole.D, 0),
+  C: Math.max(releasedByRole.C - boughtByRole.C, 0),
+  A: Math.max(releasedByRole.A - boughtByRole.A, 0),
+};
       
   const filteredAgents =
   useMemo(() => {
@@ -1933,9 +1954,15 @@ alignItems: "center",
     lineHeight: 1.8,
   }}
 >
-  👥 Giocatori da acquistare:
-{playersToBuy}
-
+  👥 Giocatori da acquistare: {playersToBuy}
+<br />
+🧤 Portieri: {missingByRole.P}
+<br />
+🛡️ Difensori: {missingByRole.D}
+<br />
+⚙️ Centrocampisti: {missingByRole.C}
+<br />
+🎯 Attaccanti: {missingByRole.A}
 
 <br />
 
