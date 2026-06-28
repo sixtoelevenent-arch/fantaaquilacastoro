@@ -286,12 +286,12 @@ export default async function FaseFinalePage() {
       ?.squadra ?? "1° Girone C";
 
   const miglioreTerza =
-    terze[0]?.squadra ??
-    "Migliore terza";
+  terze[0]?.squadra ??
+  "Migliore terza";
 
-  const peggioreTerza =
-    terze[2]?.squadra ??
-    "Peggiore terza";
+const peggioreTerza =
+  terze[1]?.squadra ??
+  "Seconda migliore terza";
 
   const miglioreSeconda =
     seconde[0]?.squadra ??
@@ -360,7 +360,7 @@ export default async function FaseFinalePage() {
   home={primaA}
   away={peggioreTerza}
   homeLabel="1ª classificata Girone A"
-  awayLabel="Peggiore terza classificata"
+awayLabel="Peggiore tra le due migliori terze"
 />
 
 <MatchCard
