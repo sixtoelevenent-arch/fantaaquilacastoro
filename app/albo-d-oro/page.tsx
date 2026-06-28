@@ -38,7 +38,7 @@ export default function AlboDOroPage() {
             marginBottom: "35px",
           }}
         >
-          I campioni della storia del FantAquilaCastoro
+          I campioni della storia del FantaMundial
         </p>
 
         <Card title="🏆 Edizione 2022">
