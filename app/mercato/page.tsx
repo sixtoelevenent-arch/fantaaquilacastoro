@@ -52,11 +52,12 @@ type TeamBudget = {
 
 export default function MercatoPage() {
 
-  type OptionalRelease = {
+ type OptionalRelease = {
   team_id: number;
   nome: string;
   ruolo: string;
   nazionale: string;
+  prezzo_recuperato: number;
 };
 
 const [optionalReleases, setOptionalReleases] =
@@ -204,11 +205,12 @@ const { data: optionalData } =
         round_id,
         team_id
       ),
-      players!inner(
-        nome,
-        ruolo,
-        nazionale
-      )
+      prezzo_recuperato,
+players!inner(
+  nome,
+  ruolo,
+  nazionale
+)
     `);
 
 setOptionalReleases(
@@ -219,16 +221,18 @@ setOptionalReleases(
         r.market_releases
           ?.round_id === active.id
     )
-    .map((r: any) => ({
-      team_id:
-        r.market_releases.team_id,
-      nome:
-        r.players.nome,
-      ruolo:
-        r.players.ruolo,
-      nazionale:
-        r.players.nazionale,
-    }))
+   .map((r: any) => ({
+  team_id:
+    r.market_releases.team_id,
+  nome:
+    r.players.nome,
+  ruolo:
+    r.players.ruolo,
+  nazionale:
+    r.players.nazionale,
+  prezzo_recuperato:
+    r.prezzo_recuperato ?? 0,
+}))
 );
 
 const {
@@ -399,25 +403,109 @@ const teamNames: Record<number, string> = {
   12: "Turchia",
 };
 
+const roleOrder = {
+  P: 1,
+  D: 2,
+  C: 3,
+  A: 4,
+};
+
 const optionalByTeam = useMemo(() => {
   return activeTeams.map(
-    ({ teamId, nome }) => ({
-      teamId,
-      squadra: nome,
-      credits:
-        teamBudgets.find(
-          (b) =>
-            b.team_id === teamId
-        )?.total_budget ?? 0,
-      players:
-        optionalReleases.filter(
+    ({ teamId, nome }) => {
+      const optional =
+        optionalReleases.map((p) => ({
+          ...p,
+          squadra: nome,
+        }));
+
+      const automatic =
+        automaticReleases
+          .filter(
+            (p) =>
+              p.team_id === teamId
+          )
+          .map((p) => ({
+            team_id: p.team_id,
+            nome: p.nome,
+            ruolo: p.ruolo,
+            nazionale: p.nazionale,
+            prezzo_recuperato:
+              p.prezzo_recuperato,
+          }));
+
+      const players = [
+        ...optional.filter(
           (p) =>
             p.team_id === teamId
         ),
-    })
+        ...automatic,
+      ].sort((a, b) => {
+        const diff =
+          roleOrder[
+            a.ruolo as keyof typeof roleOrder
+          ] -
+          roleOrder[
+            b.ruolo as keyof typeof roleOrder
+          ];
+
+          if (diff !== 0) {
+          return diff;
+        }
+
+        return a.nome.localeCompare(
+          b.nome,
+          "it"
+        );
+      });
+
+      const releasedByRole = {
+  P: players.filter(
+    (p) => p.ruolo === "P"
+  ).length,
+  D: players.filter(
+    (p) => p.ruolo === "D"
+  ).length,
+  C: players.filter(
+    (p) => p.ruolo === "C"
+  ).length,
+  A: players.filter(
+    (p) => p.ruolo === "A"
+  ).length,
+};
+
+const missingText = [
+  releasedByRole.P
+    ? `${releasedByRole.P} P`
+    : null,
+  releasedByRole.D
+    ? `${releasedByRole.D} D`
+    : null,
+  releasedByRole.C
+    ? `${releasedByRole.C} C`
+    : null,
+  releasedByRole.A
+    ? `${releasedByRole.A} A`
+    : null,
+]
+  .filter(Boolean)
+  .join(", ");
+
+      return {
+  teamId,
+  squadra: nome,
+  credits:
+    teamBudgets.find(
+      (b) => b.team_id === teamId
+    )?.total_budget ?? 0,
+  players,
+  missingText,
+};
+    }
   );
 }, [
   optionalReleases,
+  automaticReleases,
   teamBudgets,
 ]);
 
@@ -594,11 +682,12 @@ rowGap: 8,
   >
     {optionalByTeam.map(
   ({
-    teamId,
-    squadra,
-    credits,
-    players,
-  }) => {
+  teamId,
+  squadra,
+  credits,
+  players,
+  missingText,
+}) => {
        
         return (
           <div
@@ -632,6 +721,19 @@ rowGap: 8,
               }}
             >
               💳 {credits} mln
+
+<div
+  style={{
+    fontSize: ".72rem",
+    color: "#94a3b8",
+    marginTop: 2,
+    fontWeight: 500,
+  }}
+>
+  {missingText
+    ? `Mancanti: ${missingText}`
+    : "Rosa completa"}
+</div>
             </div>
 
             {players.length ===
@@ -661,15 +763,34 @@ rowGap: 8,
                     }}
                   >
                     <div
-                      style={{
-                        fontWeight: 700,
-                        fontSize:
-                          ".8rem",
-                      }}
-                    >
-                      {p.ruolo}{" "}
-                      {p.nome}
-                    </div>
+  style={{
+    display: "flex",
+    justifyContent:
+      "space-between",
+    gap: 10,
+    alignItems: "center",
+  }}
+>
+  <div
+    style={{
+      fontWeight: 700,
+      fontSize: ".8rem",
+    }}
+  >
+    {p.ruolo} {p.nome}
+  </div>
+
+  <div
+    style={{
+      color: "#4ade80",
+      fontWeight: 700,
+      fontSize: ".78rem",
+      whiteSpace: "nowrap",
+    }}
+  >
+    +{p.prezzo_recuperato}
+  </div>
+</div>
 
                     <div
                       style={{

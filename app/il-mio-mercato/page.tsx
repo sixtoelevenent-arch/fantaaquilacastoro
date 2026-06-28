@@ -599,24 +599,11 @@ loadPage();
     ),
   [myPlayers, selectedIds]
 );
-const totalRefund =
-  releasedPlayers
-    .filter(
-      (p) =>
-        !automaticIds.includes(p.id)
-    )
-    .reduce(
-      (sum, p) =>
-        sum +
-        Math.ceil(
-          (p.prezzo ?? 0) / 2
-        ),
-      0
-    );
+const availableCredits = useMemo(
+  () => leftoverBudget,
+  [leftoverBudget]
+);
 
-  const availableCredits =
-  leftoverBudget +
-  totalRefund;
 const spentOffers =
   Object.values(
     agentOffers
@@ -1069,7 +1056,7 @@ alignItems: "center",
     È ora possibile inserire
     le offerte in busta fino
     alla deadline delle ore
-    17:00.
+    17:30.
   </div>
 )}
 
