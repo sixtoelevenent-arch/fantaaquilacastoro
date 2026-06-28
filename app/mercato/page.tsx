@@ -47,6 +47,7 @@ type Assignment = {
 type TeamBudget = {
   team_id: number;
   total_budget: number;
+  group_bonus: number;
 };
 
 export default function MercatoPage() {
@@ -205,7 +206,9 @@ const {
   error: budgetsError,
 } = await supabase
   .from("market_budgets")
-  .select("team_id,total_budget");
+  .select(
+    "team_id,total_budget,group_bonus"
+  );
 
 if (budgetsError) {
   throw budgetsError;
@@ -452,9 +455,7 @@ setReturnedPlayers(
                   fontWeight: 700,
                 }}
               >
-                Nazionali eliminate:{" "}
-                {eliminatedCount}/
-                {currentRound.eliminated_nationals_count}
+                Nazionali eliminate:16/16
               </div>
 
               {showReturnedPlayers && (
@@ -672,6 +673,11 @@ const credits =
     (b) => b.team_id === teamId
   )?.total_budget ?? 0;
 
+  const groupBonus =
+  teamBudgets.find(
+    (b) => b.team_id === teamId
+  )?.group_bonus ?? 0;
+
       const roles = {
         P: 0,
         D: 0,
@@ -775,7 +781,18 @@ const credits =
         >
           💰 Totale recuperato: {refund} mln
 
-          <div
+<div
+  style={{
+    marginTop: 8,
+    color: "#facc15",
+    fontWeight: 700,
+    fontSize: ".9rem",
+  }}
+>
+  🏆 Bonus girone: +{groupBonus} mln
+</div>
+
+<div
   style={{
     marginTop: 8,
     color: "#4ade80",
