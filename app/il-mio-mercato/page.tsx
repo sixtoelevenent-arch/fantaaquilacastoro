@@ -644,6 +644,13 @@ const minimumReserve =
     0
   );
 
+  const playersToBuy = releasedPlayers.length;
+const selectedCount = selectedAgents.length;
+
+const missingSlots = Math.max(
+  playersToBuy - selectedCount,
+  0
+);
   
   const filteredAgents =
   useMemo(() => {
@@ -1065,7 +1072,7 @@ alignItems: "center",
     È ora possibile inserire
     le offerte in busta fino
     alla deadline delle ore
-    16:00.
+    16:30.
   </div>
 )}
 
@@ -1714,18 +1721,31 @@ alignItems: "center",
   }}
 >
   👥 Giocatori da acquistare:
-  {" "}
-  {playersToBuy}
+{playersToBuy}
 
-  <br />
+<br />
 
-  📌 Giocatori selezionati:
-{" "}
+📌 Giocatori selezionati:
 {selectedCount}/{playersToBuy}
 
-  <br />
+<br />
 
-  💰 Crediti disponibili:
+🪑 Slot ancora da completare:
+{" "}
+<span
+  style={{
+    color:
+      missingSlots === 0
+        ? "#4ade80"
+        : "#fde68a",
+  }}
+>
+  {missingSlots}
+</span>
+
+<br />
+
+💰 Crediti disponibili:
   {" "}
   <span style={{ color: "#facc15" }}>
     {availableCredits} mln
