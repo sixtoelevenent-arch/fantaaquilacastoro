@@ -29,6 +29,13 @@ type Player = {
 export default function IlMioMercatoPage() {
   const router = useRouter();
 
+  const ELIMINATED_USERS = [
+  "erny",
+  "fava",
+  "martin",
+  "michel",
+];
+
   const [loading, setLoading] = useState(true);
 
   const [user, setUser] =
@@ -95,6 +102,21 @@ const [agentSearch, setAgentSearch] =
 const [agentRoleFilter, setAgentRoleFilter] =
   useState("ALL");
 
+  const [openRoles, setOpenRoles] =
+  useState({
+    P: false,
+    D: false,
+    C: false,
+    A: false,
+  });
+
+  const [selectedAgents, setSelectedAgents] =
+  useState<number[]>([]);
+
+  const [agentOffers, setAgentOffers] =
+  useState<Record<number, number>>(
+    {}
+  );
   type TeamConfirmation = {
   username: string;
   confirmed: boolean;
@@ -102,6 +124,14 @@ const [agentRoleFilter, setAgentRoleFilter] =
 
 const [teamConfirmations, setTeamConfirmations] =
   useState<TeamConfirmation[]>([]);
+
+  const visibleConfirmations =
+  teamConfirmations.filter(
+    (t) =>
+      !ELIMINATED_USERS.includes(
+        t.username.toLowerCase()
+      )
+  );
 
     useEffect(() => {
     loadPage();
@@ -136,6 +166,7 @@ const [teamConfirmations, setTeamConfirmations] =
     );
 
     if (roundData) {
+
   const { data: releases } =
     await supabase
       .from("market_releases")
@@ -198,32 +229,43 @@ const [teamConfirmations, setTeamConfirmations] =
 
            setMyPlayers(squadRows);
 
-           const { data: agents } =
-  await supabase
-    .from("free_agents")
-    .select(`
-      id,
-      player_name,
-      display_name,
-      nazionale,
-      ruolo,
-      quotazione
-    `)
-    .eq("disponibile", true)
-    .order("ruolo")
-    .order("display_name");
+           const { data: agents } = await supabase
+  .from("free_agents")
+  .select(`
+    id,
+    player_name,
+    nazionale,
+    ruolo,
+    quotazione
+  `)
+  .eq("disponibile", true)
+  .order("ruolo")
+  .order("player_name");
+
+  const { data: mappings } = await supabase
+  .from("player_display_names")
+  .select(`
+    fantapiu3_name,
+    display_name
+  `);
+
+const displayMap: Record<string, string> = {};
+
+(mappings ?? []).forEach((m: any) => {
+  displayMap[
+    m.fantapiu3_name
+  ] = m.display_name;
+});
 
 setFreeAgents(
   (agents ?? []).map((p: any) => ({
     id: p.id,
     nome:
-      p.display_name ??
+      displayMap[p.player_name] ??
       p.player_name,
-    nazionale:
-      p.nazionale,
+    nazionale: p.nazionale,
     ruolo: p.ruolo,
-    prezzo:
-      p.quotazione,
+    prezzo: p.quotazione,
   }))
 );
 
@@ -423,6 +465,53 @@ alert(
 }
   }
 
+  function toggleAgent(
+  playerId: number
+) {
+  const selected =
+    selectedAgents.includes(
+      playerId
+    );
+
+  if (selected) {
+    setSelectedAgents((prev) =>
+      prev.filter(
+        (id) => id !== playerId
+      )
+    );
+
+    setAgentOffers((prev) => {
+      const next = { ...prev };
+      delete next[playerId];
+      return next;
+    });
+
+    return;
+  }
+
+  // NON permettere di selezionare
+  // più giocatori del necessario
+  if (
+    selectedAgents.length >=
+    playersToBuy
+  ) {
+    alert(
+      `Puoi selezionare al massimo ${playersToBuy} giocatori.`
+    );
+    return;
+  }
+
+  setSelectedAgents((prev) => [
+    ...prev,
+    playerId,
+  ]);
+
+  setAgentOffers((prev) => ({
+    ...prev,
+    [playerId]: 1,
+  }));
+}
+
   async function saveDraft() {
   if (
     !user ||
@@ -528,12 +617,57 @@ const totalRefund =
   const availableCredits =
   leftoverBudget +
   totalRefund;
+const spentOffers =
+  Object.values(
+    agentOffers
+  ).reduce(
+    (sum, value) =>
+      sum + value,
+    0
+  );
 
+const remainingCredits = Math.max(
+  availableCredits - spentOffers,
+  0
+);
+
+  const playersToBuy =
+  releasedPlayers.length;
+
+const selectedCount =
+  selectedAgents.length;
+
+const minimumReserve =
+  Math.max(
+    playersToBuy -
+      selectedCount,
+    0
+  );
+
+  
   const filteredAgents =
   useMemo(() => {
     let rows = [
       ...freeAgents,
     ];
+
+   rows.sort((a, b) => {
+  const getSurname = (full: string) => {
+    const parts = full.trim().split(/\s+/);
+
+    return parts.length > 1
+      ? parts.slice(1).join(" ")
+      : parts[0];
+  };
+
+  return getSurname(a.nome).localeCompare(
+    getSurname(b.nome),
+    "it",
+    {
+      sensitivity: "base",
+    }
+  );
+});
 
     if (agentSearch) {
   rows = rows.filter((p) =>
@@ -561,6 +695,21 @@ if (
   agentSearch,
   agentRoleFilter,
 ]);
+
+const groupedAgents = {
+  P: filteredAgents.filter(
+    (p) => p.ruolo === "P"
+  ),
+  D: filteredAgents.filter(
+    (p) => p.ruolo === "D"
+  ),
+  C: filteredAgents.filter(
+    (p) => p.ruolo === "C"
+  ),
+  A: filteredAgents.filter(
+    (p) => p.ruolo === "A"
+  ),
+};
 
   const filteredPlayers =
     useMemo(() => {
@@ -651,14 +800,14 @@ if (
   releasedPlayers.length > 0 && (
     <div
       style={{
-        background:
-          "rgba(15,23,42,.9)",
-        border:
-          "1px solid rgba(250,204,21,.25)",
-        borderRadius: 16,
-        padding: 16,
-        marginBottom: 20,
-      }}
+  background:
+    "rgba(255,255,255,.04)",
+  border:
+    "1px solid rgba(255,255,255,.08)",
+  borderRadius: 16,
+  padding: 18,
+  marginBottom: 20,
+}}
     >
       <div
         style={{
@@ -686,32 +835,25 @@ alignItems: "center",
              fontSize: ".95rem",
           }}
         >
-          <div
+                  <div
   style={{
     fontWeight: 700,
-    width: 110,
-    lineHeight: 1.15,
-    whiteSpace: "normal",
   }}
 >
   {p.nome}
 </div>
 
-          <div
-            style={{
-              color: "#94a3b8",
-            }}
-          >
-            {(p.nazionale ?? "")
-  .substring(0, 3)
-  .toUpperCase()}
-          </div>
+<div
+  style={{
+    color: "#94a3b8",
+    fontSize: ".9rem",
+    marginTop: 2,
+  }}
+>
+  {p.ruolo} • {p.nazionale}
+</div>
 
-          <div>
-            {p.ruolo}
-          </div>
-
-          <div
+                    <div
             style={{
               color: "#facc15",
               fontWeight: 700,
@@ -835,14 +977,14 @@ alignItems: "center",
   teamConfirmations.length > 0 && (
     <div
       style={{
-        background:
-          "rgba(255,255,255,.04)",
-        border:
-          "1px solid rgba(255,255,255,.08)",
-        borderRadius: 16,
-        padding: 18,
-        marginBottom: 20,
-      }}
+  background:
+    "rgba(255,255,255,.04)",
+  border:
+    "1px solid rgba(255,255,255,.08)",
+  borderRadius: 16,
+  padding: 18,
+  marginBottom: 20,
+}}
     >
       <div
         style={{
@@ -863,19 +1005,7 @@ alignItems: "center",
           gap: 10,
         }}
       >
-        {teamConfirmations
-  .filter(
-    (t) =>
-      ![
-        "erny",
-        "martin",
-        "fava",
-        "michel",
-      ].includes(
-        t.username.toLowerCase()
-      )
-  )
-  .map((t) => (
+        {visibleConfirmations.map((t) => (
           <div
             key={t.username}
             style={{
@@ -935,7 +1065,7 @@ alignItems: "center",
     È ora possibile inserire
     le offerte in busta fino
     alla deadline delle ore
-    18:00.
+    16:00.
   </div>
 )}
 
@@ -1020,7 +1150,11 @@ alignItems: "center",
       value={search}
       onChange={(e) =>
         setSearch(e.target.value)
+        
       }
+      onClick={(e) =>
+  e.stopPropagation()
+}
       placeholder="🔍 Cerca giocatore..."
       style={{
         width: "100%",
@@ -1374,6 +1508,37 @@ alignItems: "center",
       📑 LISTONE SVINCOLATI
     </div>
 
+<div
+  style={{
+    background:
+      "rgba(59,130,246,.12)",
+    border:
+      "1px solid rgba(59,130,246,.25)",
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 18,
+    color: "#bfdbfe",
+    lineHeight: 1.5,
+    textAlign: "center",
+  }}
+>
+  Seleziona i giocatori che vuoi
+  acquistare.
+
+  <br />
+  <br />
+
+  I valori mostrati nel listone
+  sono solamente indicativi.
+
+  <br />
+
+  Per ogni giocatore selezionato
+  potrai inserire manualmente
+  la tua offerta in crediti e
+  poi confermare le buste.
+</div>
+
     <div
       style={{
         textAlign: "center",
@@ -1384,6 +1549,226 @@ alignItems: "center",
       Giocatori disponibili:{" "}
       {filteredAgents.length}
     </div>
+    
+{playersToBuy === 0 && (
+  <div
+    style={{
+      background:
+        "rgba(250,204,21,.12)",
+      border:
+        "1px solid rgba(250,204,21,.3)",
+      borderRadius: 12,
+      padding: 14,
+      marginBottom: 18,
+      color: "#fde68a",
+      textAlign: "center",
+    }}
+  >
+    Non hai posti liberi in rosa.
+    <br />
+    Per acquistare giocatori devi
+    prima effettuare degli svincoli.
+  </div>
+)}
+
+{selectedAgents.length > 0 && (
+  <div
+    style={{
+      background:
+        "rgba(255,255,255,.04)",
+      border:
+        "1px solid rgba(255,255,255,.08)",
+      borderRadius: 16,
+      padding: 18,
+      marginBottom: 20,
+    }}
+  >
+    <div
+      style={{
+        color: "#facc15",
+        fontWeight: 800,
+        marginBottom: 16,
+      }}
+    >
+      📝 Le tue offerte
+    </div>
+
+    {freeAgents
+      .filter((p) =>
+        selectedAgents.includes(
+          p.id
+        )
+      )
+      .map((p) => (
+        <div
+          key={p.id}
+          style={{
+            display: "flex",
+            gap: 12,
+            alignItems:
+              "center",
+            marginBottom: 12,
+            flexWrap: "wrap",
+          }}
+        >
+          <div
+            style={{
+              flex: 1,
+              minWidth: 180,
+            }}
+          >
+            {p.nome}
+          </div>
+
+          <input
+            type="number"
+            min={1}
+            value={
+              agentOffers[
+                p.id
+              ] ?? 1
+            }
+            onChange={(e) => {
+  const value = Math.max(
+    1,
+    Number(e.target.value) || 1
+  );
+
+  const otherOffers =
+    Object.entries(agentOffers)
+      .filter(
+        ([id]) =>
+          Number(id) !== p.id
+      )
+      .reduce(
+        (sum, [, offer]) =>
+          sum + offer,
+        0
+      );
+
+  const reserve =
+    Math.max(
+      playersToBuy -
+        selectedAgents.length,
+      0
+    );
+
+  const maxAllowed =
+    availableCredits -
+    otherOffers -
+    reserve;
+
+  const finalValue =
+    Math.min(
+      value,
+      Math.max(
+        maxAllowed,
+        1
+      )
+    );
+
+  setAgentOffers((prev) => ({
+    ...prev,
+    [p.id]: finalValue,
+  }));
+}}
+
+            style={{
+              width: 90,
+              padding: 8,
+              borderRadius: 10,
+              border: "none",
+            }}
+          />
+
+          <button
+            onClick={() =>
+              toggleAgent(
+                p.id
+              )
+            }
+            style={{
+              padding:
+                "8px 12px",
+              border: "none",
+              borderRadius: 10,
+              background:
+                "#dc2626",
+              color: "white",
+              fontWeight: 700,
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      ))}
+
+    <div
+  style={{
+    borderTop:
+      "1px solid rgba(255,255,255,.08)",
+    paddingTop: 14,
+    marginTop: 14,
+    fontWeight: 800,
+    lineHeight: 1.8,
+  }}
+>
+  👥 Giocatori da acquistare:
+  {" "}
+  {playersToBuy}
+
+  <br />
+
+  📌 Giocatori selezionati:
+{" "}
+{selectedCount}/{playersToBuy}
+
+  <br />
+
+  💰 Crediti disponibili:
+  {" "}
+  <span style={{ color: "#facc15" }}>
+    {availableCredits} mln
+  </span>
+
+  <br />
+
+  🧾 Crediti offerti:
+  {" "}
+  <span style={{ color: "#f87171" }}>
+    {spentOffers} mln
+  </span>
+
+  <br />
+
+  💳 Crediti residui:
+  {" "}
+  <span style={{ color: "#4ade80" }}>
+    {remainingCredits} mln
+  </span>
+
+  <br />
+
+  🔒 Crediti da tenere:
+  {" "}
+  <span style={{ color: "#fde68a" }}>
+    {minimumReserve} mln
+  </span>
+
+  <br />
+
+  💸 Massimo ancora spendibile:
+  {" "}
+  <span style={{ color: "#22c55e" }}>
+    {Math.max(
+      remainingCredits -
+        minimumReserve,
+      0
+    )} mln
+  </span>
+</div>
+  </div>
+)}
 
     <input
       value={agentSearch}
@@ -1441,61 +1826,175 @@ onChange={(e) =>
 )}
     </div>
 
-    {filteredAgents.map((p) => (
+    {(["P", "D", "C", "A"] as const)
+  .filter((role) => {
+    if (agentRoleFilter === "ALL") {
+      return groupedAgents[role].length > 0;
+    }
+
+    return role === agentRoleFilter;
+  })
+  .map((role) => (
+    <div
+      key={role}
+      style={{
+        marginBottom: 18,
+      }}
+    >
       <div
-        key={p.id}
+        onClick={() =>
+          setOpenRoles(
+            (prev) => ({
+              ...prev,
+              [role]:
+                !prev[role],
+            })
+          )
+        }
         style={{
           background:
-            "rgba(255,255,255,.04)",
-          border:
-            "1px solid rgba(255,255,255,.08)",
+            "#1e293b",
           borderRadius: 14,
           padding: 14,
-          marginBottom: 10,
+          cursor: "pointer",
           display: "flex",
           justifyContent:
             "space-between",
-          alignItems: "center",
+          alignItems:
+            "center",
+          fontWeight: 800,
+          marginBottom: 10,
         }}
       >
-        <div>
-          <div
-            style={{
-              fontWeight: 800,
-            }}
-          >
-            {p.nome}
-          </div>
+       <span>
+  {role} • {groupedAgents[role].length}
+</span>
 
-          <div
-            style={{
-              color: "#94a3b8",
-              marginTop: 4,
-            }}
-          >
-            {p.nazionale}
-          </div>
-        </div>
-
-        <div
-          style={{
-            textAlign: "right",
-          }}
-        >
-          <div>{p.ruolo}</div>
-
-          <div
-            style={{
-              color: "#facc15",
-              fontWeight: 800,
-              marginTop: 6,
-            }}
-          >
-            {p.prezzo} mln
-          </div>
-        </div>
+        <span>
+          {openRoles[
+            role
+          ]
+            ? "▲"
+            : "▼"}
+        </span>
       </div>
-    ))}
+
+      {openRoles[role] &&
+        groupedAgents[
+          role
+        ].map((p) => {
+          const selected =
+            selectedAgents.includes(
+              p.id
+            );
+
+          const limitReached =
+            !selected &&
+            selectedAgents.length >=
+              playersToBuy;
+
+          return (
+            <div
+              key={p.id}
+              onClick={(e) => {
+                e.stopPropagation();
+
+                if (
+                  limitReached
+                )
+                  return;
+
+                toggleAgent(
+                  p.id
+                );
+              }}
+              style={{
+                background:
+                  selected
+                    ? "rgba(250,204,21,.12)"
+                    : "rgba(255,255,255,.04)",
+
+                boxShadow:
+                  selected
+                    ? "0 0 0 1px rgba(250,204,21,.35)"
+                    : "none",
+
+                opacity:
+                  limitReached
+                    ? 0.45
+                    : 1,
+
+                cursor:
+                  limitReached
+                    ? "not-allowed"
+                    : "pointer",
+
+                border:
+                  selected
+                    ? "1px solid rgba(250,204,21,.45)"
+                    : "1px solid rgba(255,255,255,.08)",
+
+                borderRadius: 14,
+                padding: 14,
+                marginBottom: 10,
+                display: "flex",
+                justifyContent:
+                  "space-between",
+                alignItems:
+                  "center",
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontWeight:
+                      800,
+                  }}
+                >
+                  {p.nome}
+                </div>
+
+                <div
+                  style={{
+                    color:
+                      "#94a3b8",
+                    marginTop: 4,
+                  }}
+                >
+                  {
+                    p.nazionale
+                  }
+                </div>
+              </div>
+
+              <div
+                style={{
+                  textAlign:
+                    "right",
+                }}
+              >
+                <div>
+                  {p.ruolo}
+                </div>
+
+                <div
+                  style={{
+                    color:
+                      "#facc15",
+                    fontWeight:
+                      800,
+                    marginTop: 6,
+                  }}
+                >
+                  {p.prezzo} mln
+                </div>
+              </div>
+            </div>
+          );
+        })}
+    </div>
+  )
+)}
   </div>
 )}
 

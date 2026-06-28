@@ -74,6 +74,7 @@ export default function MercatoPage() {
   nome: string;
   ruolo: string;
   nazionale: string;
+  team_id: number;
 };
 
 const [returnedPlayers, setReturnedPlayers] =
@@ -225,7 +226,8 @@ const {
   .select(`
     nome,
     ruolo,
-    nazionale
+    nazionale,
+    team_id
   `);
 
 setReturnedPlayers(
@@ -317,45 +319,66 @@ setReturnedPlayers(
    const showReturnedPlayers =
   returnedPlayers.length > 0;
 
-    const releasesByTeam =
-  useMemo(() => {
-    const hiddenTeams = [
-      "Argentina",
-      "Germania",
-      "Curacao",
-      "Uzbekistan",
-    ];
+    const eliminatedTeams = {
+  6: "Argentina",
+  7: "Germania",
+  8: "Curacao",
+  10: "Uzbekistan",
+};
 
-    const map =
-      new Map<
-        string,
-        AutomaticRelease[]
-      >();
+const activeTeams = [
+  { teamId: 1, nome: "Iran" },
+  { teamId: 2, nome: "Ghana" },
+  { teamId: 3, nome: "Messico" },
+  { teamId: 4, nome: "Colombia" },
+  { teamId: 5, nome: "Portogallo" },
+  { teamId: 11, nome: "Costa d'Avorio" },
+  { teamId: 9, nome: "Francia" },
+  { teamId: 12, nome: "Turchia" },
+];
 
-    automaticReleases
-      .filter(
-        (p) =>
-          !hiddenTeams.includes(
-            p.squadra
-          )
-      )
-      .forEach((p) => {
-        if (!map.has(p.squadra)) {
-          map.set(
-            p.squadra,
-            []
-          );
-        }
+const teamNames: Record<number, string> = {
+  1: "Iran",
+  2: "Ghana",
+  3: "Messico",
+  4: "Colombia",
+  5: "Portogallo",
+  6: "Argentina",
+  7: "Germania",
+  8: "Curacao",
+  9: "Francia",
+  10: "Uzbekistan",
+  11: "Costa d'Avorio",
+  12: "Turchia",
+};
 
-        map
-          .get(p.squadra)!
-          .push(p);
-      });
+const optionalByTeam = useMemo(() => {
+  return activeTeams.map(
+    ({ teamId, nome }) => ({
+      teamId,
+      squadra: nome,
+      credits:
+        teamBudgets.find(
+          (b) => b.team_id === teamId
+        )?.total_budget ?? 0,
+      players: automaticReleases.filter(
+        (p) => p.squadra === nome
+      ),
+    })
+  );
+}, [automaticReleases, teamBudgets]);
 
-    return Array.from(
-      map.entries()
-    );
-  }, [automaticReleases]);
+
+const returnedByTeam = useMemo(() => {
+  return Object.entries(eliminatedTeams).map(
+    ([teamId, squadra]) => [
+      squadra,
+      returnedPlayers.filter(
+        (p) => p.team_id === Number(teamId)
+      ),
+    ] as [string, ReturnedPlayer[]]
+  );
+}, [returnedPlayers]);
 
       if (loading) {
     return (
@@ -463,131 +486,12 @@ setReturnedPlayers(
               >
                 Nazionali eliminate:16/16
               </div>
-
-              {showReturnedPlayers && (
-  <div
-    style={{
-      marginTop: 20,
-      padding: 18,
-      borderRadius: 18,
-      border: "1px solid rgba(255,255,255,.08)",
-      background: "rgba(255,255,255,.03)",
-    }}
-  >
-    <div
-      style={{
-        color: "#facc15",
-        fontWeight: 800,
-        fontSize: "1.05rem",
-        marginBottom: 12,
-      }}
-    >
-      🏆 Squadre eliminate dal FantAquilaCastoro
-    </div>
-
-    <div
-      style={{
-        color: "#cbd5e1",
-        marginBottom: 14,
-        lineHeight: 1.7,
-      }}
-    >
-      Le 4 squadre eliminate hanno liberato i seguenti
-      calciatori ancora presenti al Mondiale FIFA.
-    </div>
-
-    <div
-      style={{
-        borderTop:
-          "1px solid rgba(255,255,255,.08)",
-        paddingTop: 14,
-      }}
-    >
-      <div
-        style={{
-          color: "#facc15",
-          fontWeight: 700,
-          marginBottom: 12,
-        }}
-      >
-        🌍 Giocatori rientrati nel Listone Svincolati
-      </div>
-
-      <div
-  style={{
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fit, minmax(230px, 1fr))",
-    gap: 12,
-    marginTop: 14,
-  }}
->
-  {returnedPlayers.map((p, i) => (
-    <div
-      key={i}
-      style={{
-        padding: "10px 14px",
-        borderRadius: 14,
-        background: "rgba(255,255,255,.04)",
-        border:
-          "1px solid rgba(255,255,255,.08)",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 12,
-      }}
-    >
-      <div
-        style={{
-          minWidth: 0,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        <span
-          style={{
-            fontWeight: 800,
-            marginRight: 8,
-            color:
-              p.ruolo === "P"
-                ? "#60a5fa"
-                : p.ruolo === "D"
-                ? "#34d399"
-                : p.ruolo === "C"
-                ? "#f59e0b"
-                : "#ef4444",
-          }}
-        >
-          {p.ruolo}
-        </span>
-
-        {p.nome}
-      </div>
-
-      <div
-        style={{
-          color: "#94a3b8",
-          fontWeight: 700,
-          flexShrink: 0,
-        }}
-      >
-        {p.nazionale
-          .substring(0, 3)
-          .toUpperCase()}
-      </div>
-    </div>
-  ))}
-</div>
-    </div>
-  </div>
-)}
-
-            </div>
+             
+                  </div>
           </Card>
         )}
 
-        {currentRound?.status === "svincoli" && (
+                {currentRound?.status === "svincoli" && (
           <Card>
             <div
               style={{
@@ -626,6 +530,196 @@ nella tua Area Riservata.
           </Card>
         )}
 
+<Card title="📋 Situazione squadre">
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns:
+  "repeat(2, minmax(0,1fr))",
+columnGap: 8,
+rowGap: 8,
+    }}
+  >
+    {optionalByTeam.map(
+  ({
+    teamId,
+    squadra,
+    credits,
+    players,
+  }) => {
+       
+        return (
+          <div
+            key={squadra}
+            style={{
+              border:
+                "1px solid rgba(34,197,94,.35)",
+              background:
+                "linear-gradient(180deg,#062611,#04160b)",
+              borderRadius: 18,
+              padding: 12,
+            }}
+          >
+            <div
+              style={{
+                color: "#4ade80",
+                fontWeight: 800,
+                fontSize: ".95rem",
+              }}
+            >
+              {squadra}
+            </div>
+
+            <div
+              style={{
+                color: "#bbf7d0",
+                fontWeight: 700,
+                marginTop: 4,
+                marginBottom: 12,
+                fontSize: ".85rem",
+              }}
+            >
+              💳 {credits} mln
+            </div>
+
+            {players.length ===
+            0 ? (
+              <div
+                style={{
+                  color:
+                    "#94a3b8",
+                  fontSize:
+                    ".8rem",
+                }}
+              >
+                Nessuno
+                svincolo
+                facoltativo
+              </div>
+            ) : (
+              players.map(
+                (p) => (
+                  <div
+                    key={`${squadra}-${p.nome}`}
+                    style={{
+                      padding:
+                        "6px 0",
+                      borderTop:
+                        "1px solid rgba(255,255,255,.06)",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontWeight: 700,
+                        fontSize:
+                          ".8rem",
+                      }}
+                    >
+                      {p.ruolo}{" "}
+                      {p.nome}
+                    </div>
+
+                    <div
+                      style={{
+                        color:
+                          "#94a3b8",
+                        fontSize:
+                          ".72rem",
+                      }}
+                    >
+                      {
+                        p.nazionale
+                      }
+                    </div>
+                  </div>
+                )
+              )
+            )}
+          </div>
+        );
+      }
+    )}
+
+    {returnedByTeam.map(
+      ([squadra, players]) => (
+        <div
+          key={squadra}
+          style={{
+            border:
+              "1px solid rgba(239,68,68,.35)",
+            background:
+              "linear-gradient(180deg,#250808,#130404)",
+            borderRadius: 18,
+            padding: 12,
+          }}
+        >
+          <div
+            style={{
+              color:
+                "#f87171",
+              fontWeight: 800,
+              fontSize:
+                ".95rem",
+              marginBottom: 10,
+            }}
+          >
+            {squadra}
+          </div>
+
+          <div
+            style={{
+              color:
+                "#fecaca",
+              fontSize:
+                ".8rem",
+              marginBottom: 10,
+            }}
+          >
+            Giocatori
+            rientrati:
+            {" "}
+            {players.length}
+          </div>
+
+          {players.map((p) => (
+            <div
+              key={`${squadra}-${p.nome}`}
+              style={{
+                padding:
+                  "6px 0",
+                borderTop:
+                  "1px solid rgba(255,255,255,.06)",
+              }}
+            >
+              <div
+                style={{
+                  fontWeight: 700,
+                  fontSize:
+                    ".8rem",
+                }}
+              >
+                {p.ruolo}{" "}
+                {p.nome}
+              </div>
+
+              <div
+                style={{
+                  color:
+                    "#94a3b8",
+                  fontSize:
+                    ".72rem",
+                }}
+              >
+                {p.nazionale}
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    )}
+  </div>
+</Card>
+       
         {eliminated.length > 0 && (
           <Card title="🌍 Nazionali eliminate">
             <div
@@ -656,345 +750,7 @@ nella tua Area Riservata.
           </Card>
         )}
 
-        {automaticReleases.length > 0 && (
-          <Card title="🔄 Svincoli automatici dal Mondiale">
-            <div
-  style={{
-    display: "flex",
-    flexDirection: "column",
-    gap: 14,
-  }}
->
-  {releasesByTeam.map(
-    ([squadra, players]) => {
-      const refund = players.reduce(
-        (sum, p) =>
-          sum + p.prezzo_recuperato,
-        0
-      );
-const teamId = players[0]?.team_id;
-
-const credits =
-  teamBudgets.find(
-    (b) => b.team_id === teamId
-  )?.total_budget ?? 0;
-
-  const groupBonus =
-  teamBudgets.find(
-    (b) => b.team_id === teamId
-  )?.group_bonus ?? 0;
-
-      const roles = {
-        P: 0,
-        D: 0,
-        C: 0,
-        A: 0,
-      };
-
-      players.forEach((p) => {
-        if (
-          p.ruolo === "P" ||
-          p.ruolo === "D" ||
-          p.ruolo === "C" ||
-          p.ruolo === "A"
-        ) {
-          roles[
-            p.ruolo as keyof typeof roles
-          ]++;
-        }
-      });
-
-      const missing = [
-        roles.P
-          ? `P x${roles.P}`
-          : null,
-        roles.D
-          ? `D x${roles.D}`
-          : null,
-        roles.C
-          ? `C x${roles.C}`
-          : null,
-        roles.A
-          ? `A x${roles.A}`
-          : null,
-      ]
-        .filter(Boolean)
-        .join(" · ");
-
-      return (
-  <div
-    key={squadra}
-    style={{
-      padding: 14,
-      border: "1px solid rgba(255,255,255,0.10)",
-      borderRadius: 20,
-      background:
-        "linear-gradient(180deg,#071226,#040b17)",
-      boxShadow:
-        "0 0 20px rgba(0,0,0,.35)",
-    }}
-  >
-    {/* Header */}
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 14,
-        marginBottom: 18,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: 12,
-          flexWrap: "wrap",
-        }}
-      >
-        <div
-          style={{
-            color: "#facc15",
-            fontWeight: 800,
-            fontSize: "1.6rem",
-          }}
-        >
-          {squadra}
-
-          <span
-            style={{
-              fontSize: "1rem",
-              marginLeft: 10,
-            }}
-          >
-            (+{refund} mln)
-          </span>
-        </div>
-
-        <div
-          style={{
-            padding: "8px 14px",
-            borderRadius: 16,
-            border:
-              "1px solid rgba(250,204,21,.25)",
-            background:
-              "rgba(250,204,21,.05)",
-            color: "#facc15",
-            fontWeight: 700,
-            fontSize: ".9rem",
-            whiteSpace: "nowrap",
-          }}
-        >
-          💰 Totale recuperato: {refund} mln
-
-<div
-  style={{
-    marginTop: 8,
-    color: "#facc15",
-    fontWeight: 700,
-    fontSize: ".9rem",
-  }}
->
-  🏆 Bonus girone: +{groupBonus} mln
-</div>
-
-<div
-  style={{
-    marginTop: 8,
-    color: "#4ade80",
-    fontWeight: 700,
-    fontSize: ".9rem",
-  }}
->
-  💳 Crediti residui: {credits} mln
-</div>
-
-        </div>
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-          flexWrap: "wrap",
-        }}
-      >
-        <div
-          style={{
-            color: "#cbd5e1",
-            fontWeight: 700,
-          }}
-        >
-          Da acquistare:
-        </div>
-
-        <div
-          style={{
-            padding: "6px 14px",
-            borderRadius: 999,
-            background:
-              "rgba(37,99,235,.18)",
-            color: "#bfdbfe",
-            fontWeight: 700,
-            fontSize: ".95rem",
-          }}
-        >
-          {missing}
-        </div>
-      </div>
-    </div>
-
-    {players.map((p) => (
-            <div
-  key={`${p.team_id}-${p.nome}`}
-  style={{
-    borderTop:
-      "1px solid rgba(255,255,255,.07)",
-    padding: "10px 0",
-  }}
->
-  <div
-    style={{
-      display: "flex",
-      justifyContent:
-        "space-between",
-      alignItems: "center",
-      gap: 12,
-      marginBottom: 8,
-    }}
-  >
-    <div
-      style={{
-        display: "flex",
-        gap: 12,
-        alignItems: "center",
-        minWidth: 0,
-      }}
-    >
-      <div
-        style={{
-          color:
-            p.ruolo === "P"
-              ? "#60a5fa"
-              : p.ruolo === "D"
-              ? "#34d399"
-              : p.ruolo === "C"
-              ? "#f59e0b"
-              : "#ef4444",
-          fontWeight: 800,
-          fontSize: "1.3rem",
-          flexShrink: 0,
-        }}
-      >
-        {p.ruolo}
-      </div>
-
-      <div
-        style={{
-          fontWeight: 700,
-          fontSize: "1rem",
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {p.nome}
-      </div>
-    </div>
-
-    <div
-      style={{
-        color: "#94a3b8",
-        fontSize: ".9rem",
-        textAlign: "right",
-        flexShrink: 0,
-      }}
-    >
-      {p.nazionale}
-    </div>
-  </div>
-
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns:
-        "1fr 1fr",
-      gap: 10,
-    }}
-  >
-    <div
-      style={{
-        padding: "10px",
-        borderRadius: 16,
-        background:
-          "rgba(255,255,255,.03)",
-      }}
-    >
-      <div
-        style={{
-          color: "#94a3b8",
-          fontSize: ".8rem",
-          marginBottom: 6,
-        }}
-      >
-        🛒 Acquisto
-      </div>
-
-      <div
-        style={{
-          color: "#4ade80",
-          fontSize: "1.35rem",
-          fontWeight: 800,
-          lineHeight: 1,
-        }}
-      >
-        {p.prezzo} mln
-      </div>
-    </div>
-
-    <div
-      style={{
-        padding: "10px",
-        borderRadius: 16,
-        background:
-          "rgba(255,255,255,.03)",
-      }}
-    >
-      <div
-        style={{
-          color: "#94a3b8",
-          fontSize: ".8rem",
-          marginBottom: 6,
-        }}
-      >
-        💰 Recupero
-      </div>
-
-      <div
-        style={{
-          color: "#facc15",
-          fontSize: "1.35rem",
-          fontWeight: 800,
-          lineHeight: 1,
-        }}
-      >
-        {p.prezzo_recuperato} mln
-      </div>
-    </div>
-  </div>
-</div>
-
-          ))}
-        </div>
-      );
-    }
-  )}
-</div>
-          </Card>
-        )}
-
-        {(currentRound?.status ===
+                {(currentRound?.status ===
           "buste" ||
           currentRound?.status ===
             "closed") && (
