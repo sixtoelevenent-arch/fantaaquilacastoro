@@ -78,9 +78,6 @@ export default function MercatoPage() {
 const [returnedPlayers, setReturnedPlayers] =
   useState<ReturnedPlayer[]>([]);
 
-const [eliminatedTeams, setEliminatedTeams] =
-  useState<string[]>([]);
-
    const [teamBudgets, setTeamBudgets] =
   useState<TeamBudget[]>([]);
 
@@ -218,31 +215,40 @@ setTeamBudgets(
   (budgetsData as TeamBudget[]) ?? []
 );
 
-if (
-  active.id === 1 &&
-  (eliminatedData ?? []).length >= 16
-) {
-  const {
-    data: returnedData,
-  } = await supabase
-    .from("available_free_agents")
-    .select(`
-      nome,
-      ruolo,
-      nazionale
-    `)
-    .order("ruolo")
-    .order("nome");
+const {
+  data: returnedData,
+} = await supabase
+  .from("returned_free_agents_view")
+  .select(`
+    nome,
+    ruolo,
+    nazionale
+  `);
 
-  setReturnedPlayers(
-    (returnedData as ReturnedPlayer[]) ??
-      []
-  );
+setReturnedPlayers(
+  ((returnedData as ReturnedPlayer[]) ?? [])
+    .sort((a, b) => {
+      const order = {
+        P: 1,
+        D: 2,
+        C: 3,
+        A: 4,
+      };
 
-  // per ora vuoto, domani
-  // lo collegheremo alle 4 squadre eliminate
-  setEliminatedTeams([]);
-}
+      const diff =
+        order[a.ruolo as keyof typeof order] -
+        order[b.ruolo as keyof typeof order];
+
+      if (diff !== 0) {
+        return diff;
+      }
+
+      return a.nome.localeCompare(
+        b.nome,
+        "it"
+      );
+    })
+);
 
   } catch (e) {
   console.error(e);
@@ -269,24 +275,7 @@ if (
     }
   }
 
-  function roleOrder(
-    ruolo: string
-  ) {
-    switch (ruolo) {
-      case "P":
-        return 1;
-      case "D":
-        return 2;
-      case "C":
-        return 3;
-      case "A":
-        return 4;
-      default:
-        return 99;
-    }
-  }
-
-  const filteredAgents =
+   const filteredAgents =
     useMemo(() => {
       return freeAgents.filter(
         (p) => {
@@ -322,9 +311,9 @@ if (
   const eliminatedCount =
     eliminated.length;
 
-    const showReturnedPlayers =
-  currentRound?.id === 1 &&
-  eliminatedCount >= 16;
+   const showReturnedPlayers =
+  currentRound?.status === "buste" &&
+  returnedPlayers.length > 0;
 
     const releasesByTeam =
   useMemo(() => {
@@ -470,7 +459,26 @@ if (
               </div>
 
               {showReturnedPlayers && (
-  <Card title="🏆 Squadre eliminate dal FantAquilaCastoro">
+  <div
+    style={{
+      marginTop: 20,
+      padding: 18,
+      borderRadius: 18,
+      border: "1px solid rgba(255,255,255,.08)",
+      background: "rgba(255,255,255,.03)",
+    }}
+  >
+    <div
+      style={{
+        color: "#facc15",
+        fontWeight: 800,
+        fontSize: "1.05rem",
+        marginBottom: 12,
+      }}
+    >
+      🏆 Squadre eliminate dal FantAquilaCastoro
+    </div>
+
     <div
       style={{
         color: "#cbd5e1",
@@ -478,7 +486,8 @@ if (
         lineHeight: 1.7,
       }}
     >
-      {eliminatedTeams.join(" • ")}
+      Le 4 squadre eliminate hanno liberato i seguenti
+      calciatori ancora presenti al Mondiale FIFA.
     </div>
 
     <div
@@ -495,8 +504,7 @@ if (
           marginBottom: 12,
         }}
       >
-        🌍 Giocatori rientrati nel
-        Listone Svincolati
+        🌍 Giocatori rientrati nel Listone Svincolati
       </div>
 
       <div
@@ -506,19 +514,17 @@ if (
           color: "#cbd5e1",
         }}
       >
-        {returnedPlayers.map(
-          (p, i) => (
-            <div key={i}>
-              {p.ruolo} {p.nome}{" "}
-              {p.nazionale
-                .substring(0, 3)
-                .toUpperCase()}
-            </div>
-          )
-        )}
+        {returnedPlayers.map((p, i) => (
+          <div key={i}>
+            {p.ruolo} {p.nome}{" "}
+            {p.nazionale
+              .substring(0, 3)
+              .toUpperCase()}
+          </div>
+        ))}
       </div>
     </div>
-  </Card>
+  </div>
 )}
 
             </div>
