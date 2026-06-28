@@ -311,7 +311,7 @@ useEffect(() => {
         </a>
 
         <a
-          href="/albo-doro"
+          href="/albo-d-oro"
           style={{
             ...buttonStyle,
             background: "#ca8a04",
