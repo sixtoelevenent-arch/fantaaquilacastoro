@@ -610,21 +610,7 @@ if (
       });
   }
 
-  for (
-    let i = 0;
-    i <
-    assignmentsTmp.length;
-    i++
-  ) {
-    setTimeout(() => {
-      setRevealed(
-        (prev) => [
-          ...prev,
-          assignmentsTmp[i],
-        ]
-      );
-    }, i * 5000);
-  }
+ setRevealed(assignmentsTmp);
 
   await loadPage();
 }
