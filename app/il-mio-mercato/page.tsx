@@ -120,9 +120,8 @@ const [agentRoleFilter, setAgentRoleFilter] =
   useState<number[]>([]);
 
   const [agentOffers, setAgentOffers] =
-  useState<Record<number, number>>(
-    {}
-  );
+  useState<Record<number, string>>({});
+
   type TeamConfirmation = {
   username: string;
   confirmed: boolean;
@@ -580,7 +579,7 @@ setSelectedAgents(nextIds);
 
 setAgentOffers((prev) => ({
   ...prev,
-  [playerId]: 1,
+  [playerId]: "1",
 }));
 
 if (user && round) {
@@ -1827,14 +1826,13 @@ alignItems: "center",
           </div>
 
           <input
-            type="number"
-            disabled={offersConfirmed}
-            min={1}
-            value={
-              agentOffers[
-                p.id
-              ] ?? 1
-            }
+  type="number"
+  inputMode="numeric"
+  disabled={offersConfirmed}
+  value={
+    agentOffers[p.id] ?? ""
+  }
+  
             onChange={async (e) => {
   const value = Math.max(
     1,
