@@ -363,11 +363,10 @@ if (bids) {
   bids.map((b) => b.player_id)
 );
 
-  const offers: Record<number, number> =
-    {};
+  const offers: Record<number, string> = {};
 
   bids.forEach((b) => {
-    offers[b.player_id] = b.bid;
+    offers[b.player_id] = String(b.bid);
   });
 
   setAgentOffers(offers);
@@ -765,14 +764,13 @@ const totalRefund = useMemo(
 
 const availableCredits = leftoverBudget;
 
-const spentOffers =
-  Object.values(
-    agentOffers
-  ).reduce(
-    (sum, value) =>
-      sum + value,
-    0
-  );
+const spentOffers = Object.values(
+  agentOffers
+).reduce(
+  (sum, value) =>
+    sum + (Number(value) || 0),
+  0
+);
 
 const remainingCredits = Math.max(
   availableCredits - spentOffers,
@@ -1826,18 +1824,22 @@ alignItems: "center",
           </div>
 
           <input
-  type="number"
+  type="text"
   inputMode="numeric"
   disabled={offersConfirmed}
-  value={
-    agentOffers[p.id] ?? ""
-  }
-  
-            onChange={async (e) => {
-  const value = Math.max(
-    1,
-    Number(e.target.value) || 1
-  );
+  value={agentOffers[p.id] ?? ""}
+  onChange={async (e) => {
+    const raw = e.target.value.replace(/\D/g, "");
+
+    if (raw === "") {
+      setAgentOffers((prev) => ({
+        ...prev,
+        [p.id]: "",
+      }));
+      return;
+    }
+
+    const value = Math.max(1, Number(raw));
 
   const otherOffers =
     Object.entries(agentOffers)
@@ -1845,11 +1847,12 @@ alignItems: "center",
         ([id]) =>
           Number(id) !== p.id
       )
-      .reduce(
-        (sum, [, offer]) =>
-          sum + offer,
-        0
-      );
+     .reduce(
+  (sum, [, offer]) =>
+    sum +
+    (Number(offer) || 0),
+  0
+);
 
   const reserve =
     Math.max(
@@ -1873,10 +1876,9 @@ alignItems: "center",
     );
 
   setAgentOffers((prev) => ({
-    ...prev,
-    [p.id]: finalValue,
-  }));
-
+  ...prev,
+  [p.id]: String(finalValue),
+}));
  if (user && round) {
   await supabase
     .from("market_bids")
