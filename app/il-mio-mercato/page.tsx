@@ -564,6 +564,29 @@ alert(
   );
   return;
 }
+const player = freeAgents.find(
+  (p) => p.id === playerId
+);
+
+if (!player) return;
+
+const selectedRoleCount =
+  selectedFreeAgents.filter(
+    (p) => p.ruolo === player.ruolo
+  ).length;
+
+const maxForRole =
+  allowedByRole[
+    player.ruolo as keyof typeof allowedByRole
+  ];
+
+if (selectedRoleCount >= maxForRole) {
+  alert(
+    `Hai già selezionato tutti i ${player.ruolo} richiesti.`
+  );
+  return;
+}
+
 
 const nextIds = [
   ...selectedAgents,
@@ -821,7 +844,21 @@ const selectedFreeAgents =
     )
     .filter(Boolean) as Player[];
 
-    const releasedByRole = {
+    const squadByRole = {
+  P: myPlayers.filter((p) => p.ruolo === "P").length,
+  D: myPlayers.filter((p) => p.ruolo === "D").length,
+  C: myPlayers.filter((p) => p.ruolo === "C").length,
+  A: myPlayers.filter((p) => p.ruolo === "A").length,
+};
+
+const targetByRole = {
+  P: 3,
+  D: 8,
+  C: 8,
+  A: 6,
+};
+
+const releasedByRole = {
   P: releasedPlayers.filter((p) => p.ruolo === "P").length,
   D: releasedPlayers.filter((p) => p.ruolo === "D").length,
   C: releasedPlayers.filter((p) => p.ruolo === "C").length,
@@ -835,13 +872,21 @@ const boughtByRole = {
   A: selectedFreeAgents.filter((p) => p.ruolo === "A").length,
 };
 
-const missingByRole = {
-  P: Math.max(releasedByRole.P - boughtByRole.P, 0),
-  D: Math.max(releasedByRole.D - boughtByRole.D, 0),
-  C: Math.max(releasedByRole.C - boughtByRole.C, 0),
-  A: Math.max(releasedByRole.A - boughtByRole.A, 0),
-};
-      
+const missingByRole = hasReleasePhase
+  ? {
+      P: Math.max(releasedByRole.P - boughtByRole.P, 0),
+      D: Math.max(releasedByRole.D - boughtByRole.D, 0),
+      C: Math.max(releasedByRole.C - boughtByRole.C, 0),
+      A: Math.max(releasedByRole.A - boughtByRole.A, 0),
+    }
+  : {
+      P: Math.max(targetByRole.P - squadByRole.P - boughtByRole.P, 0),
+      D: Math.max(targetByRole.D - squadByRole.D - boughtByRole.D, 0),
+      C: Math.max(targetByRole.C - squadByRole.C - boughtByRole.C, 0),
+      A: Math.max(targetByRole.A - squadByRole.A - boughtByRole.A, 0),
+    };
+
+const allowedByRole = missingByRole;
   const filteredAgents =
   useMemo(() => {
     let rows = [
@@ -1983,6 +2028,23 @@ alignItems: "center",
 >
   👥 Giocatori da acquistare: {playersToBuy}
 <br />
+{playersToBuy > 0 && (
+  <>
+    🧤 Portieri da acquistare: {missingByRole.P}
+    <br />
+
+    🛡️ Difensori da acquistare: {missingByRole.D}
+    <br />
+
+    ⚙️ Centrocampisti da acquistare: {missingByRole.C}
+    <br />
+
+    🎯 Attaccanti da acquistare: {missingByRole.A}
+    <br />
+    <br />
+  </>
+)}
+
 {hasReleasePhase && (
   <>
     🧤 Portieri: {missingByRole.P}
@@ -2161,7 +2223,20 @@ onChange={(e) =>
         }}
       >
        <span>
-  {role} • {groupedAgents[role].length}
+  {role} •
+  {groupedAgents[role].length}
+  {" • "}
+  da prendere:
+  {
+    Math.max(
+      allowedByRole[role] -
+        selectedFreeAgents.filter(
+          (x) =>
+            x.ruolo === role
+        ).length,
+      0
+    )
+  }
 </span>
 
         <span>
@@ -2182,10 +2257,22 @@ onChange={(e) =>
               p.id
             );
 
-          const limitReached =
-            !selected &&
-            selectedAgents.length >=
-              playersToBuy;
+          const selectedRoleCount =
+  selectedFreeAgents.filter(
+    (x) => x.ruolo === role
+  ).length;
+
+const roleFull =
+  selectedRoleCount >=
+  allowedByRole[role];
+
+const limitReached =
+  !selected &&
+  (
+    selectedAgents.length >=
+      playersToBuy ||
+    roleFull
+  );
 
           return (
             <div
