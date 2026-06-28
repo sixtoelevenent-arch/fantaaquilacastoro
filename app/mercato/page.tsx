@@ -507,21 +507,71 @@ setReturnedPlayers(
       </div>
 
       <div
+  style={{
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit, minmax(230px, 1fr))",
+    gap: 12,
+    marginTop: 14,
+  }}
+>
+  {returnedPlayers.map((p, i) => (
+    <div
+      key={i}
+      style={{
+        padding: "10px 14px",
+        borderRadius: 14,
+        background: "rgba(255,255,255,.04)",
+        border:
+          "1px solid rgba(255,255,255,.08)",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 12,
+      }}
+    >
+      <div
         style={{
-          fontSize: ".88rem",
-          lineHeight: 1.7,
-          color: "#cbd5e1",
+          minWidth: 0,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         }}
       >
-        {returnedPlayers.map((p, i) => (
-          <div key={i}>
-            {p.ruolo} {p.nome}{" "}
-            {p.nazionale
-              .substring(0, 3)
-              .toUpperCase()}
-          </div>
-        ))}
+        <span
+          style={{
+            fontWeight: 800,
+            marginRight: 8,
+            color:
+              p.ruolo === "P"
+                ? "#60a5fa"
+                : p.ruolo === "D"
+                ? "#34d399"
+                : p.ruolo === "C"
+                ? "#f59e0b"
+                : "#ef4444",
+          }}
+        >
+          {p.ruolo}
+        </span>
+
+        {p.nome}
       </div>
+
+      <div
+        style={{
+          color: "#94a3b8",
+          fontWeight: 700,
+          flexShrink: 0,
+        }}
+      >
+        {p.nazionale
+          .substring(0, 3)
+          .toUpperCase()}
+      </div>
+    </div>
+  ))}
+</div>
     </div>
   </div>
 )}
