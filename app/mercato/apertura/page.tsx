@@ -118,7 +118,7 @@ const openingRef =
 
   const OPEN_TIME =
   new Date(
-    "2026-06-28T16:30:00+02:00"
+    "2026-06-28T18:31:00+02:00"
   );
 
   const [now, setNow] =
