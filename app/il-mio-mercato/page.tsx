@@ -38,7 +38,7 @@ export default function IlMioMercatoPage() {
     useState<MarketRound | null>(null);
 const [confirmed, setConfirmed] =
   useState(false);
-
+  
   const now = new Date();
 
 const releaseClosed =
@@ -66,6 +66,9 @@ const marketClosed =
   const [myPlayers, setMyPlayers] =
     useState<Player[]>([]);
 
+    const [freeAgents, setFreeAgents] =
+  useState<Player[]>([]);
+
     const [leftoverBudget, setLeftoverBudget] =
   useState(0);
 
@@ -89,12 +92,17 @@ const [confirming, setConfirming] =
 
   const [roleFilter, setRoleFilter] =
     useState("ALL");
+const [agentSearch, setAgentSearch] =
+  useState("");
+
+const [agentRoleFilter, setAgentRoleFilter] =
+  useState("ALL");
 
     useEffect(() => {
     loadPage();
   }, []);
 
-  async function loadPage() {
+    async function loadPage() {
     setLoading(true);
 
     const raw =
@@ -149,6 +157,36 @@ const [confirming, setConfirming] =
       (squad as Player[]) ?? [];
 
            setMyPlayers(squadRows);
+
+           const { data: agents } =
+  await supabase
+    .from("free_agents")
+    .select(`
+      id,
+      player_name,
+      display_name,
+      nazionale,
+      ruolo,
+      quotazione
+    `)
+    .eq("disponibile", true)
+    .order("ruolo")
+    .order("display_name");
+
+setFreeAgents(
+  (agents ?? []).map((p: any) => ({
+    id: p.id,
+    nome:
+      p.display_name ??
+      p.player_name,
+    nazionale:
+      p.nazionale,
+    ruolo: p.ruolo,
+    prezzo:
+      p.quotazione,
+  }))
+);
+
 const { data: budget } =
   await supabase
     .from("market_budgets")
@@ -457,6 +495,39 @@ const totalRefund =
   automaticRefunds +
   totalRefund;
 
+  const filteredAgents =
+  useMemo(() => {
+    let rows = [
+      ...freeAgents,
+    ];
+
+    if (agentSearch) {
+  rows = rows.filter((p) =>
+    p.nome
+      .toLowerCase()
+      .includes(
+        agentSearch.toLowerCase()
+      )
+  );
+}
+
+if (
+  agentRoleFilter !== "ALL"
+) {
+  rows = rows.filter(
+    (p) =>
+      p.ruolo ===
+      agentRoleFilter
+  );
+}
+
+    return rows;
+  }, [
+  freeAgents,
+  agentSearch,
+  agentRoleFilter,
+]);
+
   const filteredPlayers =
     useMemo(() => {
        
@@ -475,7 +546,7 @@ const totalRefund =
               );
           }
         );
-      }
+        }
 
       if (
         roleFilter !== "ALL"
@@ -1169,34 +1240,153 @@ alignItems: "center",
 )}
 
         </div>
-        {bidPhase && (
+  {bidPhase && (
   <div
     style={{
       background: "#111827",
       borderRadius: 16,
       padding: 20,
       marginTop: 20,
-      textAlign: "center",
-      color: "#cbd5e1",
     }}
   >
-    📑 LISTONE SVINCOLATI
+    <div
+      style={{
+        textAlign: "center",
+        color: "#facc15",
+        fontWeight: 800,
+        fontSize: "1.1rem",
+        marginBottom: 20,
+      }}
+    >
+      📑 LISTONE SVINCOLATI
+    </div>
 
-<br />
-<br />
+    <div
+      style={{
+        textAlign: "center",
+        color: "#94a3b8",
+        marginBottom: 20,
+      }}
+    >
+      Giocatori disponibili:{" "}
+      {filteredAgents.length}
+    </div>
 
-Il listone dei giocatori
-acquistabili è aperto.
+    <input
+      value={agentSearch}
+onChange={(e) =>
+  setAgentSearch(
+    e.target.value
+  )
+}
+      placeholder="🔍 Cerca giocatore..."
+      style={{
+        width: "100%",
+        padding: 12,
+        borderRadius: 12,
+        border: "none",
+        marginBottom: 16,
+      }}
+    />
 
-<br />
+    <div
+      style={{
+        display: "flex",
+        gap: 10,
+        flexWrap: "wrap",
+        marginBottom: 20,
+      }}
+    >
+      {["ALL", "P", "D", "C", "A"].map(
+  (r) => (
+    <button
+      key={r}
+      onClick={() =>
+        setAgentRoleFilter(r)
+      }
+      style={{
+        padding: "8px 14px",
+        borderRadius: 999,
+        border: "none",
+        cursor: "pointer",
+        fontWeight: 700,
+        background:
+          agentRoleFilter === r
+            ? "#facc15"
+            : "#334155",
+        color:
+          agentRoleFilter === r
+            ? "#000"
+            : "#fff",
+      }}
+    >
+      {r === "ALL"
+        ? "Tutti"
+        : r}
+    </button>
+  )
+)}
+    </div>
 
-Seleziona i calciatori e
-inserisci le tue offerte
-in busta entro le ore
-18:00.
+    {filteredAgents.map((p) => (
+      <div
+        key={p.id}
+        style={{
+          background:
+            "rgba(255,255,255,.04)",
+          border:
+            "1px solid rgba(255,255,255,.08)",
+          borderRadius: 14,
+          padding: 14,
+          marginBottom: 10,
+          display: "flex",
+          justifyContent:
+            "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          <div
+            style={{
+              fontWeight: 800,
+            }}
+          >
+            {p.nome}
+          </div>
+
+          <div
+            style={{
+              color: "#94a3b8",
+              marginTop: 4,
+            }}
+          >
+            {p.nazionale}
+          </div>
+        </div>
+
+        <div
+          style={{
+            textAlign: "right",
+          }}
+        >
+          <div>{p.ruolo}</div>
+
+          <div
+            style={{
+              color: "#facc15",
+              fontWeight: 800,
+              marginTop: 6,
+            }}
+          >
+            {p.prezzo} mln
+          </div>
+        </div>
+      </div>
+    ))}
   </div>
 )}
-      </div>
+
+     </div>
     </main>
   );
 }
