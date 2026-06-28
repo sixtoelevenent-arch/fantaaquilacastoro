@@ -45,7 +45,7 @@ export default function IlMioMercatoPage() {
     useState<MarketRound | null>(null);
 const [confirmed, setConfirmed] =
   useState(false);
-  
+ 
   const now = new Date();
 
 const releaseClosed =
@@ -89,6 +89,12 @@ const marketClosed =
   useState(false);
 
 const [confirming, setConfirming] =
+  useState(false);
+
+  const [offersConfirmed, setOffersConfirmed] =
+  useState(false);
+
+const [confirmingOffers, setConfirmingOffers] =
   useState(false);
 
   const [search, setSearch] =
@@ -291,7 +297,8 @@ const { data: budget } =
   .from("market_releases")
   .select(`
     id,
-    confirmed
+    confirmed,
+    bids_confirmed
   `)
   .eq("round_id", roundData.id)
   .eq("team_id", u.team_id)
@@ -306,6 +313,10 @@ if (releaseError) {
 
     release.confirmed ?? false
   );
+
+setOffersConfirmed(
+  release.bids_confirmed ?? false
+);
 
   const {
   data: playersReleased,
@@ -472,6 +483,9 @@ alert(
     selectedAgents.includes(
       playerId
     );
+  if (offersConfirmed) {
+  return;
+}
 
   if (selected) {
     setSelectedAgents((prev) =>
@@ -574,7 +588,7 @@ async function confirmReleases() {
     return;
   }
 
-  await supabase
+    await supabase
     .from("market_releases")
     .update({
       confirmed: true,
@@ -592,6 +606,64 @@ alert(
 
 loadPage();
 }
+
+async function confirmOffers() {
+  if (!user || !round) return;
+
+  if (
+    selectedAgents.length !==
+    playersToBuy
+  ) {
+    alert(
+      `Devi selezionare ${playersToBuy} giocatori.`
+    );
+    return;
+  }
+
+  if (
+    remainingCredits <
+    minimumReserve
+  ) {
+    alert(
+      "Crediti insufficienti."
+    );
+    return;
+  }
+
+  const ok = window.confirm(
+    "Confermi definitivamente le buste?"
+  );
+
+  if (!ok) return;
+
+  setConfirmingOffers(true);
+
+  const { data: release } =
+    await supabase
+      .from("market_releases")
+      .select("id")
+      .eq("round_id", round.id)
+      .eq("team_id", user.team_id)
+      .single();
+
+  await supabase
+    .from("market_releases")
+    .update({
+      bids_confirmed: true,
+      bids_confirmed_at:
+        new Date().toISOString(),
+    })
+    .eq("id", release.id);
+
+  setOffersConfirmed(true);
+  setConfirmingOffers(false);
+
+  alert(
+    "Buste confermate."
+  );
+}
+
+
  const releasedPlayers = useMemo(
   () =>
     myPlayers.filter((p) =>
@@ -1030,6 +1102,27 @@ alignItems: "center",
       </div>
     </div>
 )}
+
+{offersConfirmed && (
+  <div
+    style={{
+      background:
+        "rgba(22,163,74,.12)",
+      border:
+        "1px solid rgba(34,197,94,.3)",
+      borderRadius: 16,
+      padding: 18,
+      marginBottom: 20,
+      textAlign: "center",
+      color: "#bbf7d0",
+    }}
+  >
+    ✅ Hai già confermato
+    definitivamente le buste.
+    Non sono più modificabili.
+  </div>
+)}
+
 
 {bidPhase && (
   <div
@@ -1584,6 +1677,35 @@ alignItems: "center",
       📝 Le tue offerte
     </div>
 
+<button
+  onClick={confirmOffers}
+  disabled={
+    offersConfirmed ||
+    confirmingOffers ||
+    playersToBuy === 0 ||
+    selectedCount !== playersToBuy
+  }
+  style={{
+    width: "100%",
+    padding: 16,
+    border: "none",
+    borderRadius: 14,
+    background:
+      offersConfirmed
+        ? "#475569"
+        : selectedCount !== playersToBuy
+        ? "#475569"
+        : "#16a34a",
+    color: "white",
+    fontWeight: 800,
+    marginTop: 20,
+  }}
+>
+  {offersConfirmed
+    ? "✅ BUSTE CONFERMATE"
+    : "✅ CONFERMA BUSTE"}
+</button>
+
     {freeAgents
       .filter((p) =>
         selectedAgents.includes(
@@ -1613,6 +1735,7 @@ alignItems: "center",
 
           <input
             type="number"
+            disabled={offersConfirmed}
             min={1}
             value={
               agentOffers[
@@ -1677,7 +1800,9 @@ alignItems: "center",
               toggleAgent(
                 p.id
               )
+              
             }
+            disabled={offersConfirmed}
             style={{
               padding:
                 "8px 12px",
@@ -1707,20 +1832,6 @@ alignItems: "center",
   👥 Giocatori da acquistare:
 {playersToBuy}
 
-<br />
-
-🪑 Slot ancora da completare:
-{" "}
-<span
-  style={{
-    color:
-      missingSlots === 0
-        ? "#4ade80"
-        : "#fde68a",
-  }}
->
-  {missingSlots}
-</span>
 
 <br />
 
@@ -1787,7 +1898,8 @@ alignItems: "center",
   </span>
 </div>
   </div>
-)}
+  )}
+
 
     <input
       value={agentSearch}
