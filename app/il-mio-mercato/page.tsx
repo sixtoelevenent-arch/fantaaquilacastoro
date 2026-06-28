@@ -347,6 +347,33 @@ setSelectedIds(
   )
 );
 
+const { data: bids } =
+  await supabase
+    .from("market_bids")
+    .select(`
+      player_id,
+      bid,
+      priority
+    `)
+    .eq("team_id", u.team_id)
+    .eq("round_id", roundData.id)
+    .order("priority");
+
+if (bids) {
+  setSelectedAgents(
+  bids.map((b) => b.player_id)
+);
+
+  const offers: Record<number, number> =
+    {};
+
+  bids.forEach((b) => {
+    offers[b.player_id] = b.bid;
+  });
+
+  setAgentOffers(offers);
+}
+
 setAutomaticIds(
   releasedRows
     .filter(
@@ -476,54 +503,97 @@ alert(
 }
   }
 
-  function toggleAgent(
+  async function toggleAgent(
   playerId: number
 ) {
+  if (offersConfirmed) return;
+
   const selected =
-    selectedAgents.includes(
-      playerId
+    selectedAgents.includes(playerId);
+
+  if (selected) {
+  const nextIds =
+    selectedAgents.filter(
+      (id) => id !== playerId
     );
-  if (offersConfirmed) {
+
+  if (user && round) {
+    await supabase
+      .from("market_bids")
+      .delete()
+      .eq("team_id", user.team_id)
+      .eq("player_id", playerId)
+      .eq("round_id", round.id);
+
+    await Promise.all(
+      nextIds.map(
+        (id, index) =>
+          supabase
+            .from("market_bids")
+            .update({
+              priority:
+                index + 1,
+            })
+            .eq(
+              "team_id",
+              user.team_id
+            )
+            .eq(
+              "player_id",
+              id
+            )
+            .eq(
+              "round_id",
+              round.id
+            )
+      )
+    );
+  }
+
+  setSelectedAgents(nextIds);
+
+  setAgentOffers((prev) => {
+    const next = { ...prev };
+    delete next[playerId];
+    return next;
+  });
+
   return;
 }
 
-  if (selected) {
-    setSelectedAgents((prev) =>
-      prev.filter(
-        (id) => id !== playerId
-      )
-    );
-
-    setAgentOffers((prev) => {
-      const next = { ...prev };
-      delete next[playerId];
-      return next;
-    });
-
-    return;
-  }
-
-  // NON permettere di selezionare
-  // più giocatori del necessario
   if (
-    selectedAgents.length >=
-    playersToBuy
-  ) {
-    alert(
-      `Puoi selezionare al massimo ${playersToBuy} giocatori.`
-    );
-    return;
-  }
+  selectedAgents.length >=
+  playersToBuy
+) {
+  alert(
+    `Puoi selezionare al massimo ${playersToBuy} giocatori.`
+  );
+  return;
+}
 
-  setSelectedAgents((prev) => [
-    ...prev,
-    playerId,
-  ]);
+const nextIds = [
+  ...selectedAgents,
+  playerId,
+];
 
-  setAgentOffers((prev) => ({
-    ...prev,
-    [playerId]: 1,
-  }));
+setSelectedAgents(nextIds);
+
+setAgentOffers((prev) => ({
+  ...prev,
+  [playerId]: 1,
+}));
+
+if (user && round) {
+  await supabase
+    .from("market_bids")
+    .upsert({
+      team_id: user.team_id,
+      player_id: playerId,
+      bid: 1,
+      priority: nextIds.length,
+      round_id: round.id,
+    });
+}
 }
 
   async function saveDraft() {
@@ -531,18 +601,19 @@ alert(
     !user ||
     !round ||
     confirmed
-  )
+  ) {
     return;
+  }
 
   setSaving(true);
 
   const { data: release } =
-  await supabase
-    .from("market_releases")
-    .select("id")
-    .eq("round_id", round.id)
-    .eq("team_id", user.team_id)
-    .maybeSingle();
+    await supabase
+      .from("market_releases")
+      .select("id")
+      .eq("round_id", round.id)
+      .eq("team_id", user.team_id)
+      .maybeSingle();
 
   if (release) {
     await supabase
@@ -671,10 +742,21 @@ async function confirmOffers() {
     ),
   [myPlayers, selectedIds]
 );
-const availableCredits = useMemo(
-  () => leftoverBudget,
-  [leftoverBudget]
+
+const totalRefund = useMemo(
+  () =>
+    releasedPlayers.reduce(
+      (sum, p) =>
+        sum +
+        Math.ceil(
+          (p.prezzo ?? 0) / 2
+        ),
+      0
+    ),
+  [releasedPlayers]
 );
+
+const availableCredits = leftoverBudget;
 
 const spentOffers =
   Object.values(
@@ -1706,13 +1788,14 @@ alignItems: "center",
     : "✅ CONFERMA BUSTE"}
 </button>
 
-    {freeAgents
-      .filter((p) =>
-        selectedAgents.includes(
-          p.id
-        )
-      )
-      .map((p) => (
+    {selectedAgents
+  .map((id) =>
+    freeAgents.find(
+      (p) => p.id === id
+    )
+  )
+  .filter(Boolean)
+  .map((p) => (
         <div
           key={p.id}
           style={{
@@ -1742,7 +1825,7 @@ alignItems: "center",
                 p.id
               ] ?? 1
             }
-            onChange={(e) => {
+            onChange={async (e) => {
   const value = Math.max(
     1,
     Number(e.target.value) || 1
@@ -1785,6 +1868,17 @@ alignItems: "center",
     ...prev,
     [p.id]: finalValue,
   }));
+
+ if (user && round) {
+  await supabase
+    .from("market_bids")
+    .update({
+      bid: finalValue,
+    })
+    .eq("team_id", user.team_id)
+    .eq("player_id", p.id)
+    .eq("round_id", round.id);
+}
 }}
 
             style={{
