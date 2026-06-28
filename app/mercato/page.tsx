@@ -312,7 +312,6 @@ setReturnedPlayers(
     eliminated.length;
 
    const showReturnedPlayers =
-  currentRound?.status === "buste" &&
   returnedPlayers.length > 0;
 
     const releasesByTeam =
