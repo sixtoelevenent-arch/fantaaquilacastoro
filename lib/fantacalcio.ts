@@ -315,12 +315,32 @@ processedPlayers.push({
   }
 const completedSlots =
   processedPlayers.filter((p) => {
-
     if (p.replacementPlayer) {
-      return true;
+      const repl = p.replacementPlayer;
+
+      const replacementPending =
+        repl.liveNow ||
+        repl.waitingVotes ||
+        (
+          repl.voto === null &&
+          repl.voto !== 0 &&
+          !repl.sv
+        );
+
+      return !replacementPending;
     }
 
-    if (p.voto !== null && p.voto !== undefined) {
+    if (
+      p.liveNow ||
+      p.waitingVotes
+    ) {
+      return false;
+    }
+
+    if (
+      p.voto !== null &&
+      p.voto !== undefined
+    ) {
       return true;
     }
 
@@ -329,9 +349,8 @@ const completedSlots =
     }
 
     return false;
-
   }).length;
-
+  
   const fantapoints =
   votesTotal +
   bonusTotal +
