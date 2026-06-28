@@ -644,10 +644,7 @@ const minimumReserve =
     0
   );
 
-  const playersToBuy = releasedPlayers.length;
-const selectedCount = selectedAgents.length;
-
-const missingSlots = Math.max(
+  const missingSlots = Math.max(
   playersToBuy - selectedCount,
   0
 );
@@ -1072,7 +1069,7 @@ alignItems: "center",
     È ora possibile inserire
     le offerte in busta fino
     alla deadline delle ore
-    16:30.
+    17:00.
   </div>
 )}
 
@@ -1578,7 +1575,7 @@ alignItems: "center",
   </div>
 )}
 
-{selectedAgents.length > 0 && (
+{bidPhase && (
   <div
     style={{
       background:
@@ -1722,6 +1719,21 @@ alignItems: "center",
 >
   👥 Giocatori da acquistare:
 {playersToBuy}
+
+<br />
+
+🪑 Slot ancora da completare:
+{" "}
+<span
+  style={{
+    color:
+      missingSlots === 0
+        ? "#4ade80"
+        : "#fde68a",
+  }}
+>
+  {missingSlots}
+</span>
 
 <br />
 

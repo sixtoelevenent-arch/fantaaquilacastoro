@@ -51,6 +51,17 @@ type TeamBudget = {
 };
 
 export default function MercatoPage() {
+
+  type OptionalRelease = {
+  team_id: number;
+  nome: string;
+  ruolo: string;
+  nazionale: string;
+};
+
+const [optionalReleases, setOptionalReleases] =
+  useState<OptionalRelease[]>([]);
+  
   const [loading, setLoading] = useState(true);
 
   const [rounds, setRounds] = useState<MarketRound[]>([]);
@@ -182,6 +193,42 @@ if (releasesError) {
 
 setAutomaticReleases(
   (releases as AutomaticRelease[]) ?? []
+);
+
+const { data: optionalData } =
+  await supabase
+    .from("market_release_players")
+    .select(`
+      automatic,
+      market_releases!inner(
+        round_id,
+        team_id
+      ),
+      players!inner(
+        nome,
+        ruolo,
+        nazionale
+      )
+    `);
+
+setOptionalReleases(
+  (optionalData ?? [])
+    .filter(
+      (r: any) =>
+        r.automatic === false &&
+        r.market_releases
+          ?.round_id === active.id
+    )
+    .map((r: any) => ({
+      team_id:
+        r.market_releases.team_id,
+      nome:
+        r.players.nome,
+      ruolo:
+        r.players.ruolo,
+      nazionale:
+        r.players.nazionale,
+    }))
 );
 
 const {
@@ -359,15 +406,20 @@ const optionalByTeam = useMemo(() => {
       squadra: nome,
       credits:
         teamBudgets.find(
-          (b) => b.team_id === teamId
+          (b) =>
+            b.team_id === teamId
         )?.total_budget ?? 0,
-      players: automaticReleases.filter(
-        (p) => p.squadra === nome
-      ),
+      players:
+        optionalReleases.filter(
+          (p) =>
+            p.team_id === teamId
+        ),
     })
   );
-}, [automaticReleases, teamBudgets]);
-
+}, [
+  optionalReleases,
+  teamBudgets,
+]);
 
 const returnedByTeam = useMemo(() => {
   return Object.entries(eliminatedTeams).map(
