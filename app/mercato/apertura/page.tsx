@@ -157,16 +157,22 @@ const openingRef =
   }, []);
 
   useEffect(() => {
-    if (
-      secondsToOpen === 0 &&
-      !marketOpened
-    ) {
-      openBuste();
-    }
-  }, [
-    secondsToOpen,
-    marketOpened,
-  ]);
+  if (
+    secondsToOpen === 0 &&
+    !marketOpened &&
+    bids.length > 0 &&
+    freeAgents.length > 0 &&
+    budgets.length > 0
+  ) {
+    openBuste();
+  }
+}, [
+  secondsToOpen,
+  marketOpened,
+  bids,
+  freeAgents,
+  budgets,
+]);
 
   async function loadPage() {
     setLoading(true);
@@ -256,6 +262,12 @@ const openingRef =
     );
 
     setLoading(false);
+    if (
+  OPEN_TIME <= new Date() &&
+  !openingRef.current
+) {
+  openBuste();
+}
   }
   function teamName(teamId: number) {
   return (
@@ -507,6 +519,9 @@ if (
   setAssignments(
     assignmentsTmp
   );
+console.log("ASSEGNAZIONI", assignmentsTmp);
+console.log("BUSTE", bids);
+console.log("SVINCOLATI", freeAgents);
 
   setPriorityTies(
     priorityTmp
