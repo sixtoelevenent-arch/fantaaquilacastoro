@@ -98,6 +98,14 @@ const [agentSearch, setAgentSearch] =
 const [agentRoleFilter, setAgentRoleFilter] =
   useState("ALL");
 
+  type TeamConfirmation = {
+  username: string;
+  confirmed: boolean;
+};
+
+const [teamConfirmations, setTeamConfirmations] =
+  useState<TeamConfirmation[]>([]);
+
     useEffect(() => {
     loadPage();
   }, []);
@@ -129,6 +137,30 @@ const [agentRoleFilter, setAgentRoleFilter] =
     setRound(
       roundData as MarketRound
     );
+
+    if (roundData) {
+  const { data: confirmations } =
+    await supabase
+      .from("market_releases")
+      .select(`
+        confirmed,
+        fantasy_users!inner(
+          username
+        )
+      `)
+      .eq("round_id", roundData.id);
+
+  setTeamConfirmations(
+    ((confirmations as any[]) ?? []).map(
+      (r) => ({
+        username:
+          r.fantasy_users.username,
+        confirmed:
+          r.confirmed ?? false,
+      })
+    )
+  );
+}
 
     if (!roundData) {
   setLoading(false);
@@ -795,6 +827,73 @@ alignItems: "center",
     da svincolare fino alla
     deadline delle ore 10:00 di Domenica 28.
   </div>
+)}
+
+{releasePhase &&
+  teamConfirmations.length > 0 && (
+    <div
+      style={{
+        background:
+          "rgba(255,255,255,.04)",
+        border:
+          "1px solid rgba(255,255,255,.08)",
+        borderRadius: 16,
+        padding: 18,
+        marginBottom: 20,
+      }}
+    >
+      <div
+        style={{
+          textAlign: "center",
+          color: "#facc15",
+          fontWeight: 800,
+          marginBottom: 16,
+        }}
+      >
+        ✅ Conferme allenatori
+      </div>
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns:
+            "repeat(auto-fit,minmax(160px,1fr))",
+          gap: 10,
+        }}
+      >
+        {teamConfirmations.map((t) => (
+          <div
+            key={t.username}
+            style={{
+              padding: "10px 12px",
+              borderRadius: 12,
+              background:
+                "rgba(255,255,255,.03)",
+              border:
+                "1px solid rgba(255,255,255,.08)",
+              display: "flex",
+              justifyContent:
+                "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>
+              {t.username}
+            </span>
+
+            <span
+              style={{
+                fontSize: "1.1rem",
+              }}
+            >
+              {t.confirmed
+                ? "🟢"
+                : "🟡"}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
 )}
 
 {bidPhase && (
