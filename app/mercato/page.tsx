@@ -44,12 +44,6 @@ type Assignment = {
   prezzo: number;
 };
 
-type TeamBudget = {
-  team_id: number;
-  total_budget: number;
-  group_bonus: number;
-};
-
 export default function MercatoPage() {
 
  type OptionalRelease = {
@@ -59,6 +53,26 @@ export default function MercatoPage() {
   nazionale: string;
   prezzo_recuperato: number;
 };
+
+type RoundAssignment = {
+  squadra: string;
+  nome: string;
+  ruolo: string;
+  prezzo: number;
+};
+
+type TeamStatus = {
+  team_id: number;
+  squadra: string;
+  budget: number;
+  p_missing: number;
+  d_missing: number;
+  c_missing: number;
+  a_missing: number;
+};
+
+const [teamStatus, setTeamStatus] =
+  useState<TeamStatus[]>([]);
 
 const [optionalReleases, setOptionalReleases] =
   useState<OptionalRelease[]>([]);
@@ -82,6 +96,9 @@ const [optionalReleases, setOptionalReleases] =
   const [assignments, setAssignments] =
     useState<Assignment[]>([]);
 
+    const [roundAssignments, setRoundAssignments] =
+  useState<RoundAssignment[]>([]);
+
     type ReturnedPlayer = {
   nome: string;
   ruolo: string;
@@ -92,10 +109,7 @@ const [optionalReleases, setOptionalReleases] =
 const [returnedPlayers, setReturnedPlayers] =
   useState<ReturnedPlayer[]>([]);
 
-   const [teamBudgets, setTeamBudgets] =
-  useState<TeamBudget[]>([]);
-
-  const [roleFilter, setRoleFilter] =
+      const [roleFilter, setRoleFilter] =
     useState<string>("ALL");
 
   const [search, setSearch] =
@@ -253,21 +267,24 @@ setAssignments(
   (assignmentsData as Assignment[]) ?? []
 );
 
-const {
-  data: budgetsData,
-  error: budgetsError,
-} = await supabase
-  .from("market_budgets")
-  .select(
-    "team_id,total_budget,group_bonus"
-  );
+setRoundAssignments(
+  (assignmentsData as RoundAssignment[]) ?? []
+);
 
-if (budgetsError) {
-  throw budgetsError;
+const {
+  data: statusData,
+  error: statusError,
+} = await supabase
+  .from("market_team_status")
+  .select("*")
+  .order("team_id");
+
+if (statusError) {
+  throw statusError;
 }
 
-setTeamBudgets(
-  (budgetsData as TeamBudget[]) ?? []
+setTeamStatus(
+  (statusData as TeamStatus[]) ?? []
 );
 
 const {
@@ -413,6 +430,10 @@ const roleOrder = {
 const optionalByTeam = useMemo(() => {
   return activeTeams.map(
     ({ teamId, nome }) => {
+      const status =
+  teamStatus.find(
+    (t) => t.team_id === teamId
+  );
       const optional =
         optionalReleases.map((p) => ({
           ...p,
@@ -459,45 +480,28 @@ const optionalByTeam = useMemo(() => {
         );
       });
 
-      const releasedByRole = {
-  P: players.filter(
-    (p) => p.ruolo === "P"
-  ).length,
-  D: players.filter(
-    (p) => p.ruolo === "D"
-  ).length,
-  C: players.filter(
-    (p) => p.ruolo === "C"
-  ).length,
-  A: players.filter(
-    (p) => p.ruolo === "A"
-  ).length,
-};
-
-const missingText = [
-  releasedByRole.P
-    ? `${releasedByRole.P} P`
+   const missingText = [
+  status?.p_missing
+    ? `${status.p_missing} P`
     : null,
-  releasedByRole.D
-    ? `${releasedByRole.D} D`
+  status?.d_missing
+    ? `${status.d_missing} D`
     : null,
-  releasedByRole.C
-    ? `${releasedByRole.C} C`
+  status?.c_missing
+    ? `${status.c_missing} C`
     : null,
-  releasedByRole.A
-    ? `${releasedByRole.A} A`
+  status?.a_missing
+    ? `${status.a_missing} A`
     : null,
 ]
   .filter(Boolean)
   .join(", ");
-
-      return {
+  
+  return {
   teamId,
   squadra: nome,
   credits:
-    teamBudgets.find(
-      (b) => b.team_id === teamId
-    )?.total_budget ?? 0,
+  status?.budget ?? 0,
   players,
   missingText,
 };
@@ -506,7 +510,7 @@ const missingText = [
 }, [
   optionalReleases,
   automaticReleases,
-  teamBudgets,
+  teamStatus,
 ]);
 
 const returnedByTeam = useMemo(() => {
@@ -632,25 +636,112 @@ const returnedByTeam = useMemo(() => {
         )}
 
                 {currentRound?.status === "svincoli" && (
-          <Card>
+          <Card title="🏆 Acquisti sessione corrente">
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns:
+        "repeat(2,minmax(0,1fr))",
+      gap: 8,
+    }}
+  >
+    {activeTeams.map(
+      ({ nome }) => {
+        const buys =
+          assignments
+            .filter(
+              (a) =>
+                a.squadra === nome
+            )
+            .sort((a, b) => {
+              const diff =
+                roleOrder[
+                  a.ruolo as keyof typeof roleOrder
+                ] -
+                roleOrder[
+                  b.ruolo as keyof typeof roleOrder
+                ];
+
+              if (diff !== 0)
+                return diff;
+
+              return a.nome.localeCompare(
+                b.nome,
+                "it"
+              );
+            });
+
+        return (
+          <div
+            key={nome}
+            style={{
+              border:
+                "1px solid rgba(250,204,21,.35)",
+              background:
+                "linear-gradient(180deg,#2a2105,#171003)",
+              borderRadius: 18,
+              padding: 12,
+            }}
+          >
             <div
               style={{
-                textAlign: "center",
-                padding: 14,
+                color: "#facc15",
+                fontWeight: 800,
+                marginBottom: 10,
               }}
             >
-              ⚠️ Sono già disponibili gli
-svincoli automatici delle
-nazionali eliminate.
-
-<br />
-<br />
-
-Puoi già preparare e salvare
-la tua lista svincolati
-nella tua Area Riservata.
+              {nome}
             </div>
-          </Card>
+
+            {buys.length === 0 ? (
+              <div
+                style={{
+                  color: "#94a3b8",
+                  fontSize: ".8rem",
+                }}
+              >
+                Nessun acquisto
+              </div>
+            ) : (
+              buys.map((p, i) => (
+                <div
+                  key={i}
+                  style={{
+                    padding: "6px 0",
+                    borderTop:
+                      "1px solid rgba(255,255,255,.06)",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent:
+                        "space-between",
+                    }}
+                  >
+                    <span>
+                      {p.ruolo} {p.nome}
+                    </span>
+
+                    <span
+                      style={{
+                        color:
+                          "#facc15",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {p.prezzo} mln
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        );
+      }
+    )}
+  </div>
+</Card>
         )}
 
         {currentRound?.status === "buste" && (

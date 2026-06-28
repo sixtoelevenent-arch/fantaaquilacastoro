@@ -30,9 +30,7 @@ useEffect(() => {
     boxSizing: "border-box" as const,
   };
       
-  const showMarketButton =
-  new Date() <
-  new Date("2026-06-28T18:00:00+02:00");
+  const showMarketButton = true;
 
   return (
     <main
