@@ -43,6 +43,9 @@ export default function IlMioMercatoPage() {
 
   const [round, setRound] =
     useState<MarketRound | null>(null);
+   
+    const hasReleasePhase =
+  round?.id !== 2;
 const [confirmed, setConfirmed] =
   useState(false);
  
@@ -61,10 +64,12 @@ const bidClosed =
     : false;
 
 const releasePhase =
+  hasReleasePhase &&
   !releaseClosed;
 
 const bidPhase =
-  releaseClosed &&
+  (!hasReleasePhase ||
+    releaseClosed) &&
   !bidClosed;
 
 const marketClosed =
@@ -163,8 +168,10 @@ const [teamConfirmations, setTeamConfirmations] =
     const { data: roundData } = await supabase
   .from("market_rounds")
   .select("*")
-  .or("status.eq.svincoli,status.eq.buste")
-  .single();
+  .in("status", ["svincoli", "buste"])
+  .order("id", { ascending: false })
+  .limit(1)
+  .maybeSingle();
 
     setRound(
       roundData as MarketRound
@@ -235,17 +242,8 @@ const [teamConfirmations, setTeamConfirmations] =
            setMyPlayers(squadRows);
 
            const { data: agents } = await supabase
-  .from("free_agents")
-  .select(`
-    id,
-    player_name,
-    nazionale,
-    ruolo,
-    quotazione
-  `)
-  .eq("disponibile", true)
-  .order("ruolo")
-  .order("player_name");
+  .from("market_available_players")
+  .select("*");
 
   const { data: mappings } = await supabase
   .from("player_display_names")
@@ -274,18 +272,16 @@ setFreeAgents(
   }))
 );
 
-const { data: budget } =
+const { data: team } =
   await supabase
-    .from("market_budgets")
-    .select(`
-      total_budget
-    `)
-    .eq("team_id", u.team_id)
+    .from("teams")
+    .select("budget_residuo")
+    .eq("id", u.team_id)
     .maybeSingle();
-  
-   if (budget) {
+
+if (team) {
   setLeftoverBudget(
-    budget.total_budget ?? 0
+    team.budget_residuo ?? 0
   );
 }
         if (roundData) {
@@ -707,7 +703,9 @@ async function confirmOffers() {
 
   setConfirmingOffers(true);
 
-  const { data: release } =
+  let releaseId: number;
+
+const { data: release } =
   await supabase
     .from("market_releases")
     .select("id")
@@ -715,12 +713,25 @@ async function confirmOffers() {
     .eq("team_id", user.team_id)
     .maybeSingle();
 
-if (!release) {
-  alert(
-    "Impossibile trovare la sessione di mercato."
-  );
-  setConfirmingOffers(false);
-  return;
+if (release) {
+  releaseId = release.id;
+} else {
+  const { data: created } =
+    await supabase
+      .from("market_releases")
+      .insert({
+        round_id: round.id,
+        team_id: user.team_id,
+      })
+      .select("id")
+      .single();
+
+  if (!created) {
+    setConfirmingOffers(false);
+    return;
+  }
+
+  releaseId = created.id;
 }
 
 await supabase
@@ -730,7 +741,7 @@ await supabase
     bids_confirmed_at:
       new Date().toISOString(),
   })
-  .eq("id", release.id);
+  .eq("id", releaseId);
 
   setOffersConfirmed(true);
   setConfirmingOffers(false);
@@ -762,7 +773,9 @@ const totalRefund = useMemo(
   [releasedPlayers]
 );
 
-const availableCredits = leftoverBudget;
+const availableCredits =
+  leftoverBudget +
+  totalRefund;
 
 const spentOffers = Object.values(
   agentOffers
@@ -777,9 +790,13 @@ const remainingCredits = Math.max(
   0
 );
 
-  const playersToBuy =
-  releasedPlayers.length;
-
+const playersToBuy =
+  hasReleasePhase
+    ? releasedPlayers.length
+    : Math.max(
+        25 - myPlayers.length,
+        0
+      );
 const selectedCount =
   selectedAgents.length;
 
@@ -1765,10 +1782,20 @@ alignItems: "center",
       textAlign: "center",
     }}
   >
+    {hasReleasePhase ? (
+  <>
     Non hai posti liberi in rosa.
     <br />
     Per acquistare giocatori devi
     prima effettuare degli svincoli.
+  </>
+) : (
+  <>
+    Non hai posti liberi in rosa.
+    <br />
+    La rosa è già completa.
+  </>
+)}
   </div>
 )}
 
@@ -1956,13 +1983,18 @@ alignItems: "center",
 >
   👥 Giocatori da acquistare: {playersToBuy}
 <br />
-🧤 Portieri: {missingByRole.P}
-<br />
-🛡️ Difensori: {missingByRole.D}
-<br />
-⚙️ Centrocampisti: {missingByRole.C}
-<br />
-🎯 Attaccanti: {missingByRole.A}
+{hasReleasePhase && (
+  <>
+    🧤 Portieri: {missingByRole.P}
+    <br />
+    🛡️ Difensori: {missingByRole.D}
+    <br />
+    ⚙️ Centrocampisti: {missingByRole.C}
+    <br />
+    🎯 Attaccanti: {missingByRole.A}
+    <br />
+  </>
+)}
 
 <br />
 

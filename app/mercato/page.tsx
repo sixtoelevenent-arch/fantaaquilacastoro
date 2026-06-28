@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import BackHome from "@/components/BackHome";
+import Link from "next/link";
 import Card from "@/components/Card";
 
 type MarketRound = {
@@ -435,50 +436,67 @@ const optionalByTeam = useMemo(() => {
     (t) => t.team_id === teamId
   );
       const optional =
-        optionalReleases.map((p) => ({
-          ...p,
-          squadra: nome,
-        }));
+  optionalReleases
+    .filter(
+      (p) =>
+        p.team_id === teamId
+    )
+    .map((p) => ({
+      ...p,
+      squadra: nome,
+    }));
 
-      const automatic =
-        automaticReleases
-          .filter(
-            (p) =>
-              p.team_id === teamId
-          )
-          .map((p) => ({
-            team_id: p.team_id,
-            nome: p.nome,
-            ruolo: p.ruolo,
-            nazionale: p.nazionale,
-            prezzo_recuperato:
-              p.prezzo_recuperato,
-          }));
+const automatic =
+  automaticReleases
+    .filter(
+      (p) =>
+        p.team_id === teamId
+    )
+    .map((p) => ({
+      team_id: p.team_id,
+      nome: p.nome,
+      ruolo: p.ruolo,
+      nazionale: p.nazionale,
+      prezzo_recuperato:
+        p.prezzo_recuperato,
+    }));
 
-      const players = [
-        ...optional.filter(
-          (p) =>
-            p.team_id === teamId
-        ),
-        ...automatic,
-      ].sort((a, b) => {
-        const diff =
-          roleOrder[
-            a.ruolo as keyof typeof roleOrder
-          ] -
-          roleOrder[
-            b.ruolo as keyof typeof roleOrder
-          ];
+const buys =
+  roundAssignments
+    .filter(
+      (p) =>
+        p.squadra === nome
+    )
+    .map((p) => ({
+      team_id: teamId,
+      nome: p.nome,
+      ruolo: p.ruolo,
+      nazionale: "",
+      prezzo_recuperato:
+        p.prezzo,
+    }));
 
-          if (diff !== 0) {
-          return diff;
-        }
+const players = buys;
+console.log(roundAssignments);
 
-        return a.nome.localeCompare(
-          b.nome,
-          "it"
-        );
-      });
+players.sort((a, b) => {
+  const diff =
+    roleOrder[
+      a.ruolo as keyof typeof roleOrder
+    ] -
+    roleOrder[
+      b.ruolo as keyof typeof roleOrder
+    ];
+
+  if (diff !== 0) {
+    return diff;
+  }
+
+  return a.nome.localeCompare(
+    b.nome,
+    "it"
+  );
+});
 
    const missingText = [
   status?.p_missing
@@ -511,6 +529,8 @@ const optionalByTeam = useMemo(() => {
   optionalReleases,
   automaticReleases,
   teamStatus,
+  roundAssignments,
+  currentRound,
 ]);
 
 const returnedByTeam = useMemo(() => {
@@ -536,6 +556,28 @@ const returnedByTeam = useMemo(() => {
         }}
       >
         <BackHome />
+
+        <Link
+  href="/mercato/apertura"
+  style={{
+    position: "fixed",
+    top: 12,
+    right: 12,
+    zIndex: 100,
+    background:
+      "linear-gradient(135deg,#f59e0b,#d97706)",
+    color: "#111827",
+    padding: "10px 14px",
+    borderRadius: 14,
+    textDecoration: "none",
+    fontWeight: 800,
+    fontSize: ".9rem",
+    boxShadow:
+      "0 4px 12px rgba(0,0,0,.35)",
+  }}
+>
+  📩 Apertura buste
+</Link>
 
         <div
           style={{
@@ -773,7 +815,6 @@ rowGap: 8,
   >
     {optionalByTeam.map(
   ({
-  teamId,
   squadra,
   credits,
   players,
@@ -827,86 +868,75 @@ rowGap: 8,
 </div>
             </div>
 
-            {players.length ===
-            0 ? (
-              <div
-                style={{
-                  color:
-                    "#94a3b8",
-                  fontSize:
-                    ".8rem",
-                }}
-              >
-                Nessuno
-                svincolo
-                facoltativo
-              </div>
-            ) : (
-              players.map(
-                (p) => (
-                  <div
-                    key={`${squadra}-${p.nome}`}
-                    style={{
-                      padding:
-                        "6px 0",
-                      borderTop:
-                        "1px solid rgba(255,255,255,.06)",
-                    }}
-                  >
-                    <div
+           <div
   style={{
-    display: "flex",
-    justifyContent:
-      "space-between",
-    gap: 10,
-    alignItems: "center",
+    color: "#94a3b8",
+    fontSize: ".8rem",
   }}
 >
-  <div
-    style={{
-      fontWeight: 700,
-      fontSize: ".8rem",
-    }}
-  >
-    {p.ruolo} {p.nome}
-  </div>
-
-  <div
-    style={{
-      color: "#4ade80",
-      fontWeight: 700,
-      fontSize: ".78rem",
-      whiteSpace: "nowrap",
-    }}
-  >
-    +{p.prezzo_recuperato}
-  </div>
+  {players.length === 0
+    ? "Acquisti secondo round buste"
+    : `${players.length} giocatori`}
 </div>
 
-                    <div
-                      style={{
-                        color:
-                          "#94a3b8",
-                        fontSize:
-                          ".72rem",
-                      }}
-                    >
-                      {
-                        p.nazionale
-                      }
-                    </div>
-                  </div>
-                )
-              )
-            )}
-          </div>
-        );
-      }
-    )}
+{players.map((p) => (
+  <div
+    key={`${squadra}-${p.nome}`}
+    style={{
+      padding: "6px 0",
+      borderTop:
+        "1px solid rgba(255,255,255,.06)",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        gap: 10,
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          fontWeight: 700,
+          fontSize: ".8rem",
+        }}
+      >
+        {p.ruolo} {p.nome}
+      </div>
 
-    {returnedByTeam.map(
-      ([squadra, players]) => (
-        <div
+      <div
+        style={{
+          color: "#4ade80",
+          fontWeight: 700,
+          fontSize: ".78rem",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {currentRound?.status === "buste"
+          ? `${p.prezzo_recuperato} mln`
+          : `+${p.prezzo_recuperato}`}
+      </div>
+
+      <div
+        style={{
+          color: "#94a3b8",
+          fontSize: ".72rem",
+        }}
+      >
+        {p.nazionale}
+      </div>
+    </div>
+  </div>
+))}
+
+        </div>
+      );}
+)}
+
+{returnedByTeam.map(
+  ([squadra, players]) => (
+    <div
           key={squadra}
           style={{
             border:
@@ -967,20 +997,20 @@ rowGap: 8,
               </div>
 
               <div
-                style={{
-                  color:
-                    "#94a3b8",
-                  fontSize:
-                    ".72rem",
-                }}
-              >
-                {p.nazionale}
-              </div>
+  style={{
+    color: "#94a3b8",
+    fontSize: ".72rem",
+  }}
+>
+  {currentRound?.status ===
+  "buste"
+    ? "Nuovo acquisto"
+    : p.nazionale}
+</div>
             </div>
           ))}
         </div>
-      )
-    )}
+      ))}
   </div>
 </Card>
        
