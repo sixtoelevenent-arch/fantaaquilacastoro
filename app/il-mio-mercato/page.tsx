@@ -72,9 +72,6 @@ const marketClosed =
     const [leftoverBudget, setLeftoverBudget] =
   useState(0);
 
-const [automaticRefunds, setAutomaticRefunds] =
-  useState(0);
-
   const [automaticIds, setAutomaticIds] =
     useState<number[]>([]);
 
@@ -139,26 +136,37 @@ const [teamConfirmations, setTeamConfirmations] =
     );
 
     if (roundData) {
-  const { data: confirmations } =
+  const { data: releases } =
     await supabase
       .from("market_releases")
       .select(`
-        confirmed,
-        fantasy_users!inner(
-          username
-        )
+        team_id,
+        confirmed
       `)
       .eq("round_id", roundData.id);
 
+  const { data: users } =
+    await supabase
+      .from("fantasy_users")
+      .select(`
+        username,
+        team_id
+      `);
+
+  const confirmations =
+  (users ?? []).map((u: any) => ({
+    username: u.username,
+    confirmed:
+      (releases ?? []).some(
+        (r: any) =>
+          Number(r.team_id) ===
+            Number(u.team_id) &&
+          r.confirmed === true
+      ),
+  }));
+
   setTeamConfirmations(
-    ((confirmations as any[]) ?? []).map(
-      (r) => ({
-        username:
-          r.fantasy_users.username,
-        confirmed:
-          r.confirmed ?? false,
-      })
-    )
+    confirmations
   );
 }
 
@@ -223,19 +231,14 @@ const { data: budget } =
   await supabase
     .from("market_budgets")
     .select(`
-      leftover_budget,
-      automatic_refunds
+      total_budget
     `)
     .eq("team_id", u.team_id)
     .maybeSingle();
-
-if (budget) {
+  
+   if (budget) {
   setLeftoverBudget(
-    budget.leftover_budget ?? 0
-  );
-
-  setAutomaticRefunds(
-    budget.automatic_refunds ?? 0
+    budget.total_budget ?? 0
   );
 }
         if (roundData) {
@@ -524,7 +527,6 @@ const totalRefund =
 
   const availableCredits =
   leftoverBudget +
-  automaticRefunds +
   totalRefund;
 
   const filteredAgents =
