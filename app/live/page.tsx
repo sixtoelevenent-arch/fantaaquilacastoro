@@ -515,11 +515,7 @@ return (
   highlight={openMatchId === match.id}
 
   onClick={() => {
-  if (matchdayName === "Quarti Andata") {
-    return;
-  }
-
-  setOpenMatchId(
+   setOpenMatchId(
     openMatchId === match.id
       ? null
       : match.id
@@ -713,10 +709,7 @@ return (
 
 </div>
                         
- {(
-  openMatchId === match.id ||
-  matchdayName === "Quarti Andata"
-) && (
+ {openMatchId === match.id && (
   <div
     style={{ marginTop: 15 }}
     onClick={(e) => e.stopPropagation()}
