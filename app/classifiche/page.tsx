@@ -49,7 +49,8 @@ export default async function ClassifichePage() {
     matchdays (
       chiusura_formazioni
     )
-  `);
+  `)
+  .lte("matchday_id", 3);
 
   const { data: activeMatchday } = await supabase
   .from("matchdays")

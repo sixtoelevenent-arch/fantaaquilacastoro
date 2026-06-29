@@ -51,10 +51,11 @@ export default function CalendarioPage() {
   async function loadMatches() {
 
     const { data: matchesData } = await supabase
-      .from("matches")
-      .select("*")
-      .order("matchday_id")
-      .order("id");
+  .from("matches")
+  .select("*")
+  .lte("matchday_id", 3)
+  .order("matchday_id")
+  .order("id");
 
     if (!matchesData) {
       setLoading(false);
