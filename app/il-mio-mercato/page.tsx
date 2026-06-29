@@ -272,18 +272,16 @@ setFreeAgents(
   }))
 );
 
-const { data: team } =
+const { data: budget } =
   await supabase
-    .from("teams")
-    .select("budget_residuo")
-    .eq("id", u.team_id)
+    .from("market_budgets")
+    .select("total_budget")
+    .eq("team_id", u.team_id)
     .maybeSingle();
 
-if (team) {
-  setLeftoverBudget(
-    team.budget_residuo ?? 0
-  );
-}
+setLeftoverBudget(
+  budget?.total_budget ?? 0
+);
         if (roundData) {
   const {
   data: release,
