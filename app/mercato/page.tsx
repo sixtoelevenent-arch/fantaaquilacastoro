@@ -72,6 +72,17 @@ type TeamStatus = {
   a_missing: number;
 };
 
+type MarketBuy = {
+  team_id: number;
+  nome: string;
+  ruolo: string;
+  nazionale: string;
+  prezzo: number;
+};
+
+const [marketBuys, setMarketBuys] =
+  useState<MarketBuy[]>([]);
+
 const [teamStatus, setTeamStatus] =
   useState<TeamStatus[]>([]);
 
@@ -96,12 +107,6 @@ const [optionalReleases, setOptionalReleases] =
 
   const [assignments, setAssignments] =
     useState<Assignment[]>([]);
-
-    const [roundAssignments, setRoundAssignments] =
-  useState<RoundAssignment[]>([]);
-
-  const [firstRoundBuys, setFirstRoundBuys] =
-  useState<any[]>([]);
 
     type ReturnedPlayer = {
   nome: string;
@@ -253,6 +258,33 @@ setOptionalReleases(
 }))
 );
 
+const { data: buysData, error: buysError } =
+  await supabase
+    .from("market_manual_assignments")
+    .select(`
+      team_id,
+      price,
+      players (
+        nome,
+        ruolo,
+        nazionale
+      )
+    `)
+    
+    if (buysError) {
+  throw buysError;
+}
+
+setMarketBuys(
+  (buysData ?? []).map((r: any) => ({
+    team_id: r.team_id,
+    prezzo: r.price,
+    nome: r.players.nome,
+    ruolo: r.players.ruolo,
+    nazionale: r.players.nazionale,
+  }))
+);
+
 const {
   data: assignmentsData,
   error: assignmentsError,
@@ -271,30 +303,6 @@ setAssignments(
   (assignmentsData as Assignment[]) ?? []
 );
 
-setRoundAssignments(
-  (assignmentsData as RoundAssignment[]) ?? []
-);
-
-const { data: firstRoundData } =
-  await supabase
-    .from("market_bids")
-    .select(`
-      team_id,
-      bid,
-      players (
-        nome,
-        ruolo,
-        nazionale
-      )
-    `)
-    .eq("round_id", 1)
-    .order("team_id")
-    .order("priority");
-
-setFirstRoundBuys(
-  firstRoundData ?? []
-);
-
 const {
   data: statusData,
   error: statusError,
@@ -307,33 +315,8 @@ if (statusError) {
   throw statusError;
 }
 
-const {
-  data: budgetData,
-  error: budgetError,
-} = await supabase
-  .from("market_budgets")
-  .select(`
-    team_id,
-    total_budget
-  `);
-
-if (budgetError) {
-  throw budgetError;
-}
-
-const budgets = new Map(
-  (budgetData ?? []).map((b: any) => [
-    b.team_id,
-    b.total_budget ?? 0,
-  ])
-);
-
 setTeamStatus(
-  (statusData ?? []).map((t: any) => ({
-    ...t,
-    budget:
-      budgets.get(t.team_id) ?? 0,
-  }))
+  (statusData as TeamStatus[]) ?? []
 );
 
 const {
@@ -484,24 +467,27 @@ const optionalByTeam = useMemo(() => {
     (t) => t.team_id === teamId
   );
      
+  console.log(
+  "TEAM",
+  teamId,
+  nome,
+  marketBuys
+);
+
   const buys =
-  firstRoundBuys
+  marketBuys
     .filter(
-      (b: any) =>
-        b.team_id === teamId
-    )
-    .map((b: any) => ({
-      team_id: teamId,
-      nome:
-        b.players.nome,
-      ruolo:
-        b.players.ruolo,
-      nazionale:
-        b.players.nazionale ??
-        "",
-      prezzo:
-        b.bid,
-    }));
+  (b) =>
+    b.team_id === teamId
+)
+
+.map((b) => ({
+  team_id: teamId,
+  nome: b.nome,
+  ruolo: b.ruolo,
+  nazionale: b.nazionale,
+  prezzo: b.prezzo,
+}));
 
 const players = buys;
 
@@ -551,12 +537,13 @@ players.sort((a, b) => {
 };
     }
   );
+
 }, [
   optionalReleases,
   automaticReleases,
   teamStatus,
   currentRound,
-  firstRoundBuys,
+  marketBuys,
 ]);
 
 const returnedByTeam = useMemo(() => {
