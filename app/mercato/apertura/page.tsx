@@ -18,15 +18,6 @@ type MarketRound = {
   bid_deadline: string | null;
 };
 
-type FreeAgent = {
-  id: number;
-  player_name: string;
-  display_name: string | null;
-  ruolo: string;
-  nazionale: string;
-  quotazione: number;
-};
-
 type Bid = {
   id: number;
   team_id: number;
@@ -74,6 +65,16 @@ type AuctionTie = {
   player_name: string;
   bid: number;
   teams: string[];
+};
+
+type FreeAgent = {
+  id: number;
+  players_id: number | null;
+  player_name: string;
+  display_name: string | null;
+  ruolo: string;
+  nazionale: string;
+  quotazione: number;
 };
 
 export default function MercatoPage() {
@@ -262,12 +263,7 @@ const openingRef =
     );
 
     setLoading(false);
-    if (
-  OPEN_TIME <= new Date() &&
-  !openingRef.current
-) {
-  openBuste();
-}
+  
   }
   function teamName(teamId: number) {
   return (
@@ -275,17 +271,6 @@ const openingRef =
       (t) =>
         t.team_id === teamId
     )?.username ?? "-"
-  );
-}
-
-function budgetOf(
-  teamId: number
-) {
-  return (
-    budgets.find(
-      (b) =>
-        b.team_id === teamId
-    )?.total_budget ?? 0
   );
 }
 
@@ -532,45 +517,83 @@ console.log("SVINCOLATI", freeAgents);
   );
 
   for (const a of assignmentsTmp) {
-    const freeAgent =
-      freeAgents.find(
-        (x) =>
-          x.id ===
-          a.player_id
-      );
+  const freeAgent =
+    freeAgents.find(
+      (x) =>
+        x.id === a.player_id
+    );
 
-    if (!freeAgent)
-      continue;
+  if (!freeAgent)
+    continue;
 
-    const { data: player } =
-      await supabase
-        .from("players")
-        .select(
-          "id,nome"
-        )
-        .ilike(
-          "fantapiu3_name",
-          freeAgent.player_name
-        )
-        .is(
-          "team_id",
-          null
-        )
-        .maybeSingle();
+  const playerId =
+    freeAgent.players_id;
 
-    if (!player)
-      continue;
+  let player;
 
+if (freeAgent.players_id) {
+  const { data } =
     await supabase
       .from("players")
-      .update({
+      .select("id,nome")
+      .eq(
+        "id",
+        freeAgent.players_id
+      )
+      .maybeSingle();
+
+  player = data;
+} else {
+  const { data } =
+    await supabase
+      .from("players")
+      .insert({
+        nome:
+          freeAgent.display_name ??
+          freeAgent.player_name,
+        ruolo:
+          freeAgent.ruolo,
+        nazionale:
+          freeAgent.nazionale,
+        prezzo: a.bid,
         team_id:
           a.team_id,
+        fantapiu3_name:
+          freeAgent.player_name,
+      })
+      .select("id,nome")
+      .single();
+
+  player = data;
+
+  if (player) {
+    await supabase
+      .from("free_agents")
+      .update({
+        players_id:
+          player.id,
       })
       .eq(
         "id",
-        player.id
+        freeAgent.id
       );
+  }
+}
+
+if (!player) {
+  console.error(
+    "Impossibile creare/trovare giocatore",
+    freeAgent
+  );
+  continue;
+}
+
+  await supabase
+    .from("players")
+    .update({
+      team_id: a.team_id,
+    })
+    .eq("id", player.id);
 
     await supabase
       .from(
@@ -585,29 +608,23 @@ console.log("SVINCOLATI", freeAgents);
         freeAgent.id
       );
 
-    const oldBudget =
-      budgetOf(
-        a.team_id
-      );
+    const newBudget =
+  budgetsMap.get(
+    a.team_id
+  ) ?? 0;
 
-    await supabase
-      .from(
-        "market_budgets"
-      )
-      .update({
-        total_budget:
-          Math.max(
-            oldBudget -
-              a.bid,
-            0
-          ),
-      })
-      .eq(
-        "team_id",
-        a.team_id
-      );
-
-    await supabase
+await supabase
+  .from("market_budgets")
+  .update({
+    total_budget:
+      newBudget,
+  })
+  .eq(
+    "team_id",
+    a.team_id
+  );
+      
+  await supabase
       .from(
         "market_assignments"
       )

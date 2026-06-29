@@ -283,10 +283,17 @@ setLeftoverBudget(
   budget?.total_budget ?? 0
 );
         if (roundData) {
+  setConfirmed(false);
+  setOffersConfirmed(false);
+  setSelectedIds([]);
+  setAutomaticIds([]);
+  setSelectedAgents([]);
+  setAgentOffers({});
+
   const {
-  data: release,
-  error: releaseError,
-} = await supabase
+    data: release,
+    error: releaseError,
+  } = await supabase
   .from("market_releases")
   .select(`
     id,
@@ -870,18 +877,53 @@ const boughtByRole = {
   A: selectedFreeAgents.filter((p) => p.ruolo === "A").length,
 };
 
-const missingByRole = hasReleasePhase
+const usingReleases =
+  releasedPlayers.length > 0;
+
+const missingByRole = usingReleases
   ? {
-      P: Math.max(releasedByRole.P - boughtByRole.P, 0),
-      D: Math.max(releasedByRole.D - boughtByRole.D, 0),
-      C: Math.max(releasedByRole.C - boughtByRole.C, 0),
-      A: Math.max(releasedByRole.A - boughtByRole.A, 0),
+      P: Math.max(
+        releasedByRole.P - boughtByRole.P,
+        0
+      ),
+      D: Math.max(
+        releasedByRole.D - boughtByRole.D,
+        0
+      ),
+      C: Math.max(
+        releasedByRole.C - boughtByRole.C,
+        0
+      ),
+      A: Math.max(
+        releasedByRole.A - boughtByRole.A,
+        0
+      ),
     }
   : {
-      P: Math.max(targetByRole.P - squadByRole.P - boughtByRole.P, 0),
-      D: Math.max(targetByRole.D - squadByRole.D - boughtByRole.D, 0),
-      C: Math.max(targetByRole.C - squadByRole.C - boughtByRole.C, 0),
-      A: Math.max(targetByRole.A - squadByRole.A - boughtByRole.A, 0),
+      P: Math.max(
+        targetByRole.P -
+          squadByRole.P -
+          boughtByRole.P,
+        0
+      ),
+      D: Math.max(
+        targetByRole.D -
+          squadByRole.D -
+          boughtByRole.D,
+        0
+      ),
+      C: Math.max(
+        targetByRole.C -
+          squadByRole.C -
+          boughtByRole.C,
+        0
+      ),
+      A: Math.max(
+        targetByRole.A -
+          squadByRole.A -
+          boughtByRole.A,
+        0
+      ),
     };
 
 const allowedByRole = missingByRole;
