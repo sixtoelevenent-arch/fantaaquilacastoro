@@ -7,12 +7,6 @@ import { useRouter } from "next/navigation";
 import { calcPlayerScore }
 from "@/lib/fantacalcio";
 
-type Team = {
-  id: number;
-  nome: string;
-  proprietario: string;
-};
-
 type Player = {
   id: number;
   nome: string;
@@ -55,8 +49,6 @@ function getModuloCounts(modulo: string) {
 
 export default function Page() {
   const [players, setPlayers] = useState<Player[]>([]);
-
-  const [selectedTeam, setSelectedTeam] = useState<number | null>(null);
 
   const [user, setUser] = useState<any>(null);
 
@@ -162,9 +154,7 @@ const [lastUpdate, setLastUpdate] =
 
   setUser(loggedUser);
 
-  setSelectedTeam(loggedUser.team_id);
-
-  const { data: targetMatchday } = await supabase
+   const { data: targetMatchday } = await supabase
   .from("matchdays")
   .select(
     "id,nome,ordine,chiusura_formazioni,formazione_aperta"
@@ -183,14 +173,6 @@ if (!targetMatchday) {
 
 setMatchday(targetMatchday); 
 
-if (!targetMatchday) {
-
-  alert("Nessuna giornata trovata");
-
-  setLoading(false);
-
-  return;
-}
 
 setLocked(
   !targetMatchday.formazione_aperta
@@ -342,16 +324,17 @@ setPlayers(enrichedPlayers);
       .single();
 
   if (!lastFormation) {
+  setModulo("3-4-3");
+  setLastUpdate("");
+  setTitolari([]);
 
-    setTitolari([]);
+  const panchinari =
+    sortedPlayers.map((p) => p.id);
 
-    const panchinari =
-      sortedPlayers.map((p) => p.id);
-
-    setPanchina(panchinari);
-
-    return;
-  }
+  setPanchina(panchinari);
+  setDirty(false);
+  return;
+}
 
   setModulo(lastFormation.modulo);
 
@@ -389,11 +372,47 @@ setPlayers(enrichedPlayers);
       )
       .map((p) => p.player_id);
 
-  setTitolari(titolariIds);
+ const validPlayerIds = new Set(
+  sortedPlayers.map((p) => p.id)
+);
 
-  setPanchina(panchinaIds);
+const titolariPuliti =
+  titolariIds.filter((id) =>
+    validPlayerIds.has(id)
+  );
 
-  return;
+const panchinaPulita =
+  panchinaIds.filter((id) =>
+    validPlayerIds.has(id)
+  );
+
+const mancanti = sortedPlayers
+  .map((p) => p.id)
+  .filter(
+    (id) =>
+      !titolariPuliti.includes(id) &&
+      !panchinaPulita.includes(id)
+  );
+
+const panchinaFinale = [
+  ...panchinaPulita,
+  ...mancanti,
+];
+
+setTitolari(titolariPuliti);
+setPanchina(panchinaFinale);
+setDirty(false);
+
+if (
+  titolariPuliti.length !==
+  titolariIds.length
+) {
+  alert(
+    "Alcuni giocatori della formazione precedente non sono più in rosa. Completa nuovamente la formazione."
+  );
+}
+
+return;
 }
 
   setModulo(formation.modulo);
@@ -428,10 +447,45 @@ const panchinaIds = (formationPlayers || [])
   )
   .map((p) => p.player_id);
 
-setTitolari(titolariIds);
-setPanchina(panchinaIds);
+const validPlayerIds = new Set(
+  sortedPlayers.map((p) => p.id)
+);
 
+const titolariPuliti =
+  titolariIds.filter((id) =>
+    validPlayerIds.has(id)
+  );
+
+const panchinaPulita =
+  panchinaIds.filter((id) =>
+    validPlayerIds.has(id)
+  );
+
+const mancanti = sortedPlayers
+  .map((p) => p.id)
+  .filter(
+    (id) =>
+      !titolariPuliti.includes(id) &&
+      !panchinaPulita.includes(id)
+  );
+
+const panchinaFinale = [
+  ...panchinaPulita,
+  ...mancanti,
+];
+
+setTitolari(titolariPuliti);
+setPanchina(panchinaFinale);
 setDirty(false);
+
+if (
+  titolariPuliti.length !==
+  titolariIds.length
+) {
+  alert(
+    "Alcuni giocatori della formazione salvata non sono più in rosa. Completa nuovamente la formazione."
+  );
+}
 
 }
 
@@ -612,12 +666,14 @@ function moveBenchPlayer(
     setSaving(true);
 
     try {
-      const { data: oldFormations } = await supabase
-  .from("formations")
-  .select("id")
-  .eq("team_id", user.team_id)
-  .eq("matchday_id", matchday.id);
+ 
 
+const { data: oldFormations } =
+  await supabase
+    .from("formations")
+    .select("*")
+    .eq("team_id", user.team_id)
+    .eq("matchday_id", matchday.id);
   
       let formationId: number;
 
@@ -631,13 +687,16 @@ if (oldFormations?.length) {
     .eq("formation_id", formationId);
 
   await supabase
-    .from("formations")
-    .update({
-      modulo,
-    })
-    .eq("id", formationId);
+  .from("formations")
+  .update({
+    modulo,
+    updated_at:
+      new Date().toISOString(),
+  })
+  .eq("id", formationId);
 
 } else {
+
 
   const { data: newFormation, error: formationError } =
     await supabase
@@ -653,16 +712,20 @@ if (oldFormations?.length) {
       .select()
       .single();
 
-  if (formationError || !newFormation) {
-    throw formationError;
-  }
+if (formationError || !newFormation) {
+   throw formationError;
+}
 
   formationId = newFormation.id;
 }
 
-   const benchPlayers = panchina
+  const benchPlayers = panchina
   .map((id) =>
-    players.find((p) => p.id === id)
+    players.find(
+      (p) =>
+        p.id === id &&
+        p.team_id === user.team_id
+    )
   )
   .filter(
     (p): p is Player => p !== undefined
@@ -676,12 +739,29 @@ if (oldFormations?.length) {
 };
 
 const titolariOrdinati = players
-  .filter((p) => titolari.includes(p.id))
+  .filter(
+    (p) =>
+      titolari.includes(p.id) &&
+      p.team_id === user.team_id
+  )
   .sort(
     (a, b) =>
-      ordineRuoli[a.ruolo as keyof typeof ordineRuoli] -
-      ordineRuoli[b.ruolo as keyof typeof ordineRuoli]
+      ordineRuoli[
+        a.ruolo as keyof typeof ordineRuoli
+      ] -
+      ordineRuoli[
+        b.ruolo as keyof typeof ordineRuoli
+      ]
   );
+
+  if (titolariOrdinati.length !== 11) {
+  alert(
+    "La formazione contiene giocatori non più in rosa. Ricarica la pagina."
+  );
+
+  setSaving(false);
+  return;
+}
 
 const rows = [
 
@@ -710,21 +790,34 @@ const rows = [
         throw playersError;
       }
 
-      alert("Formazione salvata correttamente"); setDirty(false);
-      setLastUpdate(new Date().toISOString());
-    } catch (err: any) {
+    await loadPlayers(
+  user.team_id,
+  matchday.id
+);
 
-  console.error("ERRORE SALVATAGGIO", err);
-  
+setDirty(false);
+setSaving(false);
+
+alert("Formazione salvata correttamente");
+
+return;
+
+    } catch (err: any) {
+  console.error(
+    "ERRORE SALVATAGGIO",
+    err
+  );
+
+  setSaving(false);
+
   alert(
-    err?.message ||
     JSON.stringify(err, null, 2)
   );
 
+  return;
 }
 
-    setSaving(false);
-  }
+}
   const required =
   getModuloCounts(modulo);
 
