@@ -100,6 +100,9 @@ const [optionalReleases, setOptionalReleases] =
     const [roundAssignments, setRoundAssignments] =
   useState<RoundAssignment[]>([]);
 
+  const [firstRoundBuys, setFirstRoundBuys] =
+  useState<any[]>([]);
+
     type ReturnedPlayer = {
   nome: string;
   ruolo: string;
@@ -272,6 +275,26 @@ setRoundAssignments(
   (assignmentsData as RoundAssignment[]) ?? []
 );
 
+const { data: firstRoundData } =
+  await supabase
+    .from("market_bids")
+    .select(`
+      team_id,
+      bid,
+      players (
+        nome,
+        ruolo,
+        nazionale
+      )
+    `)
+    .eq("round_id", 1)
+    .order("team_id")
+    .order("priority");
+
+setFirstRoundBuys(
+  firstRoundData ?? []
+);
+
 const {
   data: statusData,
   error: statusError,
@@ -284,8 +307,33 @@ if (statusError) {
   throw statusError;
 }
 
+const {
+  data: budgetData,
+  error: budgetError,
+} = await supabase
+  .from("market_budgets")
+  .select(`
+    team_id,
+    total_budget
+  `);
+
+if (budgetError) {
+  throw budgetError;
+}
+
+const budgets = new Map(
+  (budgetData ?? []).map((b: any) => [
+    b.team_id,
+    b.total_budget ?? 0,
+  ])
+);
+
 setTeamStatus(
-  (statusData as TeamStatus[]) ?? []
+  (statusData ?? []).map((t: any) => ({
+    ...t,
+    budget:
+      budgets.get(t.team_id) ?? 0,
+  }))
 );
 
 const {
@@ -435,49 +483,27 @@ const optionalByTeam = useMemo(() => {
   teamStatus.find(
     (t) => t.team_id === teamId
   );
-      const optional =
-  optionalReleases
+     
+  const buys =
+  firstRoundBuys
     .filter(
-      (p) =>
-        p.team_id === teamId
+      (b: any) =>
+        b.team_id === teamId
     )
-    .map((p) => ({
-      ...p,
-      squadra: nome,
-    }));
-
-const automatic =
-  automaticReleases
-    .filter(
-      (p) =>
-        p.team_id === teamId
-    )
-    .map((p) => ({
-      team_id: p.team_id,
-      nome: p.nome,
-      ruolo: p.ruolo,
-      nazionale: p.nazionale,
-      prezzo_recuperato:
-        p.prezzo_recuperato,
-    }));
-
-const buys =
-  roundAssignments
-    .filter(
-      (p) =>
-        p.squadra === nome
-    )
-    .map((p) => ({
+    .map((b: any) => ({
       team_id: teamId,
-      nome: p.nome,
-      ruolo: p.ruolo,
-      nazionale: "",
-      prezzo_recuperato:
-        p.prezzo,
+      nome:
+        b.players.nome,
+      ruolo:
+        b.players.ruolo,
+      nazionale:
+        b.players.nazionale ??
+        "",
+      prezzo:
+        b.bid,
     }));
 
 const players = buys;
-console.log(roundAssignments);
 
 players.sort((a, b) => {
   const diff =
@@ -529,8 +555,8 @@ players.sort((a, b) => {
   optionalReleases,
   automaticReleases,
   teamStatus,
-  roundAssignments,
   currentRound,
+  firstRoundBuys,
 ]);
 
 const returnedByTeam = useMemo(() => {
@@ -634,15 +660,17 @@ const returnedByTeam = useMemo(() => {
               }}
             >
               <div
-                style={{
-                  color: "#facc15",
-                  fontSize: "1.5rem",
-                  fontWeight: 800,
-                  marginBottom: 6,
-                }}
-              >
-                {currentRound.name}
-              </div>
+  style={{
+    color: "#facc15",
+    fontSize: "1.5rem",
+    fontWeight: 800,
+    marginBottom: 6,
+  }}
+>
+  {currentRound.id === 2
+    ? "1ª Finestra di Mercato"
+    : currentRound.name}
+</div>
 
               <div
                 style={{
@@ -913,9 +941,7 @@ rowGap: 8,
           whiteSpace: "nowrap",
         }}
       >
-        {currentRound?.status === "buste"
-          ? `${p.prezzo_recuperato} mln`
-          : `+${p.prezzo_recuperato}`}
+       {p.prezzo} mln
       </div>
 
       <div
