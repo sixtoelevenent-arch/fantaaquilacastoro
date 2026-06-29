@@ -222,7 +222,12 @@ return (
     <main
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom, #450a0a, #1f0808)",
+        background:
+  matchdayName?.includes("Quarti") ||
+  matchdayName?.includes("Semifinali") ||
+  matchdayName === "Finale"
+    ? "linear-gradient(to bottom,#1e3a8a,#172554)"
+    : "linear-gradient(to bottom,#450a0a,#1f0808)",
         color: "white",
         padding: "12px",
       }}
@@ -237,17 +242,23 @@ return (
         <BackHome />
 
         <h1
-          style={{
-            color: "#ef4444",
-            fontSize: "clamp(2rem, 5vw, 3.2rem)",
-            fontWeight: "800",
-            marginTop: "10px",
-            marginBottom: "10px",
-            textAlign: "center"
-          }}
-        >
-          🔴 LIVE GIORNATA
-        </h1>
+  style={{
+    color: "#ef4444",
+    fontSize: "clamp(2rem, 5vw, 3.2rem)",
+    fontWeight: "800",
+    marginTop: "10px",
+    marginBottom: "10px",
+    textAlign: "center",
+  }}
+>
+  {
+    matchdayName?.includes("Quarti") ||
+    matchdayName?.includes("Semifinali") ||
+    matchdayName === "Finale"
+      ? "🔴 LIVE FASE FINALE"
+      : "🔴 LIVE GIORNATA"
+  }
+</h1>
 
 
   <div
@@ -260,6 +271,86 @@ return (
   }}
 >
   ⚽ {matchdayName}
+
+  {
+  (matchdayName?.includes("Quarti") ||
+    matchdayName?.includes("Semifinali") ||
+    matchdayName === "Finale") && (
+    <div
+      style={{
+        color: "#94a3b8",
+        fontSize: ".9rem",
+        marginTop: 4,
+      }}
+    >
+      Road to New York 🗽
+    </div>
+  )
+}
+  {matchdayName === "Quarti Andata" && (
+    <div
+      style={{
+        color: "#fde68a",
+        marginTop: 6,
+        fontSize: ".9rem",
+        fontWeight: 700,
+      }}
+    >
+      🏆 QUARTI DI FINALE • ANDATA
+    </div>
+  )}
+
+  {matchdayName === "Quarti Ritorno" && (
+    <div
+      style={{
+        color: "#fde68a",
+        marginTop: 6,
+        fontSize: ".9rem",
+        fontWeight: 700,
+      }}
+    >
+      🏆 QUARTI DI FINALE • RITORNO
+    </div>
+  )}
+
+  {matchdayName === "Semifinali Andata" && (
+    <div
+      style={{
+        color: "#fde68a",
+        marginTop: 6,
+        fontSize: ".9rem",
+        fontWeight: 700,
+      }}
+    >
+      🥇 SEMIFINALI • ANDATA
+    </div>
+  )}
+
+  {matchdayName === "Semifinali Ritorno" && (
+    <div
+      style={{
+        color: "#fde68a",
+        marginTop: 6,
+        fontSize: ".9rem",
+        fontWeight: 700,
+      }}
+    >
+      🥇 SEMIFINALI • RITORNO
+    </div>
+  )}
+
+  {matchdayName === "Finale" && (
+    <div
+      style={{
+        color: "#fde68a",
+        marginTop: 6,
+        fontSize: ".9rem",
+        fontWeight: 700,
+      }}
+    >
+      🏆 FINALE
+    </div>
+  )}
 </div>
 
 
@@ -414,7 +505,7 @@ return (
 
 )}
 
-{matches.map((match) => {
+{matches.map((match, index) => {
 
   return (
     <Card
@@ -464,7 +555,18 @@ return (
     whiteSpace: "nowrap",
   }}
 >
-       {openMatchId === match.id ? "▼" : "▶"} 🏆 GIRONE {match.gruppo}
+       {openMatchId === match.id ? "▼" : "▶"}{" "}
+{
+  matchdayName === "Quarti Andata" ||
+  matchdayName === "Quarti Ritorno"
+    ? `🏆 QUARTO ${index + 1}`
+    : matchdayName === "Semifinali Andata" ||
+      matchdayName === "Semifinali Ritorno"
+    ? `🥇 SEMIFINALE ${index + 1}`
+    : matchdayName === "Finale"
+    ? "🏆 FINALE"
+    : `🏆 GIRONE ${match.gruppo}`
+}
   </div>
 </div>
 </div>
