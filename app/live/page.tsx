@@ -514,14 +514,17 @@ return (
 
   highlight={openMatchId === match.id}
 
-  onClick={() =>
-
-    setOpenMatchId(
-      openMatchId === match.id
-        ? null
-        : match.id
-    )
+  onClick={() => {
+  if (matchdayName === "Quarti Andata") {
+    return;
   }
+
+  setOpenMatchId(
+    openMatchId === match.id
+      ? null
+      : match.id
+  );
+}}
 >
 
   <div
@@ -555,7 +558,11 @@ return (
     whiteSpace: "nowrap",
   }}
 >
-       {openMatchId === match.id ? "▼" : "▶"}{" "}
+       {matchdayName === "Quarti Andata"
+  ? "▼"
+  : openMatchId === match.id
+  ? "▼"
+  : "▶"}{" "}
 {
   matchdayName === "Quarti Andata" ||
   matchdayName === "Quarti Ritorno"
@@ -706,7 +713,10 @@ return (
 
 </div>
                         
- {openMatchId === match.id && (
+ {(
+  openMatchId === match.id ||
+  matchdayName === "Quarti Andata"
+) && (
   <div
     style={{ marginTop: 15 }}
     onClick={(e) => e.stopPropagation()}
