@@ -244,16 +244,12 @@ const assist = assistValue;
   );
 
       if (error) {
-  console.log("ERRORE:", nome, error.message);
-  continue;
+   continue;
 }
 
     importati++;
   }
 
-  console.log("");
-  console.log("IMPORTATI:", importati);
-  console.log("NON TROVATI:", nonTrovati);
   return {
   importati,
   nonTrovati,

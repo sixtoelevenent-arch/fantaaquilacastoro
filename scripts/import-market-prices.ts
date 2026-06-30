@@ -5,15 +5,6 @@ import fs from "fs";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
 
-console.log(
-  "URL:",
-  !!process.env.NEXT_PUBLIC_SUPABASE_URL
-);
-
-console.log(
-  "SERVICE:",
-  !!process.env.SUPABASE_SERVICE_ROLE_KEY
-);
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -101,20 +92,6 @@ if (updateError) {
 updated++;
 
 }
-console.log("");
-console.log("=== IMPORT TERMINATO ===");
-console.log("Aggiornati:", updated);
-console.log("Non trovati:", notFound.length);
-console.log("Duplicati:", duplicates.length);
-if (notFound.length) {
-console.log("");
-console.log("NON TROVATI");
-console.log(notFound);
-}
-if (duplicates.length) {
-console.log("");
-console.log("DUPLICATI");
-console.log(duplicates);
-}
+
 }
 run();

@@ -398,37 +398,6 @@ projectedFP += player.bonus || 0;
 const projectedGoals =
   fantasyGoals(projectedFP);
 
-console.log(
-  "TEAM FINAL CHECK",
-  processedPlayers.map((p) => ({
-    nome: p.nome,
-    sv: p.sv,
-    replacement: p.replacementPlayer?.nome,
-    replacementVote:
-      p.replacementPlayer?.voto,
-  }))
-);
-
-console.log(
-  "COMPLETED SLOTS",
-  completedSlots
-);
-
-console.log(
-  "TEAM FINAL CHECK",
-  processedPlayers.map((p) => ({
-    nome: p.nome,
-    sv: p.sv,
-    replacement: p.replacementPlayer?.nome,
-    replacementVote:
-      p.replacementPlayer?.voto,
-  }))
-);
-
-console.log(
-  "COMPLETED SLOTS",
-  completedSlots
-);
 
 return {
   players: processedPlayers,

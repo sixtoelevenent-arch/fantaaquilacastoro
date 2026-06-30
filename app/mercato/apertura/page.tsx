@@ -504,9 +504,6 @@ if (
   setAssignments(
     assignmentsTmp
   );
-console.log("ASSEGNAZIONI", assignmentsTmp);
-console.log("BUSTE", bids);
-console.log("SVINCOLATI", freeAgents);
 
   setPriorityTies(
     priorityTmp

@@ -272,8 +272,6 @@ const { data: buysData, error: buysError } =
       )
     `);
 
-console.log("BUYS ERROR", buysError);
-console.log("BUYS DATA", buysData);
     
     if (buysError) {
   throw buysError;
@@ -471,14 +469,7 @@ const optionalByTeam = useMemo(() => {
     (t) => t.team_id === teamId
   );
      
-  console.log(
-  "TEAM",
-  teamId,
-  nome,
-  marketBuys
-);
-
-  const buys =
+   const buys =
   marketBuys
     .filter(
   (b) =>

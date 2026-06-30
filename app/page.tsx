@@ -5,7 +5,10 @@ import {
 } from "react";
 import Link from "next/link";
 export default function Home() {
-  const [logged, setLogged] =
+const [logged, setLogged] =
+  useState(false);
+
+  const [musicMuted, setMusicMuted] =
   useState(false);
 
 useEffect(() => {
@@ -14,7 +17,33 @@ useEffect(() => {
       "fantasy_user"
     )
   );
+
+  setMusicMuted(
+    localStorage.getItem(
+      "music_muted"
+    ) === "true"
+  );
 }, []);
+
+const toggleMusic = () => {
+  const next = !musicMuted;
+
+  setMusicMuted(next);
+
+  localStorage.setItem(
+    "music_muted",
+    String(next)
+  );
+
+  window.dispatchEvent(
+    new CustomEvent("music-toggle", {
+      detail: {
+        muted: next,
+      },
+    })
+  );
+};
+
   const buttonStyle = {
     display: "block",
     width: "100%",
@@ -45,6 +74,35 @@ useEffect(() => {
         alignItems: "center",
       }}
     >
+      
+      <button
+  onClick={toggleMusic}
+  style={{
+    position: "absolute",
+    top: 10,
+    left: 10,
+
+    width: 60,
+    height: 48,
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
+    background: "#0f172a",
+    color: "white",
+
+    border: "1px solid rgba(255,255,255,0.15)",
+    borderRadius: 14,
+    cursor: "pointer",
+
+    fontSize: "1.4rem",
+    zIndex: 50,
+  }}
+>
+  {musicMuted ? "🔇" : "🔊"}
+</button>
+
       <Link
   href={logged ? "/account" : "/login"}
   style={{

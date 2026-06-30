@@ -99,10 +99,6 @@ async function main() {
       inseriti++;
     }
   }
-
-  console.log("AGGIORNATI:", aggiornati);
-  console.log("NUOVI:", inseriti);
-
   const chunkSize = 500;
 
   for (let i = 0; i < nuoviGiocatori.length; i += chunkSize) {
@@ -118,7 +114,6 @@ async function main() {
     }
   }
 
-  console.log("IMPORT COMPLETATO");
 }
 
 main().catch(console.error);
