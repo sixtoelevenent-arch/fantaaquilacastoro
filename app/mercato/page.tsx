@@ -263,13 +263,17 @@ const { data: buysData, error: buysError } =
     .from("market_manual_assignments")
     .select(`
       team_id,
+      player_id,
       price,
-      players (
+      players!market_manual_assignments_player_id_fkey (
         nome,
         ruolo,
         nazionale
       )
-    `)
+    `);
+
+console.log("BUYS ERROR", buysError);
+console.log("BUYS DATA", buysData);
     
     if (buysError) {
   throw buysError;
@@ -277,11 +281,11 @@ const { data: buysData, error: buysError } =
 
 setMarketBuys(
   (buysData ?? []).map((r: any) => ({
-    team_id: r.team_id,
+    team_id: Number(r.team_id),
     prezzo: r.price,
-    nome: r.players.nome,
-    ruolo: r.players.ruolo,
-    nazionale: r.players.nazionale,
+    nome: r.players?.nome,
+    ruolo: r.players?.ruolo,
+    nazionale: r.players?.nazionale,
   }))
 );
 
