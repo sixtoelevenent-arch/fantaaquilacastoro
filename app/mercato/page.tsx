@@ -30,6 +30,14 @@ type AutomaticRelease = {
   prezzo_recuperato: number;
 };
 
+type OfficialAutoRelease = {
+  team_id: number;
+  nome: string;
+  ruolo: string;
+  nazionale: string;
+  refund: number;
+};
+
 type FreeAgent = {
   id: number;
   display_name: string;
@@ -126,6 +134,12 @@ const [returnedPlayers, setReturnedPlayers] =
 
   const [expandedRound, setExpandedRound] =
     useState<number | null>(null);
+
+    const [openTeam, setOpenTeam] =
+  useState<number | null>(null);
+
+    const [officialAutoReleases, setOfficialAutoReleases] =
+  useState<OfficialAutoRelease[]>([]);
 
   useEffect(() => {
   loadPage().catch((e) => {
@@ -354,7 +368,51 @@ setReturnedPlayers(
         b.nome,
         "it"
       );
+
+      
+
     })
+);
+
+const {
+  data: officialData,
+  error: officialError,
+} = await supabase
+  .from("players")
+  .select(`
+    team_id,
+    nome,
+    ruolo,
+    nazionale,
+    prezzo
+  `)
+  .in("nazionale", [
+    "Costa d'Avorio",
+    "Ecuador",
+    "Germania",
+    "Giappone",
+    "Paesi Bassi",
+    "Sudafrica",
+    "Svezia",
+  ])
+  .not("team_id", "is", null);
+
+if (officialError) {
+  throw officialError;
+}
+
+setOfficialAutoReleases(
+  (officialData ?? []).map(
+    (p: any) => ({
+      team_id: Number(p.team_id),
+      nome: p.nome,
+      ruolo: p.ruolo,
+      nazionale: p.nazionale,
+      refund: Math.ceil(
+        p.prezzo / 2
+      ),
+    })
+  )
 );
 
   } catch (e) {
@@ -461,6 +519,48 @@ const roleOrder = {
   A: 4,
 };
 
+const italyNow = new Date(
+  new Date().toLocaleString("en-US", {
+    timeZone: "Europe/Rome",
+  })
+);
+
+function getMarketStatusText() {
+  const h = italyNow.getHours();
+
+  const allComplete = teamStatus.every(
+    (t) =>
+      t.p_missing === 0 &&
+      t.d_missing === 0 &&
+      t.c_missing === 0 &&
+      t.a_missing === 0
+  );
+
+  if (allComplete) {
+    return "✅ ROSE COMPLETE";
+  }
+
+  if (h < 7) {
+    return "📅 Apertura svincoli • 04/07 ore 07:00";
+  }
+
+  if (h < 11) {
+    return "⏰ Chiusura svincoli • ore 11:00";
+  }
+
+  if (h < 13) {
+    return "⏰ Chiusura Prima Sessione • ore 13:00";
+  }
+
+  if (h < 15) {
+    return "⏰ Chiusura Seconda Sessione • ore 15:00";
+  }
+
+  const nextHour = h + 1;
+
+  return `⏰ Chiusura Sessione Successiva • ore ${nextHour}:00`;
+}
+
 const optionalByTeam = useMemo(() => {
   return activeTeams.map(
     ({ teamId, nome }) => {
@@ -484,8 +584,66 @@ const optionalByTeam = useMemo(() => {
   prezzo: b.prezzo,
 }));
 
+const autoReleases =
+  officialAutoReleases
+    .filter(
+      (p) =>
+        p.team_id === teamId
+    )
+
+
+    .sort((a, b) => {
+      const diff =
+        roleOrder[
+          a.ruolo as keyof typeof roleOrder
+        ] -
+        roleOrder[
+          b.ruolo as keyof typeof roleOrder
+        ];
+
+      if (diff !== 0) {
+        return diff;
+      }
+
+      return a.nome.localeCompare(
+        b.nome,
+        "it"
+      );
+    });
+
 const players = buys;
 
+
+const refundTotal =
+  autoReleases.reduce(
+    (sum, p) =>
+      sum + p.refund,
+    0
+  );
+
+const freeSlots =
+  autoReleases.length;
+
+  const pSlots =
+  autoReleases.filter(
+    (p) => p.ruolo === "P"
+  ).length;
+
+const dSlots =
+  autoReleases.filter(
+    (p) => p.ruolo === "D"
+  ).length;
+
+const cSlots =
+  autoReleases.filter(
+    (p) => p.ruolo === "C"
+  ).length;
+
+const aSlots =
+  autoReleases.filter(
+    (p) => p.ruolo === "A"
+  ).length;
+  
 players.sort((a, b) => {
   const diff =
     roleOrder[
@@ -506,28 +664,23 @@ players.sort((a, b) => {
 });
 
    const missingText = [
-  status?.p_missing
-    ? `${status.p_missing} P`
-    : null,
-  status?.d_missing
-    ? `${status.d_missing} D`
-    : null,
-  status?.c_missing
-    ? `${status.c_missing} C`
-    : null,
-  status?.a_missing
-    ? `${status.a_missing} A`
-    : null,
+  pSlots ? `${pSlots} P` : null,
+  dSlots ? `${dSlots} D` : null,
+  cSlots ? `${cSlots} C` : null,
+  aSlots ? `${aSlots} A` : null,
 ]
   .filter(Boolean)
   .join(", ");
-  
+
   return {
   teamId,
   squadra: nome,
   credits:
-  status?.budget ?? 0,
+    (status?.budget ?? 0) +
+    refundTotal,
   players,
+  autoReleases,
+  freeSlots,
   missingText,
 };
     }
@@ -539,6 +692,7 @@ players.sort((a, b) => {
   teamStatus,
   currentRound,
   marketBuys,
+  officialAutoReleases,
 ]);
 
 const returnedByTeam = useMemo(() => {
@@ -672,16 +826,28 @@ const returnedByTeam = useMemo(() => {
                 {statusLabel(
                   currentRound.status
                 )}
+                
+                <div
+  style={{
+    color: "#93c5fd",
+    fontWeight: 700,
+    marginTop: 12,
+    fontSize: ".95rem",
+  }}
+>
+  {getMarketStatusText()}
+</div>
+
               </div>
 
               <div
-                style={{
-                  color: "#facc15",
-                  fontWeight: 700,
-                }}
-              >
-                Nazionali eliminate:16/16
-              </div>
+  style={{
+    color: "#facc15",
+    fontWeight: 700,
+  }}
+>
+  Nazionali eliminate:16/16
+</div>
              
                   </div>
           </Card>
@@ -819,30 +985,43 @@ const returnedByTeam = useMemo(() => {
       display: "grid",
       gridTemplateColumns:
   "repeat(2, minmax(0,1fr))",
+alignItems: "start",
 columnGap: 8,
 rowGap: 8,
     }}
   >
-    {optionalByTeam.map(
+   {optionalByTeam.map(
   ({
-  squadra,
-  credits,
-  players,
-  missingText,
-}) => {
+    teamId,
+    squadra,
+    credits,
+    players,
+    autoReleases,
+    freeSlots,
+    missingText,
+  }) => {
+
+    const expanded =
+      openTeam === teamId;
        
         return (
           <div
-            key={squadra}
-            style={{
-              border:
-                "1px solid rgba(34,197,94,.35)",
-              background:
-                "linear-gradient(180deg,#062611,#04160b)",
-              borderRadius: 18,
-              padding: 12,
-            }}
-          >
+  key={squadra}
+  onClick={() =>
+    setOpenTeam(
+      expanded ? null : teamId
+    )
+  }
+  style={{
+    border:
+      "1px solid rgba(34,197,94,.35)",
+    background:
+      "linear-gradient(180deg,#062611,#04160b)",
+    borderRadius: 18,
+    padding: 12,
+    cursor: "pointer",
+  }}
+>
             <div
               style={{
                 color: "#4ade80",
@@ -864,45 +1043,128 @@ rowGap: 8,
             >
               💳 {credits} mln
 
-<div
+              <div
   style={{
     fontSize: ".72rem",
     color: "#94a3b8",
     marginTop: 2,
+  }}
+>
+  🪑 Slot da reintegrare: {missingText || "Nessuno"}
+</div>
+
+<div
+  style={{
+    marginTop: 8,
+    color: "#94a3b8",
+    fontSize: ".72rem",
     fontWeight: 500,
   }}
 >
-  {missingText
-    ? `Mancanti: ${missingText}`
-    : "Rosa completa"}
+  {expanded
+    ? "▲ Tocca per chiudere"
+    : "▼ Clicca per i dettagli"}
 </div>
+
             </div>
 
-           <div
+           {expanded && (
+            <div
   style={{
     color: "#94a3b8",
     fontSize: ".8rem",
   }}
 >
-  {players.length === 0
-    ? "Acquisti secondo round buste"
-    : `${players.length} giocatori`}
-</div>
+      {autoReleases.length > 0 && (
+  <div
+    style={{
+      marginTop: 10,
+      borderTop:
+        "1px solid rgba(255,255,255,.08)",
+      paddingTop: 10,
+    }}
+  >
+    <div
+      style={{
+        color: "#f87171",
+        fontWeight: 700,
+        marginBottom: 8,
+      }}
+    >
+      🔓 Svincoli automatici 2° round
+    </div>
 
-{players.map((p) => (
+    {autoReleases.map((p) => (
+      <div
+        key={`${squadra}-${p.nome}`}
+        style={{
+          display: "flex",
+          justifyContent:
+            "space-between",
+          fontSize: ".8rem",
+          marginBottom: 4,
+        }}
+      >
+        <span>
+          {p.ruolo} {p.nome}
+        </span>
+
+        <span
+          style={{
+            color: "#facc15",
+            fontWeight: 700,
+          }}
+        >
+          +{p.refund}
+        </span>
+      </div>
+    ))}
+  </div>
+)}
+
+<div
+  style={{
+    marginTop: 12,
+    paddingTop: 10,
+    borderTop:
+      "1px solid rgba(255,255,255,.08)",
+  }}
+>
+  <div
+    style={{
+      color: "#93c5fd",
+      fontWeight: 700,
+      marginBottom: 8,
+      fontSize: ".8rem",
+    }}
+  >
+    📦 Acquisti 1° round buste
+  </div>
+
+  <div
+    style={{
+      color: "#94a3b8",
+      fontSize: ".75rem",
+      marginBottom: 8,
+    }}
+  >
+    {players.length} giocatori
+  </div>
+
+  {players.map((p) => (
   <div
     key={`${squadra}-${p.nome}`}
     style={{
       padding: "6px 0",
       borderTop:
-        "1px solid rgba(255,255,255,.06)",
+        "1px solid rgba(255,255,255,.05)",
     }}
   >
     <div
       style={{
         display: "flex",
         justifyContent: "space-between",
-        gap: 10,
+        gap: 8,
         alignItems: "center",
       }}
     >
@@ -923,7 +1185,7 @@ rowGap: 8,
           whiteSpace: "nowrap",
         }}
       >
-       {p.prezzo} mln
+        {p.prezzo} mln
       </div>
 
       <div
@@ -938,11 +1200,16 @@ rowGap: 8,
   </div>
 ))}
 
-        </div>
-      );}
-)}
+</div>
+</div>
 
-{returnedByTeam.map(
+)}
+</div>
+);
+    }
+  )}
+
+    {returnedByTeam.map(
   ([squadra, players]) => (
     <div
           key={squadra}
@@ -953,6 +1220,8 @@ rowGap: 8,
               "linear-gradient(180deg,#250808,#130404)",
             borderRadius: 18,
             padding: 12,
+            alignSelf: "start",
+            height: "fit-content",
           }}
         >
           <div
