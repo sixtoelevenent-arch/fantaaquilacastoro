@@ -36,6 +36,8 @@ export default function IlMioMercatoPage() {
   "michel",
 ];
 
+  const [, forceTick] = useState(0);
+
   const [loading, setLoading] = useState(true);
 
   const [user, setUser] =
@@ -74,6 +76,45 @@ const bidPhase =
 
 const marketClosed =
   bidClosed;
+
+  function formatCountdown(
+  date: string | null
+) {
+  if (!date) {
+    return "00:00:00";
+  }
+
+  const diff =
+    new Date(date).getTime() -
+    Date.now();
+
+  if (diff <= 0) {
+    return "00:00:00";
+  }
+
+  const hours = Math.floor(
+    diff / 3600000
+  );
+
+  const minutes = Math.floor(
+    (diff % 3600000) / 60000
+  );
+
+  const seconds = Math.floor(
+    (diff % 60000) / 1000
+  );
+
+  return `${String(hours).padStart(
+    2,
+    "0"
+  )}:${String(minutes).padStart(
+    2,
+    "0"
+  )}:${String(seconds).padStart(
+    2,
+    "0"
+  )}`;
+}
 
   const [myPlayers, setMyPlayers] =
     useState<Player[]>([]);
@@ -146,6 +187,14 @@ const [teamConfirmations, setTeamConfirmations] =
     useEffect(() => {
     loadPage();
   }, []);
+
+  useEffect(() => {
+  const timer = setInterval(() => {
+    forceTick((v) => v + 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, []);
 
     async function loadPage() {
     setLoading(true);
@@ -1250,8 +1299,15 @@ alignItems: "center",
     <br />
 
     Puoi selezionare i giocatori
-    da svincolare fino alla
-    deadline delle ore 10:00 di Domenica 28.
+da svincolare ancora per
+
+<br />
+<br />
+
+⏳ {formatCountdown(
+  round?.release_deadline ??
+    null
+)}
   </div>
 )}
 
@@ -1366,9 +1422,15 @@ alignItems: "center",
     <br />
 
     È ora possibile inserire
-    le offerte in busta fino
-    alla deadline delle ore
-    18:00.
+le offerte in busta ancora per
+
+<br />
+<br />
+
+⏳ {formatCountdown(
+  round?.bid_deadline ??
+    null
+)}
   </div>
 )}
 
@@ -1433,9 +1495,6 @@ alignItems: "center",
 
 {bidPhase &&
   "Fase acquisti aperta."}
-
-{marketClosed &&
-  "Sessione di mercato conclusa."}
 
           {releasePhase && (
   <>
@@ -1716,61 +1775,50 @@ alignItems: "center",
                       </label>
                     </div>
 
-                    <div
-                      style={{
-                        textAlign:
-                          "right",
-                      }}
-                    >
-                      <div>
-                        {p.ruolo}
-                      </div>
-
-                      <div
-                        style={{
-                          color:
-                            "#facc15",
-                          fontWeight:
-                            800,
-                          fontSize:
-                            "1.1rem",
-                          marginTop:
-                            8,
-                        }}
-                      >
-                        Acquisto:{" "}
-                        {p.prezzo} mln
-<div
+                   <div
   style={{
-    color: "#4ade80",
-    marginTop: 6,
-    fontSize: ".95rem",
+    textAlign: "right",
   }}
 >
-  Recupero:{" "}
-  {Math.ceil(
-  (p.prezzo ?? 0) / 2
-)}{" "}
-  mln
-  {automatic && (
+  <div>{p.ruolo}</div>
+
   <div
     style={{
-      color: "#fde68a",
-      fontSize: ".85rem",
-      marginTop: 6,
+      color: "#facc15",
+      fontWeight: 800,
+      fontSize: "1.1rem",
+      marginTop: 8,
     }}
   >
-    Credito già recuperato
-    automaticamente
+    Acquisto: {p.prezzo} mln
   </div>
-)}
+
+  <div
+    style={{
+      color: "#4ade80",
+      marginTop: 6,
+      fontSize: ".95rem",
+    }}
+  >
+    Recupero: {Math.ceil((p.prezzo ?? 0) / 2)} mln
+  </div>
+
+  {automatic && (
+    <div
+      style={{
+        color: "#fde68a",
+        fontSize: ".85rem",
+        marginTop: 6,
+      }}
+    >
+      Credito già recuperato automaticamente
+    </div>
+  )}
 </div>
 
                       </div>
                     </div>
-                  </div>
-                </div>
-              );
+                 );
             }
           )}
 

@@ -106,8 +106,11 @@ const [optionalReleases, setOptionalReleases] =
   const [loading, setLoading] = useState(true);
 
   const [rounds, setRounds] = useState<MarketRound[]>([]);
+
   const [currentRound, setCurrentRound] =
     useState<MarketRound | null>(null);
+
+    const [, forceTick] = useState(0);
 
   const [eliminated, setEliminated] = useState<
     EliminatedNational[]
@@ -150,10 +153,16 @@ const [returnedPlayers, setReturnedPlayers] =
   useEffect(() => {
   loadPage().catch((e) => {
     console.error("LOADPAGE ERROR", e);
-
     setLoading(false);
-
       });
+}, []);
+
+useEffect(() => {
+  const timer = setInterval(() => {
+    forceTick((v) => v + 1);
+  }, 1000);
+
+  return () => clearInterval(timer);
 }, []);
 
   async function loadPage() {
@@ -531,6 +540,42 @@ const italyNow = new Date(
   })
 );
 
+function formatCountdown(target: Date) {
+  const now = new Date(
+    new Date().toLocaleString("en-US", {
+      timeZone: "Europe/Rome",
+    })
+  );
+
+  const diff =
+    target.getTime() - now.getTime();
+
+  if (diff <= 0) {
+    return "00:00:00";
+  }
+
+  const hours = Math.floor(
+    diff / 3600000
+  );
+  const minutes = Math.floor(
+    (diff % 3600000) / 60000
+  );
+  const seconds = Math.floor(
+    (diff % 60000) / 1000
+  );
+
+  return `${String(hours).padStart(
+    2,
+    "0"
+  )}:${String(minutes).padStart(
+    2,
+    "0"
+  )}:${String(seconds).padStart(
+    2,
+    "0"
+  )}`;
+}
+
 function getMarketStatusText() {
   if (!currentRound) return "";
 
@@ -577,52 +622,35 @@ function getMarketStatusText() {
   }
 
   if (open && now < open) {
-    return `📅 Apertura svincoli • ${open.toLocaleString(
-      "it-IT",
-      {
-        day: "2-digit",
-        month: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      }
-    )}`;
-  }
+  return `📅 Apertura svincoli facoltativi • ${formatCountdown(
+    open
+  )}`;
+}
 
   if (closeSvincoli && now < closeSvincoli) {
-    return `⏰ Chiusura svincoli • ore ${closeSvincoli.toLocaleTimeString(
-      "it-IT",
-      {
-        hour: "2-digit",
-        minute: "2-digit",
-      }
-    )}`;
+   return `⏰ Chiusura svincoli • ${formatCountdown(
+  closeSvincoli
+)}`;
+
   }
 
   if (first && now < first) {
-    return `⏰ Chiusura Prima Sessione • ore ${first.toLocaleTimeString(
-      "it-IT",
-      {
-        hour: "2-digit",
-        minute: "2-digit",
-      }
-    )}`;
-  }
+  return `⏰ Chiusura Prima Sessione • ${formatCountdown(
+    first
+  )}`;
+}
 
-  if (second && now < second) {
-    return `⏰ Chiusura Seconda Sessione • ore ${second.toLocaleTimeString(
-      "it-IT",
-      {
-        hour: "2-digit",
-        minute: "2-digit",
-      }
-    )}`;
-  }
+if (second && now < second) {
+  return `⏰ Chiusura Seconda Sessione • ${formatCountdown(
+    second
+  )}`;
+}
 
-  if (!second) return "";
+if (!second) return "";
 
-  const duration =
-    currentRound.extra_session_duration ??
-    60;
+const duration =
+  currentRound.extra_session_duration ?? 60;
+
 
   const diff =
     now.getTime() -
@@ -655,12 +683,8 @@ const label =
   sessionNames[extra - 1] ??
   `${extra + 2}ª`;
 
-return `⏰ Chiusura ${label} Sessione • ore ${deadline.toLocaleTimeString(
-  "it-IT",
-  {
-    hour: "2-digit",
-    minute: "2-digit",
-  }
+return `⏰ Chiusura ${label} Sessione • ${formatCountdown(
+  deadline
 )}`;
 }
 
