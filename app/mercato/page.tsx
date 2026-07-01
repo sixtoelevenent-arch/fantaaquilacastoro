@@ -785,7 +785,34 @@ function getPhaseLabel() {
     return "✅ ROSE COMPLETE";
   }
 
-  return "🟠 SESSIONE SUPPLEMENTARE APERTA";
+  const duration =
+  currentRound?.extra_session_duration ?? 60;
+
+const diff =
+  now.getTime() -
+  secondClose!.getTime();
+
+const extra =
+  Math.floor(
+    diff / (duration * 60000)
+  ) + 1;
+
+const sessionNames = [
+  "TERZA",
+  "QUARTA",
+  "QUINTA",
+  "SESTA",
+  "SETTIMA",
+  "OTTAVA",
+  "NONA",
+  "DECIMA",
+];
+
+const label =
+  sessionNames[extra - 1] ??
+  `${extra + 2}ª`;
+
+return `🟠 ${label} SESSIONE APERTA`;
 }
 
 const optionalByTeam = useMemo(() => {
