@@ -46,8 +46,11 @@ export default function IlMioMercatoPage() {
   const [round, setRound] =
     useState<MarketRound | null>(null);
    
-    const hasReleasePhase =
-  round?.id !== 2;
+  const hasReleasePhase =
+  [1, 2, 3, 4].includes(
+    round?.id ?? 0
+  );
+
 const [confirmed, setConfirmed] =
   useState(false);
  
@@ -76,6 +79,20 @@ const bidPhase =
 
 const marketClosed =
   bidClosed;
+
+  console.log({
+  now: new Date().toISOString(),
+  roundId: round?.id,
+  status: round?.status,
+  releaseDeadline: round?.release_deadline,
+  bidDeadline: round?.bid_deadline,
+  hasReleasePhase,
+  releaseClosed,
+  bidClosed,
+  releasePhase,
+  bidPhase,
+  marketClosed,
+});
 
   function formatCountdown(
   date: string | null
@@ -221,6 +238,8 @@ const [teamConfirmations, setTeamConfirmations] =
   .order("id", { ascending: false })
   .limit(1)
   .maybeSingle();
+
+  console.log("ROUND DA SUPABASE", roundData);
 
     setRound(
       roundData as MarketRound
