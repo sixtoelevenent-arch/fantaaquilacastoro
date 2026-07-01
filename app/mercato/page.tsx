@@ -13,6 +13,12 @@ type MarketRound = {
   open_date: string;
   eliminated_nationals_count: number;
   status: "pending" | "svincoli" | "buste" | "closed";
+
+  svincoli_open_at: string | null;
+  svincoli_close_at: string | null;
+  first_session_close_at: string | null;
+  second_session_close_at: string | null;
+  extra_session_duration: number | null;
 };
 
 type EliminatedNational = {
@@ -526,7 +532,246 @@ const italyNow = new Date(
 );
 
 function getMarketStatusText() {
-  const h = italyNow.getHours();
+  if (!currentRound) return "";
+
+  const now = new Date(
+  new Date().toLocaleString(
+    "en-US",
+    {
+      timeZone: "Europe/Rome",
+    }
+  )
+);
+
+  const open = currentRound.svincoli_open_at
+    ? new Date(currentRound.svincoli_open_at)
+    : null;
+
+  const closeSvincoli =
+    currentRound.svincoli_close_at
+      ? new Date(currentRound.svincoli_close_at)
+      : null;
+
+  const first =
+    currentRound.first_session_close_at
+      ? new Date(currentRound.first_session_close_at)
+      : null;
+
+  const second =
+    currentRound.second_session_close_at
+      ? new Date(currentRound.second_session_close_at)
+      : null;
+
+  const allComplete =
+    teamStatus.length > 0 &&
+    teamStatus.every(
+      (t) =>
+        t.p_missing === 0 &&
+        t.d_missing === 0 &&
+        t.c_missing === 0 &&
+        t.a_missing === 0
+    );
+
+  if (allComplete) {
+    return "✅ ROSE COMPLETE";
+  }
+
+  if (open && now < open) {
+    return `📅 Apertura svincoli • ${open.toLocaleString(
+      "it-IT",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    )}`;
+  }
+
+  if (closeSvincoli && now < closeSvincoli) {
+    return `⏰ Chiusura svincoli • ore ${closeSvincoli.toLocaleTimeString(
+      "it-IT",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    )}`;
+  }
+
+  if (first && now < first) {
+    return `⏰ Chiusura Prima Sessione • ore ${first.toLocaleTimeString(
+      "it-IT",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    )}`;
+  }
+
+  if (second && now < second) {
+    return `⏰ Chiusura Seconda Sessione • ore ${second.toLocaleTimeString(
+      "it-IT",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      }
+    )}`;
+  }
+
+  if (!second) return "";
+
+  const duration =
+    currentRound.extra_session_duration ??
+    60;
+
+  const diff =
+    now.getTime() -
+    second.getTime();
+
+  const extra =
+    Math.floor(
+      diff / (duration * 60000)
+    ) + 1;
+
+  const deadline = new Date(
+    second.getTime() +
+      extra *
+        duration *
+        60000
+  );
+
+  const sessionNames = [
+  "Terza",
+  "Quarta",
+  "Quinta",
+  "Sesta",
+  "Settima",
+  "Ottava",
+  "Nona",
+  "Decima",
+];
+
+const label =
+  sessionNames[extra - 1] ??
+  `${extra + 2}ª`;
+
+return `⏰ Chiusura ${label} Sessione • ore ${deadline.toLocaleTimeString(
+  "it-IT",
+  {
+    hour: "2-digit",
+    minute: "2-digit",
+  }
+)}`;
+}
+
+function getPhase() {
+  const now = new Date(
+    new Date().toLocaleString("en-US", {
+      timeZone: "Europe/Rome",
+    })
+  );
+
+  const open =
+    currentRound?.svincoli_open_at
+      ? new Date(currentRound.svincoli_open_at)
+      : null;
+
+  const close =
+    currentRound?.svincoli_close_at
+      ? new Date(currentRound.svincoli_close_at)
+      : null;
+
+  const first =
+    currentRound?.first_session_close_at
+      ? new Date(currentRound.first_session_close_at)
+      : null;
+
+  const second =
+    currentRound?.second_session_close_at
+      ? new Date(currentRound.second_session_close_at)
+      : null;
+
+  const allComplete = teamStatus.every(
+    (t) =>
+      t.p_missing === 0 &&
+      t.d_missing === 0 &&
+      t.c_missing === 0 &&
+      t.a_missing === 0
+  );
+
+  if (allComplete) {
+    return "complete";
+  }
+
+  if (open && now < open) {
+    return "auto";
+  }
+
+  if (close && now < close) {
+    return "optional";
+  }
+
+  if (first && now < first) {
+    return "first";
+  }
+
+  if (second && now < second) {
+    return "second";
+  }
+
+  return "extra";
+}
+
+function getPhaseLabel() {
+  const now = new Date(
+    new Date().toLocaleString("en-US", {
+      timeZone: "Europe/Rome",
+    })
+  );
+
+  const svincoliOpen = currentRound?.svincoli_open_at
+    ? new Date(currentRound.svincoli_open_at)
+    : null;
+
+  const svincoliClose = currentRound?.svincoli_close_at
+    ? new Date(currentRound.svincoli_close_at)
+    : null;
+
+  const firstClose = currentRound?.first_session_close_at
+    ? new Date(currentRound.first_session_close_at)
+    : null;
+
+  const secondClose = currentRound?.second_session_close_at
+    ? new Date(currentRound.second_session_close_at)
+    : null;
+
+  if (
+    svincoliOpen &&
+    now < svincoliOpen
+  ) {
+    return "🔓 SVINCOLI AUTOMATICI APERTI";
+  }
+
+  if (
+    svincoliClose &&
+    now < svincoliClose
+  ) {
+    return "🟡 SVINCOLI FACOLTATIVI APERTI";
+  }
+
+  if (
+    firstClose &&
+    now < firstClose
+  ) {
+    return "🟠 PRIMA SESSIONE APERTA";
+  }
+
+  if (
+    secondClose &&
+    now < secondClose
+  ) {
+    return "🟠 SECONDA SESSIONE APERTA";
+  }
 
   const allComplete = teamStatus.every(
     (t) =>
@@ -540,25 +785,7 @@ function getMarketStatusText() {
     return "✅ ROSE COMPLETE";
   }
 
-  if (h < 7) {
-    return "📅 Apertura svincoli • 04/07 ore 07:00";
-  }
-
-  if (h < 11) {
-    return "⏰ Chiusura svincoli • ore 11:00";
-  }
-
-  if (h < 13) {
-    return "⏰ Chiusura Prima Sessione • ore 13:00";
-  }
-
-  if (h < 15) {
-    return "⏰ Chiusura Seconda Sessione • ore 15:00";
-  }
-
-  const nextHour = h + 1;
-
-  return `⏰ Chiusura Sessione Successiva • ore ${nextHour}:00`;
+  return "🟠 SESSIONE SUPPLEMENTARE APERTA";
 }
 
 const optionalByTeam = useMemo(() => {
@@ -795,7 +1022,7 @@ const returnedByTeam = useMemo(() => {
                 padding: 18,
               }}
             >
-              <div
+        <div
   style={{
     color: "#facc15",
     fontSize: "1.5rem",
@@ -803,9 +1030,7 @@ const returnedByTeam = useMemo(() => {
     marginBottom: 6,
   }}
 >
-  {currentRound.id === 2
-    ? "1ª Finestra di Mercato"
-    : currentRound.name}
+  {currentRound.name}
 </div>
 
               <div
@@ -823,9 +1048,7 @@ const returnedByTeam = useMemo(() => {
                   fontWeight: 700,
                 }}
               >
-                {statusLabel(
-                  currentRound.status
-                )}
+               {getPhaseLabel()}
                 
                 <div
   style={{
@@ -846,14 +1069,18 @@ const returnedByTeam = useMemo(() => {
     fontWeight: 700,
   }}
 >
-  Nazionali eliminate:16/16
+  Nazionali eliminate:{" "}
+{eliminated.length}/
+{currentRound?.eliminated_nationals_count ?? 0}
 </div>
              
                   </div>
           </Card>
         )}
 
-                {currentRound?.status === "svincoli" && (
+                {["first", "second", "extra"].includes(
+  getPhase()
+) && (
           <Card title="🏆 Acquisti sessione corrente">
   <div
     style={{
@@ -962,7 +1189,7 @@ const returnedByTeam = useMemo(() => {
 </Card>
         )}
 
-        {currentRound?.status === "buste" && (
+        {getPhase() === "optional" && (
           <Card>
             <div
               style={{
@@ -1321,10 +1548,13 @@ rowGap: 8,
           </Card>
         )}
 
-                {(currentRound?.status ===
-          "buste" ||
-          currentRound?.status ===
-            "closed") && (
+{[
+  "optional",
+  "first",
+  "second",
+  "extra",
+  "complete",
+].includes(getPhase()) && (
           <Card title="📑 Lista svincolati">
             <div
               style={{
@@ -1430,9 +1660,8 @@ rowGap: 8,
           </Card>
         )}
 
-        {currentRound?.status ===
-          "closed" &&
-          assignments.length > 0 && (
+        {getPhase() === "complete" &&
+  assignments.length > 0 && (
             <Card title="🏆 Risultati delle buste">
               {assignments.map(
                 (a, i) => (
