@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import BackHome from "@/components/BackHome";
-import Link from "next/link";
 import Card from "@/components/Card";
 
 type MarketRound = {
@@ -61,21 +60,6 @@ type Assignment = {
 
 export default function MercatoPage() {
 
- type OptionalRelease = {
-  team_id: number;
-  nome: string;
-  ruolo: string;
-  nazionale: string;
-  prezzo_recuperato: number;
-};
-
-type RoundAssignment = {
-  squadra: string;
-  nome: string;
-  ruolo: string;
-  prezzo: number;
-};
-
 type TeamStatus = {
   team_id: number;
   squadra: string;
@@ -100,9 +84,6 @@ const [marketBuys, setMarketBuys] =
 const [teamStatus, setTeamStatus] =
   useState<TeamStatus[]>([]);
 
-const [optionalReleases, setOptionalReleases] =
-  useState<OptionalRelease[]>([]);
-  
   const [loading, setLoading] = useState(true);
 
   const [rounds, setRounds] = useState<MarketRound[]>([]);
@@ -124,6 +105,18 @@ const [optionalReleases, setOptionalReleases] =
 
   const [assignments, setAssignments] =
     useState<Assignment[]>([]);
+
+    const [marketProcessed,
+  setMarketProcessed] =
+  useState(false);
+
+const [priorityTies,
+  setPriorityTies] =
+  useState<any[]>([]);
+
+const [auctionTies,
+  setAuctionTies] =
+  useState<any[]>([]);
 
     type ReturnedPlayer = {
   nome: string;
@@ -156,6 +149,79 @@ const [returnedPlayers, setReturnedPlayers] =
     setLoading(false);
       });
 }, []);
+
+useEffect(() => {
+  async function processBuste() {
+    if (
+      marketProcessed ||
+      !currentRound
+    ) {
+      return;
+    }
+
+    const phase =
+      getPhase();
+
+    if (
+      phase !== "first"
+    ) {
+      return;
+    }
+
+    const deadline =
+      currentRound
+        ?.first_session_close_at;
+
+    if (!deadline) {
+      return;
+    }
+
+    if (
+      new Date(deadline)
+        .getTime() >
+      Date.now()
+    ) {
+      return;
+    }
+
+    setMarketProcessed(true);
+
+const res =
+  await fetch(
+    `/api/il-mio-mercato/process?roundId=${currentRound.id}`
+  );
+
+if (!res.ok) {
+  throw new Error(
+    "Errore elaborazione buste"
+  );
+}
+
+const data =
+  await res.json();
+
+    setAssignments(
+    data.assignments ?? []
+    );
+
+    setPriorityTies(
+      data.priorityTies ??
+        []
+    );
+
+    setAuctionTies(
+      data.auctionTies ??
+        []
+    );
+
+    await loadPage();
+  }
+
+  processBuste();
+}, [
+  currentRound,
+  marketProcessed,
+]);
 
 useEffect(() => {
   const timer = setInterval(() => {
@@ -264,28 +330,6 @@ players!inner(
   nazionale
 )
     `);
-
-setOptionalReleases(
-  (optionalData ?? [])
-    .filter(
-      (r: any) =>
-        r.automatic === false &&
-        r.market_releases
-          ?.round_id === active.id
-    )
-   .map((r: any) => ({
-  team_id:
-    r.market_releases.team_id,
-  nome:
-    r.players.nome,
-  ruolo:
-    r.players.ruolo,
-  nazionale:
-    r.players.nazionale,
-  prezzo_recuperato:
-    r.prezzo_recuperato ?? 0,
-}))
-);
 
 const { data: buysData, error: buysError } =
   await supabase
@@ -488,13 +532,7 @@ setOfficialAutoReleases(
       search,
     ]);
 
-  const eliminatedCount =
-    eliminated.length;
-
-   const showReturnedPlayers =
-  returnedPlayers.length > 0;
-
-    const eliminatedTeams = {
+  const eliminatedTeams = {
   6: "Argentina",
   7: "Germania",
   8: "Curacao",
@@ -512,20 +550,6 @@ const activeTeams = [
   { teamId: 12, nome: "Turchia" },
 ];
 
-const teamNames: Record<number, string> = {
-  1: "Iran",
-  2: "Ghana",
-  3: "Messico",
-  4: "Colombia",
-  5: "Portogallo",
-  6: "Argentina",
-  7: "Germania",
-  8: "Curacao",
-  9: "Francia",
-  10: "Uzbekistan",
-  11: "Costa d'Avorio",
-  12: "Turchia",
-};
 
 const roleOrder = {
   P: 1,
@@ -533,12 +557,6 @@ const roleOrder = {
   C: 3,
   A: 4,
 };
-
-const italyNow = new Date(
-  new Date().toLocaleString("en-US", {
-    timeZone: "Europe/Rome",
-  })
-);
 
 function formatCountdown(target: Date) {
   const now = new Date(
@@ -574,6 +592,46 @@ function formatCountdown(target: Date) {
     2,
     "0"
   )}`;
+}
+
+function formatBidCountdown() {
+  if (
+    !currentRound?.first_session_close_at
+  ) {
+    return "00:00:00";
+  }
+
+  const diff =
+    new Date(
+      currentRound.first_session_close_at
+    ).getTime() -
+    Date.now();
+
+  if (diff <= 0) {
+    return "00:00:00";
+  }
+
+  const hours = Math.floor(
+    diff / 3600000
+  );
+
+  const minutes = Math.floor(
+    (diff % 3600000) /
+      60000
+  );
+
+  const seconds = Math.floor(
+    (diff % 60000) /
+      1000
+  );
+
+  return `${String(
+    hours
+  ).padStart(2, "0")}:${String(
+    minutes
+  ).padStart(2, "0")}:${String(
+    seconds
+  ).padStart(2, "0")}`;
 }
 
 function getMarketStatusText() {
@@ -812,9 +870,13 @@ function getPhaseLabel() {
   const duration =
   currentRound?.extra_session_duration ?? 60;
 
+if (!secondClose) {
+  return "";
+}
+
 const diff =
   now.getTime() -
-  secondClose!.getTime();
+  secondClose.getTime();
 
 const extra =
   Math.floor(
@@ -868,10 +930,9 @@ const autoReleases =
       (p) =>
         p.team_id === teamId
     )
+      .sort((a, b) => {
 
-
-    .sort((a, b) => {
-      const diff =
+        const diff =
         roleOrder[
           a.ruolo as keyof typeof roleOrder
         ] -
@@ -898,9 +959,6 @@ const refundTotal =
       sum + p.refund,
     0
   );
-
-const freeSlots =
-  autoReleases.length;
 
   const pSlots =
   autoReleases.filter(
@@ -958,17 +1016,13 @@ players.sort((a, b) => {
     refundTotal,
   players,
   autoReleases,
-  freeSlots,
   missingText,
 };
     }
   );
 
 }, [
-  optionalReleases,
-  automaticReleases,
   teamStatus,
-  currentRound,
   marketBuys,
   officialAutoReleases,
 ]);
@@ -997,29 +1051,7 @@ const returnedByTeam = useMemo(() => {
       >
         <BackHome />
 
-        <Link
-  href="/mercato/apertura"
-  style={{
-    position: "fixed",
-    top: 12,
-    right: 12,
-    zIndex: 100,
-    background:
-      "linear-gradient(135deg,#f59e0b,#d97706)",
-    color: "#111827",
-    padding: "10px 14px",
-    borderRadius: 14,
-    textDecoration: "none",
-    fontWeight: 800,
-    fontSize: ".9rem",
-    boxShadow:
-      "0 4px 12px rgba(0,0,0,.35)",
-  }}
->
-  📩 Apertura buste
-</Link>
-
-        <div
+         <div
           style={{
             textAlign: "center",
             marginTop: 60,
@@ -1067,6 +1099,57 @@ const returnedByTeam = useMemo(() => {
 
         {currentRound && (
           <Card highlight>
+            {getPhase() === "first" && (
+  <Card highlight>
+    <div
+      style={{
+        textAlign:
+          "center",
+        padding: 20,
+      }}
+    >
+      <div
+        style={{
+          color:
+            "#f59e0b",
+          fontWeight: 800,
+          fontSize:
+            "1.4rem",
+          marginBottom: 14,
+        }}
+      >
+        🟠 APERTURA BUSTE
+      </div>
+
+      <div
+        style={{
+          fontSize:
+            "2.5rem",
+          fontWeight: 900,
+          letterSpacing: 2,
+        }}
+      >
+        {
+          formatBidCountdown()
+        }
+      </div>
+
+      <div
+        style={{
+          marginTop: 14,
+          color:
+            "#cbd5e1",
+        }}
+      >
+        Le buste verranno
+        elaborate
+        automaticamente
+        allo scadere del
+        countdown.
+      </div>
+    </div>
+  </Card>
+)}
             <div
               style={{
                 textAlign: "center",
@@ -1248,11 +1331,9 @@ const returnedByTeam = useMemo(() => {
                 padding: 14,
               }}
             >
-              🟠 Buste aperte.
-
+              🟡 Svincoli facoltativi aperti.
               <br />
-              Inserisci i tuoi acquisti
-              entro la deadline.
+              Inserisci gli svincoli entro la deadline.
             </div>
           </Card>
         )}
@@ -1275,7 +1356,6 @@ rowGap: 8,
     credits,
     players,
     autoReleases,
-    freeSlots,
     missingText,
   }) => {
 

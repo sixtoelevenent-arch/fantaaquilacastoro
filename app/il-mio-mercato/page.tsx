@@ -48,10 +48,12 @@ export default function IlMioMercatoPage() {
     useState<MarketRound | null>(null);
    
   const releasePhase =
-  round?.status === "svincoli";
+  round?.status === "aperta" &&
+  round?.session_type === "svincoli";
 
 const bidPhase =
-  round?.status === "buste";
+  round?.status === "aperta" &&
+  round?.session_type === "buste";
 
 const marketClosed =
   round?.status === "chiuso";
@@ -251,13 +253,13 @@ const confirmedCount =
 
       setUser(u);
 
-   const { data: roundData } =
+  const { data: roundData } =
   await supabase
     .from("market_rounds")
     .select("*")
     .in("status", [
-      "svincoli",
-      "buste",
+      "aperta",
+      "chiuso",
     ])
     .order("id", {
       ascending: false,
@@ -265,9 +267,7 @@ const confirmedCount =
     .limit(1)
     .maybeSingle();
 
-    setRound(
-      roundData as MarketRound
-    );
+ setRound(roundData as MarketRound);
 
     if (roundData) {
 
@@ -337,27 +337,10 @@ const confirmedCount =
   .from("market_available_players")
   .select("*");
 
-  const { data: mappings } = await supabase
-  .from("player_display_names")
-  .select(`
-    fantapiu3_name,
-    display_name
-  `);
-
-const displayMap: Record<string, string> = {};
-
-(mappings ?? []).forEach((m: any) => {
-  displayMap[
-    m.fantapiu3_name
-  ] = m.display_name;
-});
-
 setFreeAgents(
   (agents ?? []).map((p: any) => ({
     id: p.id,
-    nome:
-      displayMap[p.player_name] ??
-      p.player_name,
+    nome: p.display_name,
     nazionale: p.nazionale,
     ruolo: p.ruolo,
     prezzo: p.quotazione,
@@ -672,10 +655,17 @@ const selectedRoleCount =
     (p) => p.ruolo === player.ruolo
   ).length;
 
-const maxForRole =
-  allowedByRole[
-    player.ruolo as keyof typeof allowedByRole
-  ];
+const role =
+  player.ruolo as keyof typeof releasedByRole;
+
+const maxForRole = usingReleases
+  ? releasedByRole[role]
+  : Math.max(
+      targetByRole[role] -
+        squadByRole[role],
+      0
+    );
+
 
 if (selectedRoleCount >= maxForRole) {
   alert(
@@ -801,16 +791,19 @@ if (count === activeTeams) {
   await supabase
   .from("market_rounds")
   .update({
-    status: "buste",
+    status: "aperta",
+    session_type: "buste",
   })
   .eq("id", round.id);
+
+  await loadPage();
 }
 
 alert(
   "Svincoli confermati."
 );
 
-loadPage();
+await loadPage();
 }
 
 async function confirmOffers() {
@@ -898,11 +891,9 @@ const { count } = await supabase
   .eq("round_id", round.id)
   .eq("bids_confirmed", true);
 
-if (count === activeTeams) {
-  await fetch(
-    `/api/il-mio-mercato/process?roundId=${round.id}`
-  );
-}
+await fetch(
+  `/api/il-mio-mercato/process?roundId=${round.id}`
+);
 
 setConfirmingOffers(false);
 
@@ -972,13 +963,7 @@ const remainingCredits = Math.max(
 );
 
 const playersToBuy =
-  releasePhase
-    ? releasedPlayers.length
-    : Math.max(
-        25 - myPlayers.length,
-        0
-      );
-
+  releasedPlayers.length;
 const selectedCount =
   selectedAgents.length;
 
@@ -1080,7 +1065,15 @@ const missingByRole = usingReleases
       ),
     };
 
-const allowedByRole = missingByRole;
+ 
+console.log({
+  releasedByRole,
+  boughtByRole,
+  missingByRole,
+  selectedAgents,
+  selectedFreeAgents,
+});
+
   const filteredAgents =
   useMemo(() => {
     let rows = [
@@ -2409,7 +2402,16 @@ onChange={(e) =>
 
     return role === agentRoleFilter;
   })
-  .map((role) => (
+  .map((role) => {
+  const maxForRole = usingReleases
+    ? releasedByRole[role]
+    : Math.max(
+        targetByRole[role] -
+          squadByRole[role],
+        0
+      );
+
+  return (
     <div
       key={role}
       style={{
@@ -2446,16 +2448,16 @@ onChange={(e) =>
   {groupedAgents[role].length}
   {" • "}
   da prendere:
-  {
-    Math.max(
-      allowedByRole[role] -
-        selectedFreeAgents.filter(
-          (x) =>
-            x.ruolo === role
-        ).length,
-      0
-    )
-  }
+{
+  Math.max(
+    maxForRole -
+      selectedFreeAgents.filter(
+        (x) =>
+          x.ruolo === role
+      ).length,
+    0
+  )
+}
 </span>
 
         <span>
@@ -2476,14 +2478,14 @@ onChange={(e) =>
               p.id
             );
 
-          const selectedRoleCount =
+ const selectedRoleCount =
   selectedFreeAgents.filter(
     (x) => x.ruolo === role
   ).length;
 
 const roleFull =
   selectedRoleCount >=
-  allowedByRole[role];
+  maxForRole;
 
 const limitReached =
   !selected &&
@@ -2493,7 +2495,17 @@ const limitReached =
     roleFull
   );
 
-          return (
+if (role === "C") {
+  console.log({
+    nome: p.nome,
+    selected,
+    selectedRoleCount,
+    allowed: maxForRole,
+    roleFull,
+    limitReached,
+  });
+}
+  return (
             <div
               key={p.id}
               onClick={(e) => {
@@ -2564,10 +2576,9 @@ const limitReached =
 </div>
               </div>
 
-              <div
+                            <div
                 style={{
-                  textAlign:
-                    "right",
+                  textAlign: "right",
                 }}
               >
                 <div>
@@ -2576,10 +2587,8 @@ const limitReached =
 
                 <div
                   style={{
-                    color:
-                      "#facc15",
-                    fontWeight:
-                      800,
+                    color: "#facc15",
+                    fontWeight: 800,
                     marginTop: 6,
                   }}
                 >
@@ -2590,12 +2599,11 @@ const limitReached =
           );
         })}
     </div>
-  )
-)}
+  );
+})}
   </div>
 )}
-
-     </div>
+      </div>
     </main>
   );
 }

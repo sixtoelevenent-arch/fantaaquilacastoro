@@ -17,17 +17,10 @@ type FreeAgent = {
   disponibile: boolean;
 };
 
-type DisplayName = {
-  fantapiu3_name: string;
-  display_name: string;
-};
-
 export default function SvincolatiPage() {
   const [loading, setLoading] = useState(true);
 
   const [players, setPlayers] = useState<FreeAgent[]>([]);
-  const [displayMap, setDisplayMap] =
-  useState<Record<string, string>>({});
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("Tutti");
@@ -65,24 +58,10 @@ function handleSort(
   setLoading(true);
 
   const { data } = await supabase
-  .from("free_agents")
+  .from("market_available_players")
   .select("*")
-  .eq("disponibile", true)
-  .order("player_name");
+  .order("display_name");
 
-  const { data: mappings } = await supabase
-    .from("player_display_names")
-    .select("*");
-  
-  const map: Record<string, string> = {};
-
-  (mappings as DisplayName[] | null)?.forEach(
-    (m) => {
-      map[m.fantapiu3_name] = m.display_name;
-    }
-  );
-
-  setDisplayMap(map);
 
   setPlayers((data || []) as FreeAgent[]);
 
@@ -111,8 +90,8 @@ function handleSort(
 
     rows = rows.filter((p) => {
   const displayName =
-    displayMap[p.player_name] ||
-    p.player_name;
+  p.display_name ??
+  p.player_name;
 
   return displayName
     .toLowerCase()
@@ -138,12 +117,12 @@ rows.sort((a, b) => {
   switch (sortField) {
     case "giocatore":
       valueA =
-        displayMap[a.player_name] ||
-        a.player_name;
+  a.display_name ??
+  a.player_name;
 
-      valueB =
-        displayMap[b.player_name] ||
-        b.player_name;
+valueB =
+  b.display_name ??
+  b.player_name;
       break;
 
     case "nazionale":
@@ -193,15 +172,7 @@ rows.sort((a, b) => {
       );
 });
 
-return rows;  }, [
-  players,
-  displayMap,
-  search,
-  roleFilter,
-  nationFilter,
-  sortField,
-  sortDirection,
-]);
+return rows;  }, );
 
   if (loading) {
     return (
@@ -406,7 +377,7 @@ return rows;  }, [
                 {filteredPlayers.map((p) => (
                   <tr key={p.id}>
                     <td style={tdStyle}>
-                      {displayMap[p.player_name] ||
+                      {p.display_name ??
   p.player_name}
                     </td>
 
