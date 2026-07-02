@@ -172,7 +172,15 @@ valueB =
       );
 });
 
-return rows;  }, );
+return rows;
+}, [
+  players,
+  search,
+  roleFilter,
+  nationFilter,
+  sortField,
+  sortDirection,
+]);
 
   if (loading) {
     return (
