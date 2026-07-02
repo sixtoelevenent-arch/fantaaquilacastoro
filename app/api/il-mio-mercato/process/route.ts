@@ -30,6 +30,53 @@ export async function GET(
     );
   }
 
+  const { data: round } =
+  await admin
+    .from("market_rounds")
+    .select("status")
+    .eq("id", roundId)
+    .single();
+
+if (!round) {
+  return NextResponse.json(
+    {
+      ok: false,
+      error: "Round non trovato",
+    },
+    { status: 404 }
+  );
+}
+
+if (round.status === "chiuso") {
+  return NextResponse.json({
+    ok: true,
+    assignments: [],
+    priorityTies: [],
+    auctionTies: [],
+    alreadyProcessed: true,
+  });
+}
+
+const { data: closed } =
+  await admin
+    .from("market_rounds")
+    .update({
+      status: "chiuso",
+    })
+    .eq("id", roundId)
+    .eq("status", "aperta")
+    .select();
+
+if (!closed?.length) {
+  return NextResponse.json({
+    ok: true,
+    assignments: [],
+    priorityTies: [],
+    auctionTies: [],
+    alreadyProcessed: true,
+  });
+}
+
   const { data: existing } =
     await admin
       .from("market_assignments")
@@ -37,15 +84,19 @@ export async function GET(
       .eq("round_id", roundId)
       .limit(1);
 
-  if (existing?.length) {
-    return NextResponse.json({
-      ok: true,
-      assignments: [],
-      priorityTies: [],
-      auctionTies: [],
-      alreadyProcessed: true,
-    });
-  }
+      console.log("ROUND ID", roundId);
+console.log("EXISTING", existing);
+
+ if (existing?.length) {
+  return NextResponse.json({
+    ok: true,
+    assignments: [],
+    priorityTies: [],
+    auctionTies: [],
+    alreadyProcessed: true,
+    debug: "market already processed",
+  });
+}
 
   const { data: bids } =
     await admin
@@ -59,10 +110,16 @@ export async function GET(
 );
 
   const { data: freeAgents } =
-    await admin
-      .from("free_agents")
-      .select("*")
-      .eq("disponibile", true);
+  await admin
+    .from("market_available_players")
+    .select(`
+      id,
+      player_name,
+      display_name,
+      nazionale,
+      ruolo,
+      quotazione
+    `);
 
       console.log(
   "FREE AGENTS",
@@ -210,6 +267,16 @@ console.log(
 );
 
 console.log(
+  "TEAM14 SLOTS",
+  remainingSlots.get(14)
+);
+
+console.log(
+  "TEAM14 ROLE SLOTS",
+  roleSlots.get(14)
+);
+
+console.log(
   "roleSlots",
   Object.fromEntries(
     roleSlots
@@ -219,6 +286,8 @@ console.log(
   const budgetsMap =
     new Map<number, number>();
 
+    const debug: any = {};
+
   budgets?.forEach((b: any) => {
     budgetsMap.set(
       b.team_id,
@@ -226,12 +295,20 @@ console.log(
     );
   });
 
-  budgets?.forEach((b: any) => {
-  budgetsMap.set(
-    b.team_id,
-    b.total_budget
+  debug.remainingSlots =
+  Object.fromEntries(
+    remainingSlots
   );
-});
+
+debug.roleSlots =
+  Object.fromEntries(
+    roleSlots
+  );
+
+debug.budgets =
+  Object.fromEntries(
+    budgetsMap
+  );
 
 console.log(
   "BUDGETS FROM DB",
@@ -248,8 +325,8 @@ console.log(
     const assignments: any[] = [];
   const priorityTies: any[] = [];
   const auctionTies: any[] = [];
-
-  for (const player of
+  
+   for (const player of
     freeAgents ?? []) {
 
     const playerBids =
@@ -284,26 +361,54 @@ if (playerBids.length > 0) {
     }
 
     const availableBids =
-      playerBids.filter(
-        (b: any) => {
-          const budget =
-            budgetsMap.get(
-              b.team_id
-            ) ?? 0;
+  playerBids.filter(
+    (b: any) => {
+      const budget =
+        budgetsMap.get(
+          b.team_id
+        ) ?? 0;
 
-            console.log(
-  "CHECK BUDGET",
-  {
-    team: b.team_id,
-    bid: b.bid,
-    budget,
-    player: player.player_name,
-  }
-);
+      const slots =
+        remainingSlots.get(
+          b.team_id
+        ) ?? 0;
 
-          return budget >= b.bid;       
-        }
+      const role =
+        player.ruolo as
+          keyof {
+            P: number;
+            D: number;
+            C: number;
+            A: number;
+          };
+
+      const roleRemaining =
+        roleSlots
+          .get(b.team_id)
+          ?.[role] ?? 0;
+
+      if (!debug.filters) {
+        debug.filters = [];
+      }
+
+      debug.filters.push({
+        player:
+          player.player_name,
+        team: b.team_id,
+        budget,
+        slots,
+        role,
+        roleRemaining,
+        bid: b.bid,
+      });
+
+      return (
+        budget >= b.bid &&
+        slots > 0 &&
+        roleRemaining > 0
       );
+    }
+  );
 
 if (availableBids.length === 0) {
   console.log(
@@ -455,74 +560,43 @@ if (slots) {
   );
 }
 
-    let playerId =
-      player.players_id;
-
-    if (!playerId) {
-  const {
-    data: created,
-    error: createPlayerError,
-  } = await admin
-    .from("players")
-    .insert({
-      nome:
-        player.display_name ??
-        player.player_name,
-      ruolo: player.ruolo,
-      nazionale:
-        player.nazionale,
-      prezzo: winner.bid,
-      team_id:
-        winner.team_id,
-      fantapiu3_name:
-        player.player_name,
-    })
-    .select("id")
-    .single();
-
-  if (createPlayerError) {
-    console.error(
-      "CREATE PLAYER ERROR",
-      createPlayerError
-    );
-  }
-
-  playerId = created?.id;
-
-  if (playerId) {
-    await admin
-      .from("free_agents")
-      .update({
-        players_id: playerId,
-      })
-      .eq("id", player.id);
-  }
-} else {
-  const {
-    error: updatePlayerError,
-  } = await admin
-    .from("players")
-    .update({
-      team_id:
-        winner.team_id,
-      prezzo:
-        winner.bid,
-    })
-    .eq("id", playerId);
-
-  if (updatePlayerError) {
-    console.error(
-      "UPDATE PLAYER ERROR",
-      updatePlayerError
-    );
-  }
-}
-
-if (!playerId) {
-  continue;
-}
+const playerId = player.id;
 
 const {
+  error: updatePlayerError,
+} = await admin
+  .from("players")
+  .update({
+    team_id: winner.team_id,
+    prezzo: winner.bid,
+  })
+  .eq("id", playerId);
+
+  const { data: updatedPlayer } =
+  await admin
+    .from("players")
+    .select(`
+      id,
+      nome,
+      team_id,
+      prezzo
+    `)
+    .eq("id", playerId)
+    .single();
+
+console.log(
+  "UPDATED PLAYER",
+  updatedPlayer
+);
+
+if (updatePlayerError) {
+  console.error(
+    "UPDATE PLAYER ERROR",
+    updatePlayerError
+  );
+}
+
+   const {
   error: freeAgentError,
 } = await admin
   .from("free_agents")
@@ -530,9 +604,27 @@ const {
     disponibile: false,
   })
   .eq(
-    "id",
-    player.id
+    "player_name",
+    player.player_name
   );
+
+  const { data: faCheck } =
+  await admin
+    .from("free_agents")
+    .select(`
+      id,
+      player_name,
+      disponibile
+    `)
+    .eq(
+      "player_name",
+      player.player_name
+    );
+
+console.log(
+  "FREE AGENT UPDATED",
+  faCheck
+);
 
 if (freeAgentError) {
   console.error(
@@ -586,8 +678,7 @@ if (assignmentError) {
 }
 
     assignments.push({
-      player_id:
-        player.id,
+  player_id: playerId,
       display_name:
         player.display_name ??
         player.player_name,
@@ -606,22 +697,16 @@ if (assignmentError) {
     });
   }
 
-  await admin
-    .from("market_rounds")
-    .update({
-      status: "chiuso",
-    })
-    .eq("id", roundId);
-
   assignments.sort(
     (a, b) =>
       b.bid - a.bid
   );
 
   return NextResponse.json({
-    ok: true,
-    assignments,
-    priorityTies,
-    auctionTies,
-  });
+  ok: true,
+  assignments,
+  priorityTies,
+  auctionTies,
+  debug,
+});
 }

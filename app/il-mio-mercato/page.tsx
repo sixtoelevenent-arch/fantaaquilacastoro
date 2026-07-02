@@ -523,6 +523,13 @@ alert(
 );
 
     } else {
+  if (
+    round.status !== "aperta" ||
+    round.session_type !== "svincoli"
+  ) {
+    return;
+  }
+
   let releaseId: number | null = null;
 
   const {
@@ -776,7 +783,12 @@ async function confirmReleases() {
 setConfirmed(true);
 
 const activeTeams =
-  visibleConfirmations.length;
+  teamConfirmations.filter(
+    (t) =>
+      !ELIMINATED_USERS.includes(
+        t.username.toLowerCase()
+      )
+  ).length;
 
 const { count } = await supabase
   .from("market_releases")
@@ -788,13 +800,31 @@ const { count } = await supabase
   .eq("confirmed", true);
 
 if (count === activeTeams) {
+  const { data: budgets } =
+    await supabase
+      .from("market_budgets")
+      .select("*");
+
+  for (const b of budgets ?? []) {
+    await supabase
+      .from("market_budgets")
+      .update({
+        total_budget:
+          (b.leftover_budget ?? 0) +
+          (b.group_bonus ?? 0) +
+          (b.automatic_refunds ?? 0) +
+          (b.manual_refunds ?? 0),
+      })
+      .eq("team_id", b.team_id);
+  }
+
   await supabase
-  .from("market_rounds")
-  .update({
-    status: "aperta",
-    session_type: "buste",
-  })
-  .eq("id", round.id);
+    .from("market_rounds")
+    .update({
+      status: "aperta",
+      session_type: "buste",
+    })
+    .eq("id", round.id);
 
   await loadPage();
 }
@@ -850,6 +880,14 @@ const { data: release } =
 if (release) {
   releaseId = release.id;
 } else {
+  if (
+    round.status !== "aperta" ||
+    round.session_type !== "buste"
+  ) {
+    setConfirmingOffers(false);
+    return;
+  }
+
   const { data: created } =
     await supabase
       .from("market_releases")
@@ -860,7 +898,7 @@ if (release) {
       .select("id")
       .single();
 
-    if (!created) {
+  if (!created) {
     setConfirmingOffers(false);
     return;
   }
@@ -880,7 +918,12 @@ await supabase
 setOffersConfirmed(true);
 
 const activeTeams =
-  visibleConfirmations.length;
+  teamConfirmations.filter(
+    (t) =>
+      !ELIMINATED_USERS.includes(
+        t.username.toLowerCase()
+      )
+  ).length;
 
 const { count } = await supabase
   .from("market_releases")
@@ -891,15 +934,17 @@ const { count } = await supabase
   .eq("round_id", round.id)
   .eq("bids_confirmed", true);
 
-await fetch(
-  `/api/il-mio-mercato/process?roundId=${round.id}`
-);
+if (count === activeTeams) {
+  await fetch(
+    `/api/il-mio-mercato/process?roundId=${round.id}`
+  );
+}
 
 setConfirmingOffers(false);
 
 alert("Buste confermate.");
 
-loadPage();
+await loadPage();
 }
 
 
@@ -910,6 +955,21 @@ loadPage();
     ),
   [myPlayers, selectedIds]
 );
+
+const voluntaryReleasedPlayers =
+  useMemo(
+    () =>
+      releasedPlayers.filter(
+        (p) =>
+          !automaticIds.includes(
+            p.id
+          )
+      ),
+    [
+      releasedPlayers,
+      automaticIds,
+    ]
+  );
 
 const manualRefund = useMemo(
   () =>
@@ -1326,7 +1386,7 @@ const groupedAgents = {
       >
         <div>
   Svincoli automatici:
-  {releasedPlayers.length}
+{automaticIds.length}
 </div>
 
 <div
