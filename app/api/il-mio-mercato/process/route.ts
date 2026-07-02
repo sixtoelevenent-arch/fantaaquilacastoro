@@ -239,14 +239,24 @@ console.log(
           b.player_id ===
           player.id
       );
+      
 
-      console.log(
+  console.log(
   "PLAYER",
   player.player_name,
   player.id,
   "BIDS",
   playerBids.length
 );
+
+if (playerBids.length > 0) {
+  console.log(
+    "MATCH",
+    player.id,
+    player.player_name,
+    playerBids
+  );
+}
 
     if (
       playerBids.length === 0
@@ -266,27 +276,32 @@ console.log(
         }
       );
 
-    if (
-      availableBids.length ===
-      0
-    ) {
-      continue;
+   if (
+  availableBids.length ===
+  0
+) {
+  console.log(
+    "NO AVAILABLE",
+    player.id,
+    player.player_name,
+    playerBids
+  );
+
+  continue;
+}
+
+availableBids.sort(
+  (a: any, b: any) => {
+    if (b.bid !== a.bid) {
+      return b.bid - a.bid;
     }
 
-    availableBids.sort(
-      (a: any, b: any) => {
-        if (b.bid !== a.bid) {
-          return (
-            b.bid - a.bid
-          );
-        }
-
-        return (
-          a.priority -
-          b.priority
-        );
-      }
+    return (
+      a.priority -
+      b.priority
     );
+  }
+);
 
     console.log(
   "AVAILABLE",
@@ -425,103 +440,131 @@ if (slots) {
       player.players_id;
 
     if (!playerId) {
-      const {
-        data: created,
-      } = await admin
-        .from("players")
-        .insert({
-          nome:
-            player.display_name ??
-            player.player_name,
-          ruolo:
-            player.ruolo,
-          nazionale:
-            player.nazionale,
-          prezzo:
-            winner.bid,
-          team_id:
-            winner.team_id,
-          fantapiu3_name:
-            player.player_name,
-        })
-        .select("id")
-        .single();
+  const {
+    data: created,
+    error: createPlayerError,
+  } = await admin
+    .from("players")
+    .insert({
+      nome:
+        player.display_name ??
+        player.player_name,
+      ruolo: player.ruolo,
+      nazionale:
+        player.nazionale,
+      prezzo: winner.bid,
+      team_id:
+        winner.team_id,
+      fantapiu3_name:
+        player.player_name,
+    })
+    .select("id")
+    .single();
 
-      playerId =
-        created?.id;
+  if (createPlayerError) {
+    console.error(
+      "CREATE PLAYER ERROR",
+      createPlayerError
+    );
+  }
 
-      if (playerId) {
-        await admin
-          .from(
-            "free_agents"
-          )
-          .update({
-            players_id:
-              playerId,
-          })
-          .eq(
-            "id",
-            player.id
-          );
-      }
-    } else {
-      await admin
-        .from("players")
-        .update({
-          team_id:
-            winner.team_id,
-          prezzo:
-            winner.bid,
-        })
-        .eq(
-          "id",
-          playerId
-        );
-    }
+  playerId = created?.id;
 
-    if (!playerId) {
-      continue;
-    }
-
+  if (playerId) {
     await admin
       .from("free_agents")
       .update({
-        disponibile: false,
+        players_id: playerId,
       })
-      .eq(
-        "id",
-        player.id
-      );
+      .eq("id", player.id);
+  }
+} else {
+  const {
+    error: updatePlayerError,
+  } = await admin
+    .from("players")
+    .update({
+      team_id:
+        winner.team_id,
+      prezzo:
+        winner.bid,
+    })
+    .eq("id", playerId);
 
-    await admin
-      .from(
-        "market_budgets"
-      )
-      .update({
-        total_budget:
-          budgetsMap.get(
-            winner.team_id
-          ),
-      })
-      .eq(
-        "team_id",
+  if (updatePlayerError) {
+    console.error(
+      "UPDATE PLAYER ERROR",
+      updatePlayerError
+    );
+  }
+}
+
+if (!playerId) {
+  continue;
+}
+
+const {
+  error: freeAgentError,
+} = await admin
+  .from("free_agents")
+  .update({
+    disponibile: false,
+  })
+  .eq(
+    "id",
+    player.id
+  );
+
+if (freeAgentError) {
+  console.error(
+    "FREE AGENT ERROR",
+    freeAgentError
+  );
+}
+
+const {
+  error: budgetError,
+} = await admin
+  .from("market_budgets")
+  .update({
+    total_budget:
+      budgetsMap.get(
         winner.team_id
-      );
+      ),
+  })
+  .eq(
+    "team_id",
+    winner.team_id
+  );
 
-    await admin
-      .from(
-        "market_assignments"
-      )
-      .insert({
-        round_id:
-          roundId,
-        player_id:
-          playerId,
-        team_id:
-          winner.team_id,
-        price:
-          winner.bid,
-      });
+if (budgetError) {
+  console.error(
+    "BUDGET ERROR",
+    budgetError
+  );
+}
+
+    const {
+  error: assignmentError,
+} = await admin
+  .from("market_assignments")
+  .insert({
+    round_id:
+      roundId,
+    player_id:
+      playerId,
+    team_id:
+      winner.team_id,
+    price:
+      winner.bid,
+  });
+
+if (assignmentError) {
+  console.error(
+    "ASSIGNMENT ERROR",
+    assignmentError
+  );
+}
 
     assignments.push({
       player_id:
