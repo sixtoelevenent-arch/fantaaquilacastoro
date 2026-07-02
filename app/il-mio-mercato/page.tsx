@@ -8,6 +8,7 @@ import BackHome from "@/components/BackHome";
 type MarketRound = {
   id: number;
   status: string;
+  session_type: string;
   release_deadline: string | null;
   bid_deadline: string | null;
 };
@@ -46,55 +47,19 @@ export default function IlMioMercatoPage() {
   const [round, setRound] =
     useState<MarketRound | null>(null);
    
-  const hasReleasePhase =
-  [1, 2, 3, 4].includes(
-    round?.id ?? 0
-  );
+  const releasePhase =
+  round?.status === "svincoli";
+
+const bidPhase =
+  round?.status === "buste";
+
+const marketClosed =
+  round?.status === "chiuso";
 
 const [confirmed, setConfirmed] =
   useState(false);
  
-  const now = new Date();
-
-const releaseClosed =
-  round?.release_deadline
-    ? now >
-      new Date(round.release_deadline)
-    : false;
-
-const bidClosed =
-  round?.bid_deadline
-    ? now >
-      new Date(round.bid_deadline)
-    : false;
-
-const releasePhase =
-  hasReleasePhase &&
-  !releaseClosed;
-
-const bidPhase =
-  (!hasReleasePhase ||
-    releaseClosed) &&
-  !bidClosed;
-
-const marketClosed =
-  bidClosed;
-
-  console.log({
-  now: new Date().toISOString(),
-  roundId: round?.id,
-  status: round?.status,
-  releaseDeadline: round?.release_deadline,
-  bidDeadline: round?.bid_deadline,
-  hasReleasePhase,
-  releaseClosed,
-  bidClosed,
-  releasePhase,
-  bidPhase,
-  marketClosed,
-});
-
-  function formatCountdown(
+ function formatCountdown(
   date: string | null
 ) {
   if (!date) {
@@ -131,6 +96,56 @@ const marketClosed =
     2,
     "0"
   )}`;
+}
+
+function nationCode(name: string) {
+  const map: Record<string, string> = {
+    "Germania": "GER",
+    "Svezia": "SWE",
+    "Paesi Bassi": "NED",
+    "Costa d'Avorio": "CIV",
+    "Francia": "FRA",
+    "Spagna": "ESP",
+    "Portogallo": "POR",
+    "Inghilterra": "ENG",
+    "Brasile": "BRA",
+    "Argentina": "ARG",
+    "Italia": "ITA",
+    "Belgio": "BEL",
+    "Croazia": "CRO",
+    "Danimarca": "DEN",
+    "Norvegia": "NOR",
+    "Marocco": "MAR",
+    "Messico": "MEX",
+    "Stati Uniti": "USA",
+    "Canada": "CAN",
+    "Giappone": "JPN",
+    "Corea del Sud": "KOR",
+    "Uruguay": "URU",
+    "Colombia": "COL",
+    "Iran": "IRN",
+    "Turchia": "TUR",
+    "Uzbekistan": "UZB",
+    "Ghana": "GHA",
+    "Senegal": "SEN",
+    "Svizzera": "SUI",
+    "Serbia": "SRB",
+    "Polonia": "POL",
+    "Austria": "AUT",
+    "Repubblica Ceca": "CZE",
+    "Scozia": "SCO",
+    "Tunisia": "TUN",
+    "Panama": "PAN",
+    "Nuova Zelanda": "NZL",
+    "Arabia Saudita": "KSA",
+    "Qatar": "QAT",
+    "Iraq": "IRQ",
+    "Giordania": "JOR",
+    "Haiti": "HAI",
+    "Curacao": "CUW",
+  };
+
+  return map[name] ?? name;
 }
 
   const [myPlayers, setMyPlayers] =
@@ -193,13 +208,18 @@ const [agentRoleFilter, setAgentRoleFilter] =
 const [teamConfirmations, setTeamConfirmations] =
   useState<TeamConfirmation[]>([]);
 
-  const visibleConfirmations =
+const visibleConfirmations =
   teamConfirmations.filter(
     (t) =>
       !ELIMINATED_USERS.includes(
         t.username.toLowerCase()
       )
   );
+
+const confirmedCount =
+  visibleConfirmations.filter(
+    (t) => t.confirmed
+  ).length;
 
     useEffect(() => {
     loadPage();
@@ -231,15 +251,19 @@ const [teamConfirmations, setTeamConfirmations] =
 
       setUser(u);
 
-    const { data: roundData } = await supabase
-  .from("market_rounds")
-  .select("*")
-  .in("status", ["svincoli", "buste"])
-  .order("id", { ascending: false })
-  .limit(1)
-  .maybeSingle();
-
-  console.log("ROUND DA SUPABASE", roundData);
+   const { data: roundData } =
+  await supabase
+    .from("market_rounds")
+    .select("*")
+    .in("status", [
+      "svincoli",
+      "buste",
+    ])
+    .order("id", {
+      ascending: false,
+    })
+    .limit(1)
+    .maybeSingle();
 
     setRound(
       roundData as MarketRound
@@ -761,6 +785,27 @@ async function confirmReleases() {
   setConfirming(false);
 setConfirmed(true);
 
+const activeTeams =
+  visibleConfirmations.length;
+
+const { count } = await supabase
+  .from("market_releases")
+  .select("*", {
+    count: "exact",
+    head: true,
+  })
+  .eq("round_id", round.id)
+  .eq("confirmed", true);
+
+if (count === activeTeams) {
+  await supabase
+  .from("market_rounds")
+  .update({
+    status: "buste",
+  })
+  .eq("id", round.id);
+}
+
 alert(
   "Svincoli confermati."
 );
@@ -822,7 +867,7 @@ if (release) {
       .select("id")
       .single();
 
-  if (!created) {
+    if (!created) {
     setConfirmingOffers(false);
     return;
   }
@@ -839,12 +884,31 @@ await supabase
   })
   .eq("id", releaseId);
 
-  setOffersConfirmed(true);
-  setConfirmingOffers(false);
+setOffersConfirmed(true);
 
-  alert(
-    "Buste confermate."
+const activeTeams =
+  visibleConfirmations.length;
+
+const { count } = await supabase
+  .from("market_releases")
+  .select("*", {
+    count: "exact",
+    head: true,
+  })
+  .eq("round_id", round.id)
+  .eq("bids_confirmed", true);
+
+if (count === activeTeams) {
+  await fetch(
+    `/api/il-mio-mercato/process?roundId=${round.id}`
   );
+}
+
+setConfirmingOffers(false);
+
+alert("Buste confermate.");
+
+loadPage();
 }
 
 
@@ -854,6 +918,27 @@ await supabase
       selectedIds.includes(p.id)
     ),
   [myPlayers, selectedIds]
+);
+
+const manualRefund = useMemo(
+  () =>
+    releasedPlayers
+      .filter(
+        (p) =>
+          !automaticIds.includes(p.id)
+      )
+      .reduce(
+        (sum, p) =>
+          sum +
+          Math.ceil(
+            (p.prezzo ?? 0) / 2
+          ),
+        0
+      ),
+  [
+    releasedPlayers,
+    automaticIds,
+  ]
 );
 
 const totalRefund = useMemo(
@@ -871,7 +956,7 @@ const totalRefund = useMemo(
 
 const availableCredits =
   leftoverBudget +
-  totalRefund;
+  manualRefund;
 
 const spentOffers = Object.values(
   agentOffers
@@ -887,12 +972,13 @@ const remainingCredits = Math.max(
 );
 
 const playersToBuy =
-  hasReleasePhase
+  releasePhase
     ? releasedPlayers.length
     : Math.max(
         25 - myPlayers.length,
         0
       );
+
 const selectedCount =
   selectedAgents.length;
 
@@ -1174,16 +1260,16 @@ const groupedAgents = {
         <div
           key={p.id}
           style={{
-            display: "grid",
-gridTemplateColumns:
-  "105px 43px 20px 58px 68px",
-columnGap: 8,
-alignItems: "center",
-            padding: "10px 0",
-            borderTop:
-              "1px solid rgba(255,255,255,.08)",
-             fontSize: ".95rem",
-          }}
+  display: "grid",
+  gridTemplateColumns:
+    "1.8fr .7fr .9fr .9fr",
+  columnGap: 10,
+  alignItems: "center",
+  padding: "10px 0",
+  borderTop:
+    "1px solid rgba(255,255,255,.08)",
+  fontSize: ".92rem",
+}}
         >
                   <div
   style={{
@@ -1196,11 +1282,11 @@ alignItems: "center",
 <div
   style={{
     color: "#94a3b8",
-    fontSize: ".9rem",
-    marginTop: 2,
+    fontSize: ".85rem",
+    whiteSpace: "nowrap",
   }}
 >
-  {p.ruolo} • {p.nazionale}
+  {p.ruolo} • {nationCode(p.nazionale)}
 </div>
 
                     <div
@@ -1246,7 +1332,7 @@ alignItems: "center",
         }}
       >
         <div>
-  Giocatori da svincolare:
+  Svincoli automatici:
   {releasedPlayers.length}
 </div>
 
@@ -1299,7 +1385,7 @@ alignItems: "center",
   </div>
 )}
 
-        {releasePhase && (
+        {releasePhase && !confirmed && (
   <div
     style={{
       background:
@@ -1307,8 +1393,8 @@ alignItems: "center",
       border:
         "1px solid rgba(34,197,94,.3)",
       borderRadius: 16,
-      padding: 18,
-      marginBottom: 20,
+      padding: 16,
+      marginBottom: 16,
       textAlign: "center",
       color: "#bbf7d0",
     }}
@@ -1318,15 +1404,24 @@ alignItems: "center",
     <br />
 
     Puoi selezionare i giocatori
-da svincolare ancora per
+    da svincolare ancora per
 
-<br />
-<br />
-
-⏳ {formatCountdown(
+    <div
+  style={{
+    fontSize: "2rem",
+    fontWeight: 900,
+    letterSpacing: 2,
+    fontVariantNumeric:
+      "tabular-nums",
+    marginTop: 14,
+    color: "#fff",
+  }}
+>
+  {formatCountdown(
   round?.release_deadline ??
     null
 )}
+</div>
   </div>
 )}
 
@@ -1339,8 +1434,8 @@ da svincolare ancora per
   border:
     "1px solid rgba(255,255,255,.08)",
   borderRadius: 16,
-  padding: 18,
-  marginBottom: 20,
+  padding: 14,
+  marginBottom: 16,
 }}
     >
       <div
@@ -1351,7 +1446,7 @@ da svincolare ancora per
           marginBottom: 16,
         }}
       >
-        ✅ Conferme allenatori
+     ✅ Conferme allenatori ({confirmedCount}/{visibleConfirmations.length})
       </div>
 
       <div
@@ -1359,14 +1454,20 @@ da svincolare ancora per
           display: "grid",
           gridTemplateColumns:
             "repeat(auto-fit,minmax(160px,1fr))",
-          gap: 10,
+          gap: 8,
         }}
       >
-        {visibleConfirmations.map((t) => (
+        {[...visibleConfirmations]
+  .sort(
+    (a, b) =>
+      Number(b.confirmed) -
+      Number(a.confirmed)
+  )
+  .map((t) => (
           <div
             key={t.username}
             style={{
-              padding: "10px 12px",
+              padding: "8px 12px",
               borderRadius: 12,
               background:
                 "rgba(255,255,255,.03)",
@@ -1426,8 +1527,8 @@ da svincolare ancora per
       border:
         "1px solid rgba(245,158,11,.3)",
       borderRadius: 16,
-      padding: 18,
-      marginBottom: 20,
+      padding: 16,
+      marginBottom: 16,
       textAlign: "center",
       color: "#fde68a",
     }}
@@ -1441,17 +1542,30 @@ da svincolare ancora per
     <br />
 
     È ora possibile inserire
-le offerte in busta ancora per
+    le offerte in busta ancora per
 
-<br />
-<br />
+    <br />
+    <br />
 
-⏳ {formatCountdown(
-  round?.bid_deadline ??
-    null
-)}
+    <div
+      style={{
+        fontSize: "2rem",
+        fontWeight: 900,
+        letterSpacing: 2,
+        fontVariantNumeric:
+          "tabular-nums",
+        marginTop: 12,
+        color: "#fff",
+      }}
+    >
+      {formatCountdown(
+        round?.bid_deadline ??
+          null
+      )}
+    </div>
   </div>
 )}
+
 
 {marketClosed && (
   <div
@@ -1510,19 +1624,21 @@ le offerte in busta ancora per
           }}
         >
           {releasePhase &&
+  !confirmed &&
   "Seleziona i giocatori da svincolare."}
 
 {bidPhase &&
   "Fase acquisti aperta."}
 
-          {releasePhase && (
-  <>
-    <br />
-    <br />
-    Giocatori in rosa:{" "}
-    {myPlayers.length}
-  </>
+  {releasePhase &&
+  !confirmed && (
+    <>
+      <br />
+      <br />
+      Giocatori in rosa: {myPlayers.length}
+    </>
 )}
+
         </p>
 
         {releasePhase && (
@@ -1744,17 +1860,13 @@ le offerte in busta ancora per
                       </div>
 
                       <div
-                        style={{
-                          color:
-                            "#94a3b8",
-                          marginTop:
-                            4,
-                        }}
-                      >
-                        {
-                          p.nazionale
-                        }
-                      </div>
+  style={{
+    color: "#94a3b8",
+    marginTop: 4,
+  }}
+>
+  {nationCode(p.nazionale)}
+</div>
 
                       <label
                         style={{
@@ -1934,7 +2046,7 @@ le offerte in busta ancora per
       textAlign: "center",
     }}
   >
-    {hasReleasePhase ? (
+    {releasePhase ? (
   <>
     Non hai posti liberi in rosa.
     <br />
@@ -2152,7 +2264,7 @@ le offerte in busta ancora per
   </>
 )}
 
-{hasReleasePhase && (
+{releasePhase && (
   <>
     🧤 Portieri: {missingByRole.P}
     <br />
@@ -2442,17 +2554,14 @@ const limitReached =
                   {p.nome}
                 </div>
 
-                <div
-                  style={{
-                    color:
-                      "#94a3b8",
-                    marginTop: 4,
-                  }}
-                >
-                  {
-                    p.nazionale
-                  }
-                </div>
+               <div
+  style={{
+    color: "#94a3b8",
+    marginTop: 4,
+  }}
+>
+  {nationCode(p.nazionale)}
+</div>
               </div>
 
               <div
@@ -2474,7 +2583,7 @@ const limitReached =
                     marginTop: 6,
                   }}
                 >
-                  {p.prezzo} mln
+                  {p.prezzo}
                 </div>
               </div>
             </div>

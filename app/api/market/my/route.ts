@@ -1,8 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse }
+from "next/server";
 
-export async function GET() {
+export async function GET(
+  request: NextRequest
+) {
+  const roundId =
+    Number(
+      request.nextUrl.searchParams.get(
+        "roundId"
+      )
+    );
+
   return NextResponse.json({
     ok: true,
-    message: "API Il Mio Mercato"
+    roundId,
   });
 }
