@@ -226,6 +226,25 @@ console.log(
     );
   });
 
+  budgets?.forEach((b: any) => {
+  budgetsMap.set(
+    b.team_id,
+    b.total_budget
+  );
+});
+
+console.log(
+  "BUDGETS FROM DB",
+  budgets
+);
+
+console.log(
+  "BUDGETS MAP",
+  Object.fromEntries(
+    budgetsMap
+  )
+);
+
     const assignments: any[] = [];
   const priorityTies: any[] = [];
   const auctionTies: any[] = [];
@@ -272,14 +291,21 @@ if (playerBids.length > 0) {
               b.team_id
             ) ?? 0;
 
+            console.log(
+  "CHECK BUDGET",
+  {
+    team: b.team_id,
+    bid: b.bid,
+    budget,
+    player: player.player_name,
+  }
+);
+
           return budget >= b.bid;       
         }
       );
 
-   if (
-  availableBids.length ===
-  0
-) {
+if (availableBids.length === 0) {
   console.log(
     "NO AVAILABLE",
     player.id,
@@ -290,29 +316,22 @@ if (playerBids.length > 0) {
   continue;
 }
 
-availableBids.sort(
-  (a: any, b: any) => {
-    if (b.bid !== a.bid) {
-      return b.bid - a.bid;
-    }
-
-    return (
-      a.priority -
-      b.priority
-    );
+availableBids.sort((a, b) => {
+  if (b.bid !== a.bid) {
+    return b.bid - a.bid;
   }
-);
 
-    console.log(
+  return a.priority - b.priority;
+});
+
+console.log(
   "AVAILABLE",
   player.player_name,
-  availableBids.map(
-    (x: any) => ({
-      team: x.team_id,
-      bid: x.bid,
-      priority: x.priority,
-    })
-  )
+  availableBids.map((x) => ({
+    team: x.team_id,
+    bid: x.bid,
+    priority: x.priority,
+  }))
 );
 
    const bestBid =
