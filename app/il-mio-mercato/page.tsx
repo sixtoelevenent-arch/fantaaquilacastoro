@@ -390,9 +390,13 @@ if (releaseError) {
   );
 
 setOffersConfirmed(
-  release.bids_confirmed ?? false
+  roundData.session_type ===
+  "buste" &&
+  (release.bids_confirmed ?? false)
 );
-
+} else {
+  setOffersConfirmed(false);
+  }
   const {
   data: playersReleased,
   error: playersReleasedError,

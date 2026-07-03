@@ -259,6 +259,17 @@ console.log(
   )
 );
 
+released?.forEach((r: any) => {
+  console.log(
+    "TEAM",
+    r.market_releases.team_id,
+    "PLAYER",
+    r.player_id,
+    "PLAYERS",
+    JSON.stringify(r.players)
+  );
+});
+
 console.log(
   "remainingSlots",
   Object.fromEntries(
@@ -507,20 +518,23 @@ console.log(
         });
       } else {
         auctionTies.push({
-          player_name:
-            player.display_name ??
-            player.player_name,
-          bid: bestBid,
-          teams:
-            samePriority.map(
-              (x: any) =>
-                teamName(
-                  x.team_id
-                )
-            ),
-        });
+  player_name:
+    player.display_name ??
+    player.player_name,
+  bid: bestBid,
+  teams: samePriority.map(
+    (x: any) =>
+      teamName(x.team_id)
+  ),
+});
 
-        continue;
+winner =
+  samePriority[
+    Math.floor(
+      Math.random() *
+      samePriority.length
+    )
+  ];
       }
     }
 
