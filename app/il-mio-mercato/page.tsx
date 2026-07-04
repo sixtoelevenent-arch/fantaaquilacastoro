@@ -1110,7 +1110,8 @@ const selectedCount =
 const minimumReserve =
   Math.max(
     playersToBuy -
-      selectedCount,
+      selectedCount -
+      1,
     0
   );
 
