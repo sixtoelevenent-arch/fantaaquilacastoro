@@ -33,7 +33,11 @@ export async function GET(
   const { data: round } =
   await admin
     .from("market_rounds")
-    .select("status")
+    .select(`
+  status,
+  current_bid_session,
+  extra_session_duration
+`)
     .eq("id", roundId)
     .single();
 
@@ -48,26 +52,6 @@ if (!round) {
 }
 
 if (round.status === "chiuso") {
-  return NextResponse.json({
-    ok: true,
-    assignments: [],
-    priorityTies: [],
-    auctionTies: [],
-    alreadyProcessed: true,
-  });
-}
-
-const { data: closed } =
-  await admin
-    .from("market_rounds")
-    .update({
-      status: "chiuso",
-    })
-    .eq("id", roundId)
-    .eq("status", "aperta")
-    .select();
-
-if (!closed?.length) {
   return NextResponse.json({
     ok: true,
     assignments: [],
@@ -98,6 +82,69 @@ console.log("EXISTING", existing);
   });
 }
 
+const { data: releases } =
+  await admin
+    .from("market_release_players")
+    .select(`
+      player_id,
+      market_releases_id,
+      automatic,
+      players!inner(
+        ruolo
+      ),
+      market_releases!inner(
+        team_id,
+        round_id
+      )
+    `);
+
+for (const r of releases ?? []) {
+  if (
+    r.market_releases.round_id !==
+    roundId
+  ) {
+    continue;
+  }
+
+  const playerId =
+    r.player_id;
+
+  const teamId =
+    r.market_releases.team_id;
+
+  const { data: releasedPlayer } =
+  await admin
+    .from("players")
+    .update({
+      team_id: null,
+    })
+    .eq("id", playerId)
+    .eq("team_id", teamId)
+    .select("id")
+    .single();
+
+if (releasedPlayer) {
+  await admin
+    .from("free_agents")
+    .update({
+      disponibile: true,
+      blocked_team_id:
+        r.automatic
+          ? null
+          : teamId,
+      is_optional_release:
+        !r.automatic,
+      released_by_team_id:
+        teamId,
+    })
+    .eq(
+      "players_id",
+      playerId
+    );
+}
+
+}
+
   const { data: bids } =
     await admin
       .from("market_bids")
@@ -111,15 +158,18 @@ console.log("EXISTING", existing);
 
   const { data: freeAgents } =
   await admin
-    .from("market_available_players")
+    .from("free_agents")
     .select(`
-      id,
+      players_id,
       player_name,
       display_name,
       nazionale,
       ruolo,
-      quotazione
-    `);
+      quotazione,
+      blocked_team_id,
+      disponibile
+    `)
+    .eq("disponibile", true);
 
       console.log(
   "FREE AGENTS",
@@ -153,19 +203,8 @@ console.log("EXISTING", existing);
   );
 }
 
-const { data: released } =
-  await admin
-    .from("market_release_players")
-    .select(`
-      player_id,
-      players!inner(
-        ruolo
-      ),
-      market_releases!inner(
-        team_id,
-        round_id
-      )
-    `);
+const released = [...
+  (releases ?? [])];
 
      const remainingSlots =
   new Map<number, number>();
@@ -343,15 +382,14 @@ console.log(
     const playerBids =
       (bids ?? []).filter(
         (b: any) =>
-          b.player_id ===
-          player.id
+          b.player_id === player.players_id
       );
       
 
   console.log(
   "PLAYER",
   player.player_name,
-  player.id,
+  player.players_id,
   "BIDS",
   playerBids.length
 );
@@ -359,7 +397,7 @@ console.log(
 if (playerBids.length > 0) {
   console.log(
     "MATCH",
-    player.id,
+    player.players_id,
     player.player_name,
     playerBids
   );
@@ -414,17 +452,19 @@ if (playerBids.length > 0) {
       });
 
       return (
-        budget >= b.bid &&
-        slots > 0 &&
-        roleRemaining > 0
-      );
+  budget >= b.bid &&
+  slots > 0 &&
+  roleRemaining > 0 &&
+  player.blocked_team_id !==
+    b.team_id
+);
     }
   );
 
 if (availableBids.length === 0) {
   console.log(
     "NO AVAILABLE",
-    player.id,
+    player.players_id,
     player.player_name,
     playerBids
   );
@@ -549,32 +589,45 @@ winner =
         winner.bid
     );
 
-    remainingSlots.set(
-      winner.team_id,
-      Math.max(
-        (remainingSlots.get(
-          winner.team_id
-        ) ?? 0) - 1,
-        0
-      )
+    const slotToConsume =
+  released.find(
+    (r: any) =>
+      r.market_releases.round_id ===
+        roundId &&
+      r.market_releases.team_id ===
+        winner.team_id &&
+      r.players.ruolo ===
+        player.ruolo
+  );
+
+if (slotToConsume) {
+  remainingSlots.set(
+    winner.team_id,
+    Math.max(
+      (remainingSlots.get(
+        winner.team_id
+      ) ?? 0) - 1,
+      0
+    )
+  );
+
+  const slots =
+    roleSlots.get(
+      winner.team_id
     );
 
-    const slots =
-  roleSlots.get(
-    winner.team_id
-  );
+  if (slots) {
+    const ruolo =
+      player.ruolo as keyof typeof slots;
 
-if (slots) {
-  const ruolo =
-    player.ruolo as keyof typeof slots;
-
-  slots[ruolo] = Math.max(
-    slots[ruolo] - 1,
-    0
-  );
+    slots[ruolo] = Math.max(
+      slots[ruolo] - 1,
+      0
+    );
+  }
 }
 
-const playerId = player.id;
+const playerId = player.players_id;
 
 const {
   error: updatePlayerError,
@@ -618,8 +671,8 @@ if (updatePlayerError) {
     disponibile: false,
   })
   .eq(
-    "player_name",
-    player.player_name
+    "players_id",
+    player.players_id
   );
 
   const { data: faCheck } =
@@ -674,14 +727,10 @@ if (budgetError) {
 } = await admin
   .from("market_assignments")
   .insert({
-    round_id:
-      roundId,
-    player_id:
-      playerId,
-    team_id:
-      winner.team_id,
-    price:
-      winner.bid,
+    round_id: roundId,
+    player_id: playerId,
+    team_id: winner.team_id,
+    price: winner.bid,
   });
 
 if (assignmentError) {
@@ -689,9 +738,36 @@ if (assignmentError) {
     "ASSIGNMENT ERROR",
     assignmentError
   );
-}
+} else {
+  
+  if (slotToConsume) {
+    await admin
+      .from("market_release_players")
+      .delete()
+      .eq(
+        "player_id",
+        slotToConsume.player_id
+      )
+      .eq(
+        "market_releases_id",
+        slotToConsume.market_releases_id
+      );
 
-    assignments.push({
+    const index =
+      released.findIndex(
+        (r: any) =>
+          r.player_id ===
+            slotToConsume.player_id &&
+          r.market_releases.team_id ===
+            winner.team_id
+      ) ?? -1;
+
+    if (index >= 0) {
+      released.splice(index, 1);
+    }
+  }
+
+   assignments.push({
   player_id: playerId,
       display_name:
         player.display_name ??
@@ -709,12 +785,84 @@ if (assignmentError) {
       priority:
         winner.priority,
     });
-  }
+    
+}
+}
 
   assignments.sort(
     (a, b) =>
       b.bid - a.bid
   );
+
+const {
+  data: statusRows,
+} = await admin
+  .from("market_team_status")
+  .select(`
+    p_missing,
+    d_missing,
+    c_missing,
+    a_missing
+  `);
+
+const missingPlayers =
+  (statusRows ?? []).reduce(
+    (sum: number, t: any) =>
+      sum +
+      Number(t.p_missing) +
+      Number(t.d_missing) +
+      Number(t.c_missing) +
+      Number(t.a_missing),
+    0
+  );
+
+  if (missingPlayers === 0) {
+  await admin
+    .from("market_rounds")
+    .update({
+      status: "chiuso",
+      session_type: null,
+    })
+    .eq("id", roundId);
+} else {
+  const nextSession =
+    (round.current_bid_session ?? 1) + 1;
+
+  const minutes =
+    round.extra_session_duration ??
+    60;
+
+  const nextDeadline =
+    new Date(
+      Date.now() +
+        minutes * 60000
+    ).toISOString();
+
+  await admin
+    .from("market_bids")
+    .delete()
+    .eq("round_id", roundId);
+
+  await admin
+    .from("market_releases")
+    .update({
+      bids_confirmed: false,
+      bids_confirmed_at: null,
+    })
+    .eq("round_id", roundId);
+
+  await admin
+    .from("market_rounds")
+    .update({
+      status: "aperta",
+      session_type: "buste",
+      bid_deadline:
+        nextDeadline,
+      current_bid_session:
+        nextSession,
+    })
+    .eq("id", roundId);
+}
 
   return NextResponse.json({
   ok: true,
