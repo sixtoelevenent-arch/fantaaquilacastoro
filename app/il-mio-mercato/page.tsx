@@ -1354,6 +1354,7 @@ const groupedAgents = {
   fontSize: ".92rem",
 }}
         >
+
                   <div
   style={{
     fontWeight: 700,
@@ -2217,28 +2218,143 @@ const groupedAgents = {
     : "✅ CONFERMA BUSTE"}
 </button>
 
-    {selectedFreeAgents.map((p) => (
-        <div
-          key={p.id}
-          style={{
-            display: "flex",
-            gap: 12,
-            alignItems:
-              "center",
-            marginBottom: 12,
-            flexWrap: "wrap",
-          }}
-        >
-          <div
-            style={{
-              flex: 1,
-              minWidth: 180,
-            }}
-          >
-            {p.nome}
-          </div>
+    {selectedFreeAgents.map((p, index) => (
+  <div
+    key={p.id}
+    style={{
+      display: "flex",
+      gap: 12,
+      alignItems: "center",
+      marginBottom: 12,
+      flexWrap: "wrap",
+    }}
+  >
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 2,
+      }}
+    >
+      <button
+        disabled={
+          offersConfirmed ||
+          index === 0
+        }
+        onClick={async () => {
+          const next = [
+            ...selectedAgents,
+          ];
 
-          <input
+          [
+            next[index - 1],
+            next[index],
+          ] = [
+            next[index],
+            next[index - 1],
+          ];
+
+          setSelectedAgents(next);
+
+          if (user && round) {
+            await Promise.all(
+              next.map((id, i) =>
+                supabase
+                  .from("market_bids")
+                  .update({
+                    priority: i + 1,
+                  })
+                  .eq(
+                    "team_id",
+                    user.team_id
+                  )
+                  .eq(
+                    "round_id",
+                    round.id
+                  )
+                  .eq(
+                    "player_id",
+                    id
+                  )
+              )
+            );
+          }
+        }}
+      >
+        ▲
+      </button>
+
+      <button
+        disabled={
+          offersConfirmed ||
+          index ===
+            selectedFreeAgents.length - 1
+        }
+        onClick={async () => {
+          const next = [
+            ...selectedAgents,
+          ];
+
+          [
+            next[index],
+            next[index + 1],
+          ] = [
+            next[index + 1],
+            next[index],
+          ];
+
+          setSelectedAgents(next);
+
+          if (user && round) {
+            await Promise.all(
+              next.map((id, i) =>
+                supabase
+                  .from("market_bids")
+                  .update({
+                    priority: i + 1,
+                  })
+                  .eq(
+                    "team_id",
+                    user.team_id
+                  )
+                  .eq(
+                    "round_id",
+                    round.id
+                  )
+                  .eq(
+                    "player_id",
+                    id
+                  )
+              )
+            );
+          }
+        }}
+      >
+        ▼
+      </button>
+    </div>
+
+    <div
+      style={{
+        width: 24,
+        textAlign: "center",
+        fontWeight: 800,
+        color: "#facc15",
+      }}
+    >
+      {index + 1}
+    </div>
+
+    <div
+      style={{
+        flex: 1,
+        minWidth: 180,
+      }}
+    >
+      {p.nome}
+    </div>
+
+    <input
   type="text"
   inputMode="numeric"
   disabled={offersConfirmed}
