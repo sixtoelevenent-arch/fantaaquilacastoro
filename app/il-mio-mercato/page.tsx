@@ -1,5 +1,8 @@
 "use client";
 
+export const dynamic =
+  "force-dynamic";
+
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -56,7 +59,7 @@ const bidPhase =
   round?.session_type === "buste";
 
 const marketClosed =
-  round?.status === "chiuso";
+  round?.status === "chiusa";
 
 const [confirmed, setConfirmed] =
   useState(false);
@@ -159,10 +162,18 @@ function nationCode(name: string) {
     const [leftoverBudget, setLeftoverBudget] =
   useState(0);
 
+  const [teamStatus, setTeamStatus] =
+  useState<{
+    p_missing: number;
+    d_missing: number;
+    c_missing: number;
+    a_missing: number;
+  } | null>(null);
+
   const [automaticIds, setAutomaticIds] =
     useState<number[]>([]);
 
-  const [selectedIds, setSelectedIds] =
+     const [selectedIds, setSelectedIds] =
     useState<number[]>([]);
 
     const [saving, setSaving] =
@@ -224,8 +235,10 @@ const confirmedCount =
   ).length;
 
     useEffect(() => {
+  if (typeof window !== "undefined") {
     loadPage();
-  }, []);
+  }
+}, []);
 
   useEffect(() => {
   const timer = setInterval(() => {
@@ -236,12 +249,16 @@ const confirmedCount =
 }, []);
 
     async function loadPage() {
-    setLoading(true);
+  if (typeof window === "undefined") {
+    return;
+  }
 
-    const raw =
-      localStorage.getItem(
-        "fantasy_user"
-      );
+  setLoading(true);
+
+  const raw =
+    localStorage.getItem(
+      "fantasy_user"
+    );
 
     if (!raw) {
       router.push("/login");
@@ -253,40 +270,47 @@ const confirmedCount =
 
       setUser(u);
 
-  const { data: roundData } =
-  await supabase
-    .from("market_rounds")
-    .select("*")
-    .in("status", [
-      "aperta",
-      "chiuso",
-    ])
-    .order("id", {
-      ascending: false,
-    })
-    .limit(1)
-    .maybeSingle();
+  const { data: roundData } = await supabase
+  .from("market_rounds")
+  .select("*")
+  .neq("status", "chiusa")
+  .order("id")
+  .limit(1)
+  .maybeSingle();
 
- setRound(roundData as MarketRound);
+if (!roundData) {
+  setLoading(false);
+  return;
+}
 
-    if (roundData) {
+const currentRound =
+  roundData as MarketRound;
+
+setRound(currentRound);
+
+console.log("roundData", roundData);
+console.log("currentRound", currentRound);
+
+const nextRoundId = currentRound.id;
+
+    if (currentRound) {
 
   const { data: releases } =
-    await supabase
-      .from("market_releases")
-      .select(`
-        team_id,
-        confirmed
-      `)
-      .eq("round_id", roundData.id);
+  await supabase
+    .from("market_releases")
+    .select(`
+      team_id,
+      confirmed
+    `)
+    .eq("round_id", currentRound.id);
 
-  const { data: users } =
-    await supabase
-      .from("fantasy_users")
-      .select(`
-        username,
-        team_id
-      `);
+const { data: users } =
+  await supabase
+    .from("fantasy_users")
+    .select(`
+      username,
+      team_id
+    `);
 
   const confirmations =
   (users ?? []).map((u: any) => ({
@@ -303,11 +327,6 @@ const confirmedCount =
   setTeamConfirmations(
     confirmations
   );
-}
-
-    if (!roundData) {
-  setLoading(false);
-  return;
 }
 
     const {
@@ -357,7 +376,20 @@ const { data: budget } =
 setLeftoverBudget(
   budget?.total_budget ?? 0
 );
-        if (roundData) {
+
+const { data: status } =
+  await supabase
+    .from("market_team_status")
+    .select(`
+      p_missing,
+      d_missing,
+      c_missing,
+      a_missing
+    `)
+    .eq("team_id", u.team_id)
+    .maybeSingle();
+
+  setTeamStatus(status);
   setConfirmed(false);
   setOffersConfirmed(false);
   setSelectedIds([]);
@@ -375,7 +407,7 @@ setLeftoverBudget(
     confirmed,
     bids_confirmed
   `)
-  .eq("round_id", roundData.id)
+  .eq("round_id", currentRound.id)
   .eq("team_id", u.team_id)
   .maybeSingle();
 
@@ -390,35 +422,38 @@ if (releaseError) {
   );
 
 setOffersConfirmed(
-  roundData.session_type ===
-  "buste" &&
+  currentRound.session_type === "buste" &&
   (release.bids_confirmed ?? false)
 );
 } else {
   setOffersConfirmed(false);
   }
+  let releasedRows: any[] = [];
+
+if (release) {
   const {
-  data: playersReleased,
-  error: playersReleasedError,
-} = await supabase
-  .from("market_release_players")
-  .select(`
-    player_id,
-    automatic
-  `)
-  .eq(
-    "release_id",
-    release.id
-  );
+    data: playersReleased,
+    error: playersReleasedError,
+  } = await supabase
+    .from("market_release_players")
+    .select(`
+      player_id,
+      automatic
+    `)
+    .eq(
+      "release_id",
+      release.id
+    );
 
-if (playersReleasedError) {
-  console.error(
-    playersReleasedError
-  );
+  if (playersReleasedError) {
+    console.error(
+      playersReleasedError
+    );
+  }
+
+  releasedRows =
+    playersReleased ?? [];
 }
-
-const releasedRows =
-  playersReleased ?? [];
 
 setSelectedIds(
   releasedRows.map(
@@ -435,7 +470,7 @@ const { data: bids } =
       priority
     `)
     .eq("team_id", u.team_id)
-    .eq("round_id", roundData.id)
+    .eq("round_id", currentRound.id)
     .order("priority");
 
 if (bids) {
@@ -452,23 +487,31 @@ if (bids) {
   setAgentOffers(offers);
 }
 
-setAutomaticIds(
-  releasedRows
-    .filter(
-      (r) => r.automatic
-    )
-    .map(
-      (r) => r.player_id
-    )
-);
+const {
+    data: auto,
+    error: autoError,
+  } = await supabase.rpc(
+    "market_automatic_releases_view",
+    {
+      p_round: nextRoundId,
+    }
+  );
 
-  
-}
-}
+  if (autoError) {
+    console.error(autoError);
+  }
+
+  const ids = (auto ?? [])
+  .filter(
+    (r: any) =>
+      Number(r.team_id) === Number(u.team_id)
+  )
+  .map((r: any) => r.player_id);
+
+setAutomaticIds(ids);
 
 setLoading(false);
 }
-
 
   async function toggleRelease(
     playerId: number
@@ -669,14 +712,8 @@ const selectedRoleCount =
 const role =
   player.ruolo as keyof typeof releasedByRole;
 
-const maxForRole = usingReleases
-  ? releasedByRole[role]
-  : Math.max(
-      targetByRole[role] -
-        squadByRole[role],
-      0
-    );
-
+const maxForRole =
+  releasedByRole[role];
 
 if (selectedRoleCount >= maxForRole) {
   alert(
@@ -960,21 +997,6 @@ await loadPage();
   [myPlayers, selectedIds]
 );
 
-const voluntaryReleasedPlayers =
-  useMemo(
-    () =>
-      releasedPlayers.filter(
-        (p) =>
-          !automaticIds.includes(
-            p.id
-          )
-      ),
-    [
-      releasedPlayers,
-      automaticIds,
-    ]
-  );
-
 const manualRefund = useMemo(
   () =>
     releasedPlayers
@@ -1027,7 +1049,13 @@ const remainingCredits = Math.max(
 );
 
 const playersToBuy =
-  releasedPlayers.length;
+  bidPhase
+    ? (teamStatus?.p_missing ?? 0) +
+      (teamStatus?.d_missing ?? 0) +
+      (teamStatus?.c_missing ?? 0) +
+      (teamStatus?.a_missing ?? 0)
+    : releasedPlayers.length;
+   
 const selectedCount =
   selectedAgents.length;
 
@@ -1052,25 +1080,11 @@ const selectedFreeAgents =
     )
     .filter(Boolean) as Player[];
 
-    const squadByRole = {
-  P: myPlayers.filter((p) => p.ruolo === "P").length,
-  D: myPlayers.filter((p) => p.ruolo === "D").length,
-  C: myPlayers.filter((p) => p.ruolo === "C").length,
-  A: myPlayers.filter((p) => p.ruolo === "A").length,
-};
-
-const targetByRole = {
-  P: 3,
-  D: 8,
-  C: 8,
-  A: 6,
-};
-
-const releasedByRole = {
-  P: releasedPlayers.filter((p) => p.ruolo === "P").length,
-  D: releasedPlayers.filter((p) => p.ruolo === "D").length,
-  C: releasedPlayers.filter((p) => p.ruolo === "C").length,
-  A: releasedPlayers.filter((p) => p.ruolo === "A").length,
+    const releasedByRole = {
+  P: teamStatus?.p_missing ?? 0,
+  D: teamStatus?.d_missing ?? 0,
+  C: teamStatus?.c_missing ?? 0,
+  A: teamStatus?.a_missing ?? 0,
 };
 
 const boughtByRole = {
@@ -1080,64 +1094,29 @@ const boughtByRole = {
   A: selectedFreeAgents.filter((p) => p.ruolo === "A").length,
 };
 
-const usingReleases =
-  releasedPlayers.length > 0;
-
-const missingByRole = usingReleases
-  ? {
-      P: Math.max(
-        releasedByRole.P - boughtByRole.P,
-        0
-      ),
-      D: Math.max(
-        releasedByRole.D - boughtByRole.D,
-        0
-      ),
-      C: Math.max(
-        releasedByRole.C - boughtByRole.C,
-        0
-      ),
-      A: Math.max(
-        releasedByRole.A - boughtByRole.A,
-        0
-      ),
-    }
-  : {
-      P: Math.max(
-        targetByRole.P -
-          squadByRole.P -
-          boughtByRole.P,
-        0
-      ),
-      D: Math.max(
-        targetByRole.D -
-          squadByRole.D -
-          boughtByRole.D,
-        0
-      ),
-      C: Math.max(
-        targetByRole.C -
-          squadByRole.C -
-          boughtByRole.C,
-        0
-      ),
-      A: Math.max(
-        targetByRole.A -
-          squadByRole.A -
-          boughtByRole.A,
-        0
-      ),
-    };
-
+const missingByRole = {
+  P: Math.max(
+    releasedByRole.P -
+      boughtByRole.P,
+    0
+  ),
+  D: Math.max(
+    releasedByRole.D -
+      boughtByRole.D,
+    0
+  ),
+  C: Math.max(
+    releasedByRole.C -
+      boughtByRole.C,
+    0
+  ),
+  A: Math.max(
+    releasedByRole.A -
+      boughtByRole.A,
+    0
+  ),
+};
  
-console.log({
-  releasedByRole,
-  boughtByRole,
-  missingByRole,
-  selectedAgents,
-  selectedFreeAgents,
-});
-
   const filteredAgents =
   useMemo(() => {
     let rows = [
@@ -1289,19 +1268,17 @@ const groupedAgents = {
         >
           💰 IL MIO MERCATO
         </h1>
-{releasePhase &&
-  releasedPlayers.length > 0 && (
-    <div
-      style={{
-  background:
-    "rgba(255,255,255,.04)",
-  border:
-    "1px solid rgba(255,255,255,.08)",
-  borderRadius: 16,
-  padding: 18,
-  marginBottom: 20,
-}}
-    >
+<div
+  style={{
+    background:
+      "rgba(255,255,255,.04)",
+    border:
+      "1px solid rgba(255,255,255,.08)",
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 20,
+  }}
+>
       <div
         style={{
           color: "#facc15",
@@ -1375,51 +1352,73 @@ const groupedAgents = {
       ))}
 
       <div
-        style={{
-          marginTop: 16,
-          paddingTop: 16,
-          borderTop:
-            "1px solid rgba(255,255,255,.1)",
-          display: "flex",
-          justifyContent:
-            "space-between",
-          flexWrap: "wrap",
-          gap: 10,
-          fontWeight: 800,
-        }}
-      >
-        <div>
-  Svincoli automatici:
-{automaticIds.length}
-</div>
-
-<div
   style={{
-    color: "#4ade80",
-  }}
->
-  Recupero totale:
-  +{totalRefund} mln
-</div>
-
-<div
-  style={{
-    width: "100%",
-    marginTop: 12,
-    paddingTop: 12,
+    marginTop: 16,
+    paddingTop: 16,
     borderTop:
-      "1px solid rgba(255,255,255,.08)",
-    color: "#facc15",
+      "1px solid rgba(255,255,255,.1)",
+    display: "flex",
+    justifyContent:
+      "space-between",
+    flexWrap: "wrap",
+    gap: 10,
     fontWeight: 800,
-    fontSize: "1.05rem",
   }}
 >
-  💳 Crediti disponibili:
-  {availableCredits} mln
+  <div>
+    🌍 Svincoli automatici:
+    {automaticIds.length}
+  </div>
+
+  <div>
+  🪑 Slot da reintegrare:
+  {" "}
+  {(teamStatus?.p_missing ?? 0) +
+    (teamStatus?.d_missing ?? 0) +
+    (teamStatus?.c_missing ?? 0) +
+    (teamStatus?.a_missing ?? 0)}
+
+  <div
+    style={{
+      marginTop: 6,
+      fontSize: ".9rem",
+      color: "#cbd5e1",
+      fontWeight: 600,
+    }}
+  >
+    🧤 {teamStatus?.p_missing ?? 0} •
+    {" "}🛡️ {teamStatus?.d_missing ?? 0} •
+    {" "}⚙️ {teamStatus?.c_missing ?? 0} •
+    {" "}🎯 {teamStatus?.a_missing ?? 0}
+  </div>
 </div>
-      </div>
-    </div>
-)}
+
+  <div
+    style={{
+      color: "#4ade80",
+    }}
+  >
+    Recupero totale:
+    +{totalRefund} mln
+  </div>
+
+  <div
+    style={{
+      width: "100%",
+      marginTop: 12,
+      paddingTop: 12,
+      borderTop:
+        "1px solid rgba(255,255,255,.08)",
+      color: "#facc15",
+      fontWeight: 800,
+      fontSize: "1.05rem",
+    }}
+  >
+    💳 Crediti disponibili:
+    {availableCredits} mln
+  </div>
+  </div>
+</div>
 
         {confirmed && (
   <div
@@ -1701,14 +1700,13 @@ const groupedAgents = {
         {releasePhase && (
   <>
     <input
-      value={search}
-      onChange={(e) =>
-        setSearch(e.target.value)
-        
-      }
-      onClick={(e) =>
-  e.stopPropagation()
-}
+  value={search}
+  onChange={(e) => {
+    setSearch(e.target.value);
+  }}
+  onClick={(e) => {
+    e.stopPropagation();
+  }}
       placeholder="🔍 Cerca giocatore..."
       style={{
         width: "100%",
@@ -2120,18 +2118,17 @@ const groupedAgents = {
   </div>
 )}
 
-{bidPhase && (
-  <div
-    style={{
-      background:
-        "rgba(255,255,255,.04)",
-      border:
-        "1px solid rgba(255,255,255,.08)",
-      borderRadius: 16,
-      padding: 18,
-      marginBottom: 20,
-    }}
-  >
+<div
+  style={{
+    background:
+      "rgba(255,255,255,.04)",
+    border:
+      "1px solid rgba(255,255,255,.08)",
+    borderRadius: 16,
+    padding: 18,
+    marginBottom: 20,
+  }}
+>
     <div
       style={{
         color: "#facc15",
@@ -2399,9 +2396,7 @@ const groupedAgents = {
   </span>
 </div>
   </div>
-  )}
-
-
+  
     <input
       value={agentSearch}
 onChange={(e) =>
@@ -2467,13 +2462,8 @@ onChange={(e) =>
     return role === agentRoleFilter;
   })
   .map((role) => {
-  const maxForRole = usingReleases
-    ? releasedByRole[role]
-    : Math.max(
-        targetByRole[role] -
-          squadByRole[role],
-        0
-      );
+  const maxForRole =
+  releasedByRole[role];
 
   return (
     <div

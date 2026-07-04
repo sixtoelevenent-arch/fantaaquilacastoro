@@ -63,7 +63,27 @@ function handleSort(
   .order("display_name");
 
 
-  setPlayers((data || []) as FreeAgent[]);
+  const unique = Array.from(
+  new Map(
+    ((data || []) as FreeAgent[]).map((p) => [
+      `${p.id}-${p.nazionale}`,
+      p,
+    ])
+  ).values()
+);
+
+const activeTeamIds = [1, 2, 3, 4, 5, 9, 11, 12];
+
+const cleaned = unique.filter(
+  (p: any) =>
+    !activeTeamIds.includes(
+      Number((p as any).team_id)
+    )
+);
+
+setPlayers(cleaned);
+
+setPlayers(unique);
 
   setLoading(false);
 }
@@ -383,7 +403,9 @@ return rows;
 
               <tbody>
                 {filteredPlayers.map((p) => (
-                  <tr key={p.id}>
+                  <tr
+  key={`${p.id}-${p.player_name}-${p.nazionale}`}
+>
                     <td style={tdStyle}>
                       {p.display_name ??
   p.player_name}

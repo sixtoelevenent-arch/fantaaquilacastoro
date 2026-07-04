@@ -27,11 +27,11 @@ export async function GET() {
   //
 
   if (
-    round.status === "pending" &&
-    !round.session_type &&
-    round.svincoli_open_at &&
-    now >= new Date(round.svincoli_open_at)
-  ) {
+  round.status === "pending" &&
+  round.session_type === "svincoli" &&
+  round.svincoli_open_at &&
+  now >= new Date(round.svincoli_open_at)
+) {
     await admin
       .from("market_rounds")
       .update({
@@ -61,11 +61,12 @@ export async function GET() {
     );
 
     await admin
-      .from("market_rounds")
-      .update({
-        session_type: "buste",
-      })
-      .eq("id", 2);
+  .from("market_rounds")
+  .update({
+    session_type: "buste",
+    current_bid_session: 1,
+  })
+  .eq("id", 2);
 
     return NextResponse.json({
       ok: true,
@@ -78,11 +79,12 @@ export async function GET() {
   //
 
   if (
-    round.status === "aperta" &&
-    round.session_type === "buste" &&
-    round.first_session_close_at &&
-    now >= new Date(round.first_session_close_at)
-  ) {
+  round.status === "aperta" &&
+  round.session_type === "buste" &&
+  round.current_bid_session === 1 &&
+  round.first_session_close_at &&
+  now >= new Date(round.first_session_close_at)
+) {
     await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/il-mio-mercato/process?roundId=2`
     );
@@ -102,10 +104,17 @@ export async function GET() {
         })
         .eq("id", 2);
 
-      return NextResponse.json({
-        ok: true,
-        event: "market_closed",
-      });
+      await admin
+  .from("market_rounds")
+  .update({
+    current_bid_session: 2,
+  })
+  .eq("id", 2);
+
+return NextResponse.json({
+  ok: true,
+  event: "second_session_opened",
+});
     }
 
     return NextResponse.json({
@@ -119,11 +128,12 @@ export async function GET() {
   //
 
   if (
-    round.status === "aperta" &&
-    round.session_type === "buste" &&
-    round.second_session_close_at &&
-    now >= new Date(round.second_session_close_at)
-  ) {
+  round.status === "aperta" &&
+  round.session_type === "buste" &&
+  round.current_bid_session === 2 &&
+  round.second_session_close_at &&
+  now >= new Date(round.second_session_close_at)
+){
     await fetch(
       `${process.env.NEXT_PUBLIC_SITE_URL}/api/il-mio-mercato/process?roundId=2`
     );
@@ -143,10 +153,17 @@ export async function GET() {
         })
         .eq("id", 2);
 
-      return NextResponse.json({
-        ok: true,
-        event: "market_closed",
-      });
+      await admin
+  .from("market_rounds")
+  .update({
+    current_bid_session: 3,
+  })
+  .eq("id", 2);
+
+return NextResponse.json({
+  ok: true,
+  event: "extra_session_opened",
+});
     }
 
     return NextResponse.json({
@@ -160,10 +177,11 @@ export async function GET() {
   //
 
   if (
-    round.status === "aperta" &&
-    round.session_type === "buste" &&
-    round.second_session_close_at
-  ) {
+  round.status === "aperta" &&
+  round.session_type === "buste" &&
+  round.current_bid_session === 3 &&
+  round.second_session_close_at
+) {
     const finalClose =
       new Date(
         round.second_session_close_at

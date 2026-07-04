@@ -224,6 +224,62 @@ const { data: loadedPlayers } =
     .from("players")
     .select("id,nazionale")
     .in("id", playerIds);
+
+    const allIds = [
+  ...(homeRows ?? []).map((r: any) => r.player_id),
+  ...(awayRows ?? []).map((r: any) => r.player_id),
+];
+
+const { data: playerRows } =
+  await supabase
+    .from("players")
+    .select("id,fantapiu3_name")
+    .in("id", allIds);
+
+const fantapiu3Names =
+  (playerRows ?? [])
+    .map((p: any) => p.fantapiu3_name)
+    .filter(Boolean);
+
+const { data: displayRows } =
+  await supabase
+    .from("player_display_names")
+    .select("fantapiu3_name,display_name")
+    .in(
+      "fantapiu3_name",
+      fantapiu3Names
+    );
+
+const displayByFantapiu = new Map<
+  string,
+  string
+>();
+
+(displayRows ?? []).forEach((r: any) => {
+  displayByFantapiu.set(
+    r.fantapiu3_name,
+    r.display_name
+  );
+});
+
+const displayMap = new Map<
+  number,
+  string
+>();
+
+(playerRows ?? []).forEach((p: any) => {
+  const display =
+    displayByFantapiu.get(
+      p.fantapiu3_name
+    );
+
+  if (display) {
+    displayMap.set(
+      p.id,
+      display
+    );
+  }
+});
  
     const fixtureMap = new Map<
   string,
@@ -367,7 +423,10 @@ waitingVotes:
     fixtureInfo?.kickoff
   ),
 
-      nome: r.players?.nome ?? "",
+  nome:
+  displayMap.get(r.player_id) ??
+  r.players?.nome ??
+  "",
 ruolo: r.players?.ruolo ?? "",
 nazionale: r.players?.nazionale ?? "",
 

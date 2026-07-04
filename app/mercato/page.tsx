@@ -11,7 +11,7 @@ type MarketRound = {
   fifa_phase: string;
   open_date: string;
   eliminated_nationals_count: number;
-  status: "pending" | "svincoli" | "buste" | "closed";
+  status: "pending" | "chiusa";
 
   svincoli_open_at: string | null;
   svincoli_close_at: string | null;
@@ -33,14 +33,6 @@ type AutomaticRelease = {
   ruolo: string;
   prezzo: number;
   prezzo_recuperato: number;
-};
-
-type OfficialAutoRelease = {
-  team_id: number;
-  nome: string;
-  ruolo: string;
-  nazionale: string;
-  refund: number;
 };
 
 type FreeAgent = {
@@ -140,10 +132,7 @@ const [returnedPlayers, setReturnedPlayers] =
     const [openTeam, setOpenTeam] =
   useState<number | null>(null);
 
-    const [officialAutoReleases, setOfficialAutoReleases] =
-  useState<OfficialAutoRelease[]>([]);
-
-  useEffect(() => {
+     useEffect(() => {
   loadPage().catch((e) => {
     console.error("LOADPAGE ERROR", e);
     setLoading(false);
@@ -253,13 +242,10 @@ useEffect(() => {
     setRounds(rounds);
 
     const active =
-      [...rounds]
-        .reverse()
-        .find((r) => r.status !== "pending") ??
-      rounds[0] ??
-      null;
+  rounds.find((r) => r.status === "pending") ??
+  null;
 
-    setCurrentRound(active);
+setCurrentRound(active);
 
     if (!active) {
       setLoading(false);
@@ -313,23 +299,6 @@ if (releasesError) {
 setAutomaticReleases(
   (releases as AutomaticRelease[]) ?? []
 );
-
-const { data: optionalData } =
-  await supabase
-    .from("market_release_players")
-    .select(`
-      automatic,
-      market_releases!inner(
-        round_id,
-        team_id
-      ),
-      prezzo_recuperato,
-players!inner(
-  nome,
-  ruolo,
-  nazionale
-)
-    `);
 
 const { data: buysData, error: buysError } =
   await supabase
@@ -433,47 +402,6 @@ setReturnedPlayers(
     })
 );
 
-const {
-  data: officialData,
-  error: officialError,
-} = await supabase
-  .from("players")
-  .select(`
-    team_id,
-    nome,
-    ruolo,
-    nazionale,
-    prezzo
-  `)
-  .in("nazionale", [
-    "Costa d'Avorio",
-    "Ecuador",
-    "Germania",
-    "Giappone",
-    "Paesi Bassi",
-    "Sudafrica",
-    "Svezia",
-  ])
-  .not("team_id", "is", null);
-
-if (officialError) {
-  throw officialError;
-}
-
-setOfficialAutoReleases(
-  (officialData ?? []).map(
-    (p: any) => ({
-      team_id: Number(p.team_id),
-      nome: p.nome,
-      ruolo: p.ruolo,
-      nazionale: p.nazionale,
-      refund: Math.ceil(
-        p.prezzo / 2
-      ),
-    })
-  )
-);
-
   } catch (e) {
   console.error(e);
 } finally {
@@ -481,23 +409,18 @@ setOfficialAutoReleases(
   }
 }
 
-  function statusLabel(
-    status?: string
-  ) {
-    switch (status) {
-      case "svincoli":
-        return "🟡 SVINCOLI APERTI";
+  function statusLabel(status?: string) {
+  switch (status) {
+    case "pending":
+      return "🟡 IN CORSO";
 
-      case "buste":
-        return "🟠 BUSTE APERTE";
+    case "chiusa":
+      return "🟢 CONCLUSA";
 
-      case "closed":
-        return "🟢 CONCLUSA";
-
-      default:
-        return "⚪ IN ATTESA";
-    }
+    default:
+      return "⚪ SCONOSCIUTA";
   }
+}
 
    const filteredAgents =
     useMemo(() => {
@@ -665,20 +588,6 @@ function getMarketStatusText() {
       ? new Date(currentRound.second_session_close_at)
       : null;
 
-  const allComplete =
-    teamStatus.length > 0 &&
-    teamStatus.every(
-      (t) =>
-        t.p_missing === 0 &&
-        t.d_missing === 0 &&
-        t.c_missing === 0 &&
-        t.a_missing === 0
-    );
-
-  if (allComplete) {
-    return "✅ ROSE COMPLETE";
-  }
-
   if (open && now < open) {
   return `📅 Apertura svincoli facoltativi • ${formatCountdown(
     open
@@ -773,19 +682,11 @@ function getPhase() {
       ? new Date(currentRound.second_session_close_at)
       : null;
 
-  const allComplete = teamStatus.every(
-    (t) =>
-      t.p_missing === 0 &&
-      t.d_missing === 0 &&
-      t.c_missing === 0 &&
-      t.a_missing === 0
-  );
-
-  if (allComplete) {
-    return "complete";
-  }
-
-  if (open && now < open) {
+  if (
+    automaticReleases.length > 0 &&
+    open &&
+    now < open
+  ) {
     return "auto";
   }
 
@@ -855,17 +756,13 @@ function getPhaseLabel() {
     return "🟠 SECONDA SESSIONE APERTA";
   }
 
-  const allComplete = teamStatus.every(
-    (t) =>
-      t.p_missing === 0 &&
-      t.d_missing === 0 &&
-      t.c_missing === 0 &&
-      t.a_missing === 0
-  );
-
-  if (allComplete) {
-    return "✅ ROSE COMPLETE";
-  }
+if (
+  automaticReleases.length > 0 &&
+  svincoliOpen &&
+  now < svincoliOpen
+) {
+  return "🔓 SVINCOLI AUTOMATICI APERTI";
+}
 
   const duration =
   currentRound?.extra_session_duration ?? 60;
@@ -904,10 +801,17 @@ return `🟠 ${label} SESSIONE APERTA`;
 const optionalByTeam = useMemo(() => {
   return activeTeams.map(
     ({ teamId, nome }) => {
-      const status =
+
+const status =
   teamStatus.find(
     (t) => t.team_id === teamId
-  );
+  ) ?? {
+    budget: 0,
+    p_missing: 0,
+    d_missing: 0,
+    c_missing: 0,
+    a_missing: 0,
+  };
      
    const buys =
   marketBuys
@@ -925,11 +829,18 @@ const optionalByTeam = useMemo(() => {
 }));
 
 const autoReleases =
-  officialAutoReleases
+  automaticReleases
     .filter(
       (p) =>
         p.team_id === teamId
     )
+    .map((p) => ({
+      team_id: p.team_id,
+      nome: p.nome,
+      ruolo: p.ruolo,
+      nazionale: p.nazionale,
+      refund: p.prezzo_recuperato,
+    }))
       .sort((a, b) => {
 
         const diff =
@@ -960,25 +871,10 @@ const refundTotal =
     0
   );
 
-  const pSlots =
-  autoReleases.filter(
-    (p) => p.ruolo === "P"
-  ).length;
-
-const dSlots =
-  autoReleases.filter(
-    (p) => p.ruolo === "D"
-  ).length;
-
-const cSlots =
-  autoReleases.filter(
-    (p) => p.ruolo === "C"
-  ).length;
-
-const aSlots =
-  autoReleases.filter(
-    (p) => p.ruolo === "A"
-  ).length;
+const pSlots = status.p_missing;
+const dSlots = status.d_missing;
+const cSlots = status.c_missing;
+const aSlots = status.a_missing;
   
 players.sort((a, b) => {
   const diff =
@@ -1024,7 +920,7 @@ players.sort((a, b) => {
 }, [
   teamStatus,
   marketBuys,
-  officialAutoReleases,
+  automaticReleases,
 ]);
 
 const returnedByTeam = useMemo(() => {
@@ -1449,8 +1345,18 @@ rowGap: 8,
         marginBottom: 8,
       }}
     >
-      🔓 Svincoli automatici 2° round
+      🔓 Svincoli automatici
     </div>
+
+    <div
+  style={{
+    color: "#94a3b8",
+    fontSize: ".72rem",
+    marginBottom: 10,
+  }}
+>
+  {autoReleases.length} giocatori svincolati
+</div>
 
     {autoReleases.map((p) => (
       <div
@@ -1637,10 +1543,9 @@ rowGap: 8,
     fontSize: ".72rem",
   }}
 >
-  {currentRound?.status ===
-  "buste"
-    ? "Nuovo acquisto"
-    : p.nazionale}
+  {["first", "second", "extra"].includes(getPhase())
+  ? "Nuovo acquisto"
+  : p.nazionale}
 </div>
             </div>
           ))}
@@ -1684,7 +1589,6 @@ rowGap: 8,
   "first",
   "second",
   "extra",
-  "complete",
 ].includes(getPhase()) && (
           <Card title="📑 Lista svincolati">
             <div
@@ -1791,8 +1695,7 @@ rowGap: 8,
           </Card>
         )}
 
-        {getPhase() === "complete" &&
-  assignments.length > 0 && (
+        {assignments.length > 0 && (
             <Card title="🏆 Risultati delle buste">
               {assignments.map(
                 (a, i) => (
