@@ -99,20 +99,26 @@ const { data: releases } =
     `);
 
 for (const r of releases ?? []) {
+  const marketRelease = 
+  Array.isArray(
+  r.market_releases
+)
+  ? r.market_releases[0]
+  : r.market_releases;
   if (
-    r.market_releases.round_id !==
+    marketRelease.round_id !==
     roundId
   ) {
     continue;
   }
 
+  const teamId =
+    marketRelease.team_id;
+
   const playerId =
     r.player_id;
 
-  const teamId =
-    r.market_releases.team_id;
-
-  const { data: releasedPlayer } =
+    const { data: releasedPlayer } =
   await admin
     .from("players")
     .update({
@@ -219,15 +225,21 @@ teams?.forEach((t: any) => {
 
 (released ?? []).forEach(
   (r: any) => {
+    const marketRelease = 
+  Array.isArray(
+  r.market_releases
+)
+  ? r.market_releases[0]
+  : r.market_releases;
+  
     if (
-      r.market_releases
-        .round_id !== roundId
+      marketRelease.round_id !== roundId
     ) {
       return;
     }
 
     const teamId =
-      r.market_releases.team_id;
+      marketRelease.team_id;
 
     remainingSlots.set(
       teamId,
@@ -265,15 +277,21 @@ teams?.forEach((t: any) => {
 
 (released ?? []).forEach(
   (r: any) => {
+    const marketRelease = 
+  Array.isArray(
+  r.market_releases
+)
+  ? r.market_releases[0]
+  : r.market_releases;
+  
     if (
-      r.market_releases
-        .round_id !== roundId
+      marketRelease.round_id !== roundId
     ) {
       return;
     }
 
     const teamId =
-      r.market_releases.team_id;
+      marketRelease.team_id;
 
     const ruolo =
       r.players.ruolo;
@@ -590,42 +608,54 @@ winner =
     );
 
     const slotToConsume =
-  released.find(
-    (r: any) =>
-      r.market_releases.round_id ===
-        roundId &&
-      r.market_releases.team_id ===
-        winner.team_id &&
-      r.players.ruolo ===
-        player.ruolo
-  );
+      released.find(
+        (r: any) => {
+          const marketRelease =
+            Array.isArray(
+              r.market_releases
+            )
+              ? r.market_releases[0]
+              : r.market_releases;
 
-if (slotToConsume) {
-  remainingSlots.set(
-    winner.team_id,
-    Math.max(
-      (remainingSlots.get(
-        winner.team_id
-      ) ?? 0) - 1,
-      0
-    )
-  );
+          return (
+            marketRelease?.round_id ===
+              roundId &&
+            marketRelease?.team_id ===
+              winner.team_id &&
+            r.players.ruolo ===
+              player.ruolo
+          );
+        }
+      );
 
-  const slots =
-    roleSlots.get(
-      winner.team_id
-    );
+    if (slotToConsume) {
+      remainingSlots.set(
+        winner.team_id,
+        Math.max(
+          (
+            remainingSlots.get(
+              winner.team_id
+            ) ?? 0
+          ) - 1,
+          0
+        )
+      );
 
-  if (slots) {
-    const ruolo =
-      player.ruolo as keyof typeof slots;
+      const slots =
+        roleSlots.get(
+          winner.team_id
+        );
 
-    slots[ruolo] = Math.max(
-      slots[ruolo] - 1,
-      0
-    );
-  }
-}
+      if (slots) {
+        const ruolo =
+          player.ruolo as keyof typeof slots;
+
+        slots[ruolo] = Math.max(
+          slots[ruolo] - 1,
+          0
+        );
+      }
+    }
 
 const playerId = player.players_id;
 
@@ -755,11 +785,16 @@ if (assignmentError) {
 
     const index =
       released.findIndex(
-        (r: any) =>
-          r.player_id ===
-            slotToConsume.player_id &&
-          r.market_releases.team_id ===
-            winner.team_id
+        (r: any) => {
+          const marketRelease = Array.isArray(r.market_releases)
+            ? r.market_releases[0]
+            : r.market_releases;
+
+          return (
+            marketRelease.player_id === slotToConsume.player_id &&
+            marketRelease.team_id === winner.team_id
+          );
+        }
       ) ?? -1;
 
     if (index >= 0) {
