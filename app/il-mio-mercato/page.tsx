@@ -288,6 +288,54 @@ const currentRound =
 
 setRound(currentRound);
 
+const now = Date.now();
+
+const releaseDeadline =
+  currentRound.release_deadline
+    ? new Date(
+        currentRound.release_deadline
+      ).getTime()
+    : null;
+
+const bidDeadline =
+  currentRound.bid_deadline
+    ? new Date(
+        currentRound.bid_deadline
+      ).getTime()
+    : null;
+
+// ⏰ Fine svincoli → apri buste
+if (
+  currentRound.status === "aperta" &&
+  currentRound.session_type ===
+    "svincoli" &&
+  releaseDeadline &&
+  now >= releaseDeadline
+) {
+  await fetch(
+    `/api/market/advance?roundId=${currentRound.id}`
+  );
+
+  window.location.reload();
+  return;
+}
+
+// ⏰ Fine buste → processa assegnazioni
+if (
+  currentRound.status === "aperta" &&
+  currentRound.session_type ===
+    "buste" &&
+  bidDeadline &&
+  now >= bidDeadline
+) {
+  await fetch(
+    `/api/il-mio-mercato/process?roundId=${currentRound.id}`
+  );
+
+  window.location.reload();
+  return;
+}
+
 console.log("roundData", roundData);
 console.log("currentRound", currentRound);
 
