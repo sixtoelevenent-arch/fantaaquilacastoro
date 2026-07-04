@@ -54,18 +54,21 @@ const secondaryButton: CSSProperties = {
   loadTeam(u.team_id);
 }, []);
 
-  async function loadTeam(
-    teamId: number
-  ) {
+  async function loadTeam(teamId: number) {
+  const { data, error } = await supabase
+    .from("teams")
+    .select("*")
+    .eq("id", teamId)
+    .maybeSingle();
 
-    const { data } = await supabase
-      .from("teams")
-      .select("*")
-      .eq("id", teamId)
-      .single();
-
-    setTeam(data);
+  if (error || !data) {
+    localStorage.removeItem("fantasy_user");
+    router.push("/login");
+    return;
   }
+
+  setTeam(data);
+}
 
   function logout() {
 
