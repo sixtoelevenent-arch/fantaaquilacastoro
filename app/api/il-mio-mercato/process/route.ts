@@ -33,14 +33,16 @@ export async function GET(
   const { data: round } =
   await admin
     .from("market_rounds")
-    .select(`
+   .select(`
   status,
+  session_type,
+  bid_deadline,
   current_bid_session,
   extra_session_duration
 `)
     .eq("id", roundId)
     .single();
-
+    
 if (!round) {
   return NextResponse.json(
     {
@@ -51,7 +53,50 @@ if (!round) {
   );
 }
 
-if (round.status === "chiuso") {
+if (
+  round.status === "attesa" &&
+  round.bid_deadline &&
+  new Date() >=
+    new Date(round.bid_deadline)
+) {
+  const nextDeadline =
+    new Date(
+      new Date(
+        round.bid_deadline
+      ).getTime() +
+        60 * 60 * 1000
+    ).toISOString();
+
+  await admin
+    .from("market_bids")
+    .delete()
+    .eq("round_id", roundId);
+
+  await admin
+    .from("market_releases")
+    .update({
+      bids_confirmed: false,
+      bids_confirmed_at: null,
+    })
+    .eq("round_id", roundId);
+
+  await admin
+    .from("market_rounds")
+    .update({
+      status: "aperta",
+      session_type: "buste",
+      bid_deadline:
+        nextDeadline,
+    })
+    .eq("id", roundId);
+
+  return NextResponse.json({
+    ok: true,
+    reopened: true,
+  });
+}
+
+if (round.status === "chiusa") {
   return NextResponse.json({
     ok: true,
     assignments: [],
@@ -783,19 +828,17 @@ if (assignmentError) {
         slotToConsume.market_releases_id
       );
 
-    const index =
-      released.findIndex(
-        (r: any) => {
-          const marketRelease = Array.isArray(r.market_releases)
-            ? r.market_releases[0]
-            : r.market_releases;
+   const index =
+  released.findIndex((r: any) => {
+    const marketRelease = Array.isArray(r.market_releases)
+      ? r.market_releases[0]
+      : r.market_releases;
 
-          return (
-            marketRelease.player_id === slotToConsume.player_id &&
-            marketRelease.team_id === winner.team_id
-          );
-        }
-      ) ?? -1;
+    return (
+      r.player_id === slotToConsume.player_id &&
+      marketRelease.team_id === winner.team_id
+    );
+  });
 
     if (index >= 0) {
       released.splice(index, 1);
@@ -852,47 +895,33 @@ const missingPlayers =
   );
 
   if (missingPlayers === 0) {
-  await admin
-    .from("market_rounds")
-    .update({
-      status: "chiuso",
-      session_type: null,
-    })
-    .eq("id", roundId);
+await admin
+  .from("market_rounds")
+  .update({
+    status: "chiusa",
+    session_type: null,
+  })
+  .eq("id", roundId);
 } else {
   const nextSession =
     (round.current_bid_session ?? 1) + 1;
 
-  const minutes =
-    round.extra_session_duration ??
-    60;
+  const nextStart = new Date();
 
-  const nextDeadline =
-    new Date(
-      Date.now() +
-        minutes * 60000
-    ).toISOString();
-
-  await admin
-    .from("market_bids")
-    .delete()
-    .eq("round_id", roundId);
-
-  await admin
-    .from("market_releases")
-    .update({
-      bids_confirmed: false,
-      bids_confirmed_at: null,
-    })
-    .eq("round_id", roundId);
+  nextStart.setMinutes(0);
+  nextStart.setSeconds(0);
+  nextStart.setMilliseconds(0);
+  nextStart.setHours(
+    nextStart.getHours() + 1
+  );
 
   await admin
     .from("market_rounds")
     .update({
-      status: "aperta",
-      session_type: "buste",
+      status: "attesa",
+      session_type: null,
       bid_deadline:
-        nextDeadline,
+        nextStart.toISOString(),
       current_bid_session:
         nextSession,
     })
