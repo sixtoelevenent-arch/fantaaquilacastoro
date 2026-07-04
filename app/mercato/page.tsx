@@ -11,7 +11,7 @@ type MarketRound = {
   fifa_phase: string;
   open_date: string;
   eliminated_nationals_count: number;
-  status: "pending" | "chiusa";
+  status: string;
 
   svincoli_open_at: string | null;
   svincoli_close_at: string | null;
@@ -132,14 +132,14 @@ const [returnedPlayers, setReturnedPlayers] =
     const [openTeam, setOpenTeam] =
   useState<number | null>(null);
 
-     useEffect(() => {
+  useEffect(() => {
+ 
   loadPage().catch((e) => {
-    console.error("LOADPAGE ERROR", e);
-    setLoading(false);
-      });
+       setLoading(false);
+  });
 }, []);
 
-useEffect(() => {
+     useEffect(() => {
   async function processBuste() {
     if (
       marketProcessed ||
@@ -221,10 +221,10 @@ useEffect(() => {
 }, []);
 
   async function loadPage() {
+  
   try {
     setLoading(true);
-
-    const {
+      const {
       data: roundsData,
       error: roundsError,
     } = await supabase
@@ -236,30 +236,39 @@ useEffect(() => {
       throw roundsError;
     }
 
+    console.table(
+  roundsData?.map((r: any) => ({
+    id: r.id,
+    name: r.name,
+    status: r.status,
+  }))
+);
+
     const rounds =
       (roundsData as MarketRound[]) ?? [];
 
     setRounds(rounds);
 
     const active =
-  rounds.find((r) => r.status === "pending") ??
+  rounds.find((r) => r.status === "aperta") ??
   null;
 
 setCurrentRound(active);
 
-    if (!active) {
-      setLoading(false);
-      return;
-    }
+if (!active) {
+  
+  setLoading(false);
+  return;
+}
 
-    const {
-      data: eliminatedData,
-      error: eliminatedError,
-    } = await supabase
-      .from("eliminated_nationals")
-      .select("*")
-      .eq("round_id", active.id)
-      .order("nazionale");
+const {
+  data: eliminatedData,
+  error: eliminatedError,
+} = await supabase
+  .from("eliminated_nationals")
+  .select("*")
+  .eq("round_id", active.id)
+  .order("nazionale");
 
     if (eliminatedError)
       throw eliminatedError;
@@ -279,6 +288,7 @@ setCurrentRound(active);
     if (freeError)
       throw freeError;
 
+    
 setFreeAgents(freeData ?? []);
 
 const {
@@ -290,7 +300,6 @@ const {
     p_round: active.id,
   }
 );
-
 
 if (releasesError) {
   throw releasesError;
@@ -313,7 +322,6 @@ const { data: buysData, error: buysError } =
         nazionale
       )
     `);
-
     
     if (buysError) {
   throw buysError;
@@ -363,6 +371,7 @@ setTeamStatus(
   (statusData as TeamStatus[]) ?? []
 );
 
+
 const {
   data: returnedData,
 } = await supabase
@@ -409,9 +418,9 @@ setReturnedPlayers(
   }
 }
 
-  function statusLabel(status?: string) {
+function statusLabel(status?: string) {
   switch (status) {
-    case "pending":
+    case "aperta":
       return "🟡 IN CORSO";
 
     case "chiusa":
@@ -804,14 +813,20 @@ const optionalByTeam = useMemo(() => {
 
 const status =
   teamStatus.find(
-    (t) => t.team_id === teamId
-  ) ?? {
-    budget: 0,
-    p_missing: 0,
-    d_missing: 0,
-    c_missing: 0,
-    a_missing: 0,
-  };
+    (t) => Number(t.team_id) === Number(teamId)
+  );
+
+const pSlots =
+  status?.p_missing ?? 0;
+
+const dSlots =
+  status?.d_missing ?? 0;
+
+const cSlots =
+  status?.c_missing ?? 0;
+
+const aSlots =
+  status?.a_missing ?? 0;
      
    const buys =
   marketBuys
@@ -863,19 +878,13 @@ const autoReleases =
 
 const players = buys;
 
-
 const refundTotal =
   autoReleases.reduce(
     (sum, p) =>
       sum + p.refund,
     0
   );
-
-const pSlots = status.p_missing;
-const dSlots = status.d_missing;
-const cSlots = status.c_missing;
-const aSlots = status.a_missing;
-  
+ 
 players.sort((a, b) => {
   const diff =
     roleOrder[
@@ -908,8 +917,8 @@ players.sort((a, b) => {
   teamId,
   squadra: nome,
   credits:
-    (status?.budget ?? 0) +
-    refundTotal,
+  (status?.budget ?? 0) +
+  refundTotal,
   players,
   autoReleases,
   missingText,

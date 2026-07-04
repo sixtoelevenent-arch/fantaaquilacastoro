@@ -83,8 +83,6 @@ const cleaned = unique.filter(
 
 setPlayers(cleaned);
 
-setPlayers(unique);
-
   setLoading(false);
 }
 
