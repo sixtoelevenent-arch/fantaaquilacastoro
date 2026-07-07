@@ -1,4 +1,3 @@
-
 import { importVotes } from "@/lib/importVotes";
 
 export async function POST() {
@@ -10,9 +9,15 @@ export async function POST() {
       ...result,
     });
   } catch (error: any) {
+
+    console.error("IMPORT VOTES ERROR:");
+    console.error(error);
+    console.error(error?.stack);
+
     return Response.json({
       success: false,
-      error: error.message,
+      error: error?.message,
+      stack: error?.stack,
     });
   }
 }
