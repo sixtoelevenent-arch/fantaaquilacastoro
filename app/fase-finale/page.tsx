@@ -1,5 +1,7 @@
 import BackHome from "@/components/BackHome";
 import { supabase } from "@/lib/supabase";
+import MatchDetails from "@/components/MatchDetails";
+import Collapsible from "@/components/Collapsible";
 
 type TeamRow = {
   id: number;
@@ -9,6 +11,8 @@ type TeamRow = {
 };
 
 type MatchRow = {
+  id: number;
+  matchday_id: number;
   team_home_id: number;
   team_away_id: number;
   gol_home: number | null;
@@ -16,18 +20,7 @@ type MatchRow = {
   fp_home: number | null;
   fp_away: number | null;
   completata: boolean;
-};
-
-type Standing = {
-  id: number;
-  squadra: string;
-  allenatore: string;
-  gruppo: string;
-  pt: number;
-  gf: number;
-  gs: number;
-  dr: number;
-  fp: number;
+  stato: string | null;
 };
 
 export const dynamic = "force-dynamic";
@@ -39,12 +32,18 @@ function MatchCard({
   away,
   homeLabel,
   awayLabel,
+  result,
+  homeFP,
+  awayFP,
 }: {
   title: string;
   home: string;
   away: string;
   homeLabel?: string;
   awayLabel?: string;
+  result?: string;
+  homeFP?: number | null;
+  awayFP?: number | null;
 }) {
 
   return (
@@ -58,15 +57,48 @@ function MatchCard({
       }}
     >
       <div
-        style={{
-          color: "#facc15",
-          fontWeight: 800,
-          marginBottom: 16,
-          fontSize: "1rem",
-        }}
-      >
-        {title}
-      </div>
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 16,
+  }}
+>
+  <div
+    style={{
+      color: "#facc15",
+      fontWeight: 800,
+      fontSize: "1rem",
+    }}
+  >
+    {title}
+  </div>
+
+ <div style={{ textAlign: "right" }}>
+  {result && (
+    <div
+      style={{
+        fontWeight: 800,
+        fontSize: "1rem",
+      }}
+    >
+      {result}
+    </div>
+  )}
+
+  {homeFP != null && awayFP != null && (
+    <div
+      style={{
+        color: "#94a3b8",
+        fontSize: ".8rem",
+        marginTop: 2,
+      }}
+    >
+      ⭐ {homeFP.toFixed(1)} - {awayFP.toFixed(1)}
+    </div>
+  )}
+</div>
+</div>
 
       <div
         style={{
@@ -165,147 +197,43 @@ export default async function FaseFinalePage() {
     .order("gruppo");
 
   const { data: matches } = await supabase
-    .from("matches")
-    .select("*");
+  .from("matches")
+  .select("*")
+  .in("matchday_id", [4, 5, 6, 7, 8])
+  .order("matchday_id")
+  .order("id");
 
-  const standings = new Map<number, Standing>();
+function getTeam(id: number) {
+  return teams?.find(
+    (t: TeamRow) => t.id === id
+  );
+}
 
-  (teams || []).forEach((team: TeamRow) => {
-    standings.set(team.id, {
-      id: team.id,
-      squadra: team.nome,
-      allenatore: team.proprietario,
-      gruppo: team.gruppo,
-      pt: 0,
-      gf: 0,
-      gs: 0,
-      dr: 0,
-      fp: 0,
-    });
-  });
+const quartiAndata =
+(matches ?? []).filter(
+  (m) => m.matchday_id === 4
+);
 
-  (matches || []).forEach((match: MatchRow) => {
-    const home = standings.get(
-      match.team_home_id
-    );
+const quartiRitorno =
+(matches ?? []).filter(
+  (m) => m.matchday_id === 7
+);
 
-    const away = standings.get(
-      match.team_away_id
-    );
+const semifinaliAndata =
+(matches ?? []).filter(
+  (m) => m.matchday_id === 5
+);
 
-    if (!home || !away) return;
+const semifinaliRitorno =
+(matches ?? []).filter(
+  (m) => m.matchday_id === 8
+);
 
-    home.gf += match.gol_home ?? 0;
-    home.gs += match.gol_away ?? 0;
-
-    away.gf += match.gol_away ?? 0;
-    away.gs += match.gol_home ?? 0;
-
-    home.dr = home.gf - home.gs;
-    away.dr = away.gf - away.gs;
-
-    home.fp += Number(match.fp_home || 0);
-    away.fp += Number(match.fp_away || 0);
-
-    if (
-      (match.gol_home ?? 0) >
-      (match.gol_away ?? 0)
-    ) {
-      home.pt += 3;
-    } else if (
-      (match.gol_home ?? 0) <
-      (match.gol_away ?? 0)
-    ) {
-      away.pt += 3;
-    } else {
-      home.pt += 1;
-      away.pt += 1;
-    }
-  });
-
-  const sortGirone = (
-    a: Standing,
-    b: Standing
-  ) => {
-    if (b.pt !== a.pt)
-      return b.pt - a.pt;
-
-    if (b.fp !== a.fp)
-      return b.fp - a.fp;
-
-    if (b.dr !== a.dr)
-      return b.dr - a.dr;
-
-    return 0;
-  };
-
-  const gironeA = [...standings.values()]
-    .filter((t) => t.gruppo === "A")
-    .sort(sortGirone);
-
-  const gironeB = [...standings.values()]
-    .filter((t) => t.gruppo === "B")
-    .sort(sortGirone);
-
-  const gironeC = [...standings.values()]
-    .filter((t) => t.gruppo === "C")
-    .sort(sortGirone);
-
-  const prime = [
-    gironeA[0],
-    gironeB[0],
-    gironeC[0],
-  ].filter(Boolean);
-
-  const seconde = [
-    gironeA[1],
-    gironeB[1],
-    gironeC[1],
-  ]
-    .filter(Boolean)
-    .sort(sortGirone);
-
-  const terze = [
-    gironeA[2],
-    gironeB[2],
-    gironeC[2],
-  ]
-    .filter(Boolean)
-    .sort(sortGirone);
-
-  const primaA =
-    prime.find((t) => t.gruppo === "A")
-      ?.squadra ?? "1° Girone A";
-
-  const primaB =
-    prime.find((t) => t.gruppo === "B")
-      ?.squadra ?? "1° Girone B";
-
-  const primaC =
-    prime.find((t) => t.gruppo === "C")
-      ?.squadra ?? "1° Girone C";
-
-  const miglioreTerza =
-  terze[0]?.squadra ??
-  "Migliore terza";
-
-const peggioreTerza =
-  terze[1]?.squadra ??
-  "Seconda migliore terza";
-
-  const miglioreSeconda =
-    seconde[0]?.squadra ??
-    "Seconda migliore";
-
-  const peggioreSeconda =
-    seconde[2]?.squadra ??
-    "Peggiore seconda";
-
-  const secondaRimanente =
-    seconde[1]?.squadra ??
-    "Seconda rimanente";
-
-  return (
+const finale =
+(matches ?? []).find(
+  (m) => m.matchday_id === 6
+);
+    return (
     <main
       style={{
         minHeight: "100vh",
@@ -347,45 +275,251 @@ const peggioreTerza =
         </p>
 
         <h2
-          style={{
-            color: "#facc15",
-            marginBottom: 18,
-          }}
-        >
-          🏆 Quarti di Finale
-        </h2>
+  style={{
+    color: "#facc15",
+    marginBottom: 18,
+  }}
+>
+  🏆 Quarti di Finale
+</h2>
+
+{quartiAndata.map((andata, i) => {
+
+  const ritorno = quartiRitorno[i];
+
+  const golHome =
+    (andata.gol_home ?? 0) + (ritorno?.gol_away ?? 0);
+
+  const golAway =
+    (andata.gol_away ?? 0) + (ritorno?.gol_home ?? 0);
+
+  const fpHome =
+    (andata.fp_home ?? 0) + (ritorno?.fp_away ?? 0);
+
+  const fpAway =
+    (andata.fp_away ?? 0) + (ritorno?.fp_home ?? 0);
+
+  return (
+
+    <div
+      key={andata.id}
+      style={{
+        background:"#1f2937",
+        border:"1px solid rgba(255,255,255,.10)",
+        borderRadius:18,
+        padding:18,
+        marginBottom:18,
+      }}
+    >
+
+      <h3
+  style={{
+    color:"#facc15",
+    marginBottom:12,
+    textAlign:"center",
+    lineHeight:1.3,
+  }}
+>
+  🏆 Quarto {i + 1}
+  <div
+  style={{
+    marginTop:8,
+    fontSize:"1.05rem",
+    color:"white",
+    fontWeight:700,
+  }}
+>
+  {getTeam(andata.team_home_id)?.nome} vs {getTeam(andata.team_away_id)?.nome}
+</div>
+
+<div
+  style={{
+    marginTop:10,
+    color:"#cbd5e1",
+    fontSize:".95rem",
+    lineHeight:1.5,
+    fontWeight:600,
+  }}
+>
+  ⚽ Aggregato: {golHome} - {golAway}
+  <br />
+  ⭐ Tot. FP: {fpHome.toFixed(1)} - {fpAway.toFixed(1)}
+</div>
+</h3>
+
+      <Collapsible title="📋 Andata">
 
         <MatchCard
-  title="Quarto 1"
-  home={primaA}
-  away={peggioreTerza}
-  homeLabel="1ª classificata Girone A"
-awayLabel="Peggiore tra le due migliori terze"
-/>
+          title="Andata"
+          home={
+            getTeam(andata.team_home_id)?.nome ?? "-"
+          }
+          away={
+            getTeam(andata.team_away_id)?.nome ?? "-"
+          }
+          result={`${andata.gol_home}-${andata.gol_away}`}
+          homeFP={andata.fp_home}
+          awayFP={andata.fp_away}
+        />
+
+        <MatchDetails
+          matchId={andata.id}
+        />
+
+      </Collapsible>
+
+      {ritorno && (
+
+      <Collapsible title="📋 Ritorno">
+
+        <MatchCard
+          title="Ritorno"
+          home={
+            getTeam(ritorno.team_home_id)?.nome ?? "-"
+          }
+          away={
+            getTeam(ritorno.team_away_id)?.nome ?? "-"
+          }
+          result={
+            ritorno.completata
+            ? `${ritorno.gol_home}-${ritorno.gol_away}`
+                        : undefined
+          }
+          homeFP={ritorno.fp_home}
+          awayFP={ritorno.fp_away}
+        />
+
+        <MatchDetails
+          matchId={ritorno.id}
+        />
+
+      </Collapsible>
+
+      )}
+
+    </div>
+
+  );
+
+})}
+        <Collapsible title="🥇 Semifinali">
+
+        {semifinaliAndata.map((andata,i)=>{
+
+const ritorno=semifinaliRitorno[i];
+
+const golHome =
+  (andata.gol_home ?? 0) + (ritorno?.gol_away ?? 0);
+
+const golAway =
+  (andata.gol_away ?? 0) + (ritorno?.gol_home ?? 0);
+
+const fpHome =
+  (andata.fp_home ?? 0) + (ritorno?.fp_away ?? 0);
+
+const fpAway =
+  (andata.fp_away ?? 0) + (ritorno?.fp_home ?? 0);
+
+return(
+
+<div
+key={andata.id}
+style={{
+background:"#1f2937",
+border:"1px solid rgba(255,255,255,.10)",
+borderRadius:18,
+padding:18,
+marginBottom:18,
+}}
+>
+
+<h3
+  style={{
+    color:"#facc15",
+    marginBottom:12,
+    textAlign:"center",
+    lineHeight:1.3,
+  }}
+>
+  🥇 Semifinale {i + 1}
+
+  <div
+    style={{
+      marginTop:8,
+      fontSize:"1.05rem",
+      color:"white",
+      fontWeight:700,
+    }}
+  >
+    {getTeam(andata.team_home_id)?.nome} vs {getTeam(andata.team_away_id)?.nome}
+  </div>
+
+  <div
+    style={{
+      marginTop:10,
+      color:"#cbd5e1",
+      fontSize:".95rem",
+      lineHeight:1.5,
+      fontWeight:600,
+    }}
+  >
+    ⚽ Aggregato: {golHome} - {golAway}
+    <br />
+    ⭐ Tot. FP: {fpHome.toFixed(1)} - {fpAway.toFixed(1)}
+  </div>
+
+</h3>
+
+<Collapsible title="📋 Andata">
 
 <MatchCard
-  title="Quarto 2"
-  home={primaB}
-  away={miglioreTerza}
-  homeLabel="1ª classificata Girone B"
-  awayLabel="Migliore terza classificata"
+title="Andata"
+home={getTeam(andata.team_home_id)?.nome??"-"}
+away={getTeam(andata.team_away_id)?.nome??"-"}
+result={
+andata.completata
+?`${andata.gol_home}-${andata.gol_away}`
+:undefined
+}
+homeFP={andata.fp_home}
+awayFP={andata.fp_away}
 />
 
-<MatchCard
-  title="Quarto 3"
-  home={primaC}
-  away={peggioreSeconda}
-  homeLabel="1ª classificata Girone C"
-  awayLabel="Peggiore seconda classificata"
-/>
+<MatchDetails matchId={andata.id}/>
+
+</Collapsible>
+
+{ritorno&&(
+
+<Collapsible title="📋 Ritorno">
 
 <MatchCard
-  title="Quarto 4"
-  home={miglioreSeconda}
-  away={secondaRimanente}
-  homeLabel="Migliore seconda classificata"
-  awayLabel="Seconda classificata rimanente"
+title="Ritorno"
+home={getTeam(ritorno.team_home_id)?.nome??"-"}
+away={getTeam(ritorno.team_away_id)?.nome??"-"}
+result={
+ritorno.completata
+?`${ritorno.gol_home}-${ritorno.gol_away}`
+:undefined
+}
+homeFP={ritorno.fp_home}
+awayFP={ritorno.fp_away}
 />
+
+<MatchDetails matchId={ritorno.id}/>
+
+</Collapsible>
+
+)}
+
+</div>
+
+);
+
+})}
+       
+       </Collapsible>
+       
         <h2
           style={{
             color: "#facc15",
@@ -393,36 +527,35 @@ awayLabel="Peggiore tra le due migliori terze"
             marginBottom: 18,
           }}
         >
-          🥇 Semifinali
+          🏆 Finale
         </h2>
 
-        <MatchCard
-          title="Semifinale 1"
-          home="Vincente Quarto 1"
-          away="Vincente Quarto 4"
-        />
+        <Collapsible title="📋 Finale">
 
-        <MatchCard
-          title="Semifinale 2"
-          home="Vincente Quarto 2"
-          away="Vincente Quarto 3"
-        />
+  <MatchCard
+    title="MetLife Stadium • New York"
+    home={
+      finale
+        ? getTeam(finale.team_home_id)?.nome ?? "-"
+        : "Vincente Semifinale 1"
+    }
+    away={
+      finale
+        ? getTeam(finale.team_away_id)?.nome ?? "-"
+        : "Vincente Semifinale 2"
+    }
+    result={
+      finale?.completata
+        ? `${finale.gol_home}-${finale.gol_away}`
+        : undefined
+        }
+  />
 
-        <h2
-          style={{
-            color: "#facc15",
-            marginTop: 40,
-            marginBottom: 18,
-          }}
-        >
-          🏆 Finale"
-        </h2>
+  {finale && (
+    <MatchDetails matchId={finale.id} />
+  )}
 
-        <MatchCard
-          title="MetLife Stadium • New York"
-          home="Vincente Semifinale 1"
-          away="Vincente Semifinale 2"
-        />
+</Collapsible>
 
         <div
           style={{

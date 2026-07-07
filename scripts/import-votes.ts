@@ -43,7 +43,7 @@ async function main() {
   const { data: activeMatchday, error: matchdayError } =
   await supabase
     .from("matchdays")
-    .select("id,nome")
+    .select("id,nome,fantapiu_giornata")
     .eq("attiva", true)
     .single();
 
@@ -64,7 +64,7 @@ console.log(
 );
 
 const URL =
-  `${BASE_URL}${activeMatchday.id}`;
+  `${BASE_URL}${activeMatchday.fantapiu_giornata}`;
 
   console.log("URL:", URL);
 

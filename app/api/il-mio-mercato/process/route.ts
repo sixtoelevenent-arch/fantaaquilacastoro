@@ -132,7 +132,7 @@ const { data: releases } =
     .from("market_release_players")
     .select(`
       player_id,
-      market_releases_id,
+      release_id,
       automatic,
       players!inner(
         ruolo
@@ -142,6 +142,16 @@ const { data: releases } =
         round_id
       )
     `);
+
+console.log(
+  "RELEASES LENGTH",
+  releases?.length
+);
+
+console.log(
+  "FIRST RELEASE",
+  releases?.[0]
+);
 
 for (const r of releases ?? []) {
   const marketRelease = 
@@ -524,6 +534,29 @@ if (playerBids.length > 0) {
     }
   );
 
+  console.log(
+  "FILTER",
+  player.player_name,
+  availableBids.map((x) => ({
+    team: x.team_id,
+    bid: x.bid,
+  })),
+  playerBids.map((x) => ({
+    team: x.team_id,
+    bid: x.bid,
+  }))
+);
+
+console.log(
+  "remainingSlots",
+  Object.fromEntries(remainingSlots)
+);
+
+console.log(
+  "roleSlots",
+  Object.fromEntries(roleSlots)
+);
+
 if (availableBids.length === 0) {
   console.log(
     "NO AVAILABLE",
@@ -817,16 +850,16 @@ if (assignmentError) {
   
   if (slotToConsume) {
     await admin
-      .from("market_release_players")
-      .delete()
-      .eq(
-        "player_id",
-        slotToConsume.player_id
-      )
-      .eq(
-        "market_releases_id",
-        slotToConsume.market_releases_id
-      );
+  .from("market_release_players")
+  .delete()
+  .eq(
+    "player_id",
+    slotToConsume.player_id
+  )
+  .eq(
+    "release_id",
+    slotToConsume.release_id
+  );
 
    const index =
   released.findIndex((r: any) => {
@@ -874,6 +907,7 @@ if (assignmentError) {
 
 const {
   data: statusRows,
+  error: statusError,
 } = await admin
   .from("market_team_status")
   .select(`
@@ -882,6 +916,16 @@ const {
     c_missing,
     a_missing
   `);
+
+console.log(
+  "STATUS ERROR",
+  statusError
+);
+
+console.log(
+  "STATUS ROWS",
+  statusRows
+);
 
 const missingPlayers =
   (statusRows ?? []).reduce(
@@ -894,6 +938,10 @@ const missingPlayers =
     0
   );
 
+console.log(
+  "MISSING PLAYERS",
+  missingPlayers
+);
   if (missingPlayers === 0) {
 await admin
   .from("market_rounds")

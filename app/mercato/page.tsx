@@ -43,12 +43,6 @@ type FreeAgent = {
   ruolo: string;
 };
 
-type Assignment = {
-  squadra: string;
-  nome: string;
-  ruolo: string;
-  prezzo: number;
-};
 
 export default function MercatoPage() {
 
@@ -70,8 +64,18 @@ type MarketBuy = {
   prezzo: number;
 };
 
+type Assignment = {
+  squadra: string;
+  nome: string;
+  ruolo: string;
+  prezzo: number;
+};
+
 const [marketBuys, setMarketBuys] =
   useState<MarketBuy[]>([]);
+
+  const [assignments, setAssignments] =
+  useState<Assignment[]>([]);
 
 const [teamStatus, setTeamStatus] =
   useState<TeamStatus[]>([]);
@@ -95,9 +99,7 @@ const [teamStatus, setTeamStatus] =
   const [freeAgents, setFreeAgents] =
     useState<FreeAgent[]>([]);
 
-  const [assignments, setAssignments] =
-    useState<Assignment[]>([]);
-
+ 
     const [marketProcessed,
   setMarketProcessed] =
   useState(false);
@@ -148,31 +150,21 @@ const [returnedPlayers, setReturnedPlayers] =
       return;
     }
 
-    const phase =
-      getPhase();
+  const deadline =
+  currentRound
+    ?.first_session_close_at;
 
-    if (
-      phase !== "first"
-    ) {
-      return;
-    }
+if (!deadline) {
+  return;
+}
 
-    const deadline =
-      currentRound
-        ?.first_session_close_at;
-
-    if (!deadline) {
-      return;
-    }
-
-    if (
-      new Date(deadline)
-        .getTime() >
-      Date.now()
-    ) {
-      return;
-    }
-
+if (
+  new Date(deadline)
+    .getTime() >
+  Date.now()
+) {
+  return;
+}
     setMarketProcessed(true);
 
 const res =
@@ -189,11 +181,7 @@ if (!res.ok) {
 const data =
   await res.json();
 
-    setAssignments(
-    data.assignments ?? []
-    );
-
-    setPriorityTies(
+      setPriorityTies(
       data.priorityTies ??
         []
     );
@@ -249,9 +237,12 @@ useEffect(() => {
 
     setRounds(rounds);
 
-    const active =
-  rounds.find((r) => r.status === "aperta") ??
-  null;
+   const active =
+  rounds.find(
+    (r) =>
+      r.status === "aperta" ||
+      r.status === "attesa"
+  ) ?? null;
 
 setCurrentRound(active);
 
@@ -309,31 +300,30 @@ setAutomaticReleases(
   (releases as AutomaticRelease[]) ?? []
 );
 
-const { data: buysData, error: buysError } =
-  await supabase
-    .from("market_manual_assignments")
-    .select(`
-      team_id,
-      player_id,
-      price,
-      players!market_manual_assignments_player_id_fkey (
-        nome,
-        ruolo,
-        nazionale
-      )
-    `);
-    
-    if (buysError) {
+const {
+  data: buysData,
+  error: buysError,
+} = await supabase.rpc(
+  "market_assignments_view",
+  {
+    p_round: active.id,
+  }
+);
+
+if (buysError) {
   throw buysError;
 }
 
 setMarketBuys(
   (buysData ?? []).map((r: any) => ({
-    team_id: Number(r.team_id),
-    prezzo: r.price,
-    nome: r.players?.nome,
-    ruolo: r.players?.ruolo,
-    nazionale: r.players?.nazionale,
+    team_id:
+      activeTeams.find(
+        (t) => t.nome === r.squadra
+      )?.teamId ?? 0,
+    nome: r.nome,
+    ruolo: r.ruolo,
+    nazionale: "",
+    prezzo: r.prezzo,
   }))
 );
 
@@ -489,6 +479,57 @@ const roleOrder = {
   C: 3,
   A: 4,
 };
+
+function getCurrentDeadline() {
+  if (!currentRound) {
+    return null;
+  }
+
+  const now = Date.now();
+
+  const first =
+    currentRound.first_session_close_at
+      ? new Date(
+          currentRound.first_session_close_at
+        ).getTime()
+      : null;
+
+  const second =
+    currentRound.second_session_close_at
+      ? new Date(
+          currentRound.second_session_close_at
+        ).getTime()
+      : null;
+
+  const duration =
+    currentRound.extra_session_duration ?? 60;
+
+  if (first && now < first) {
+    return first;
+  }
+
+  if (second && now < second) {
+    return second;
+  }
+
+  if (!second) {
+    return null;
+  }
+
+  const diff = now - second;
+
+  const extra =
+    Math.floor(
+      diff / (duration * 60000)
+    ) + 1;
+
+  return (
+    second +
+    extra *
+      duration *
+      60000
+  );
+}
 
 function formatCountdown(target: Date) {
   const now = new Date(
@@ -1130,30 +1171,29 @@ const returnedByTeam = useMemo(() => {
     }}
   >
     {activeTeams.map(
-      ({ nome }) => {
-        const buys =
-          assignments
-            .filter(
-              (a) =>
-                a.squadra === nome
-            )
-            .sort((a, b) => {
-              const diff =
-                roleOrder[
-                  a.ruolo as keyof typeof roleOrder
-                ] -
-                roleOrder[
-                  b.ruolo as keyof typeof roleOrder
-                ];
+  ({ teamId, nome }) => {
+        const buys = marketBuys
+  .filter(
+    (b) => b.team_id === teamId
+  )
+  .sort((a, b) => {
+    const diff =
+      roleOrder[
+        a.ruolo as keyof typeof roleOrder
+      ] -
+      roleOrder[
+        b.ruolo as keyof typeof roleOrder
+      ];
 
-              if (diff !== 0)
-                return diff;
+    if (diff !== 0) {
+      return diff;
+    }
 
-              return a.nome.localeCompare(
-                b.nome,
-                "it"
-              );
-            });
+    return a.nome.localeCompare(
+      b.nome,
+      "it"
+    );
+  });
 
         return (
           <div

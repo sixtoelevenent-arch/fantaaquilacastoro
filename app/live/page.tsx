@@ -506,7 +506,67 @@ return (
 )}
 
 {matches.map((match, index) => {
+let aggGoalsHome = liveData[match.id]?.homeGoals ?? 0;
+let aggGoalsAway = liveData[match.id]?.awayGoals ?? 0;
 
+let aggFPHome = liveData[match.id]?.homeFP ?? 0;
+let aggFPAway = liveData[match.id]?.awayFP ?? 0;
+
+if (matchdayName === "Quarti Ritorno") {
+
+  const andata = matches.find(
+    (m) =>
+      m.matchday_id === 4 &&
+      m.team_home_id === match.team_away_id &&
+      m.team_away_id === match.team_home_id
+  );
+
+  if (andata && liveData[andata.id]) {
+    aggGoalsHome =
+      liveData[andata.id].awayGoals +
+      liveData[match.id].homeGoals;
+
+    aggGoalsAway =
+      liveData[andata.id].homeGoals +
+      liveData[match.id].awayGoals;
+
+    aggFPHome =
+      liveData[andata.id].awayFP +
+      liveData[match.id].homeFP;
+
+    aggFPAway =
+      liveData[andata.id].homeFP +
+      liveData[match.id].awayFP;
+  }
+}
+
+if (matchdayName === "Semifinali Ritorno") {
+
+  const andata = matches.find(
+    (m) =>
+      m.matchday_id === 5 &&
+      m.team_home_id === match.team_away_id &&
+      m.team_away_id === match.team_home_id
+  );
+
+  if (andata && liveData[andata.id]) {
+    aggGoalsHome =
+      liveData[andata.id].awayGoals +
+      liveData[match.id].homeGoals;
+
+    aggGoalsAway =
+      liveData[andata.id].homeGoals +
+      liveData[match.id].awayGoals;
+
+    aggFPHome =
+      liveData[andata.id].awayFP +
+      liveData[match.id].homeFP;
+
+    aggFPAway =
+      liveData[andata.id].homeFP +
+      liveData[match.id].awayFP;
+  }
+}
   return (
     <Card
 
@@ -635,7 +695,28 @@ return (
     textAlign: "center",
   }}
 >
-      <div
+      
+      {(matchdayName === "Quarti Ritorno" ||
+  matchdayName === "Semifinali Ritorno") && (
+
+  <div
+    style={{
+      marginBottom: 8,
+      textAlign: "center",
+      color: "#cbd5e1",
+      fontSize: ".82rem",
+      fontWeight: 700,
+      lineHeight: 1.4,
+    }}
+  >
+    ⚽ Agg. {aggGoalsHome} - {aggGoalsAway}
+    <br />
+    ⭐ {aggFPHome.toFixed(1)} - {aggFPAway.toFixed(1)}
+  </div>
+
+)}
+
+<div
   style={{
     fontSize: "2.5rem",
     fontWeight: 900,
