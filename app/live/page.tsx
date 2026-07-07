@@ -139,6 +139,16 @@ useEffect(() => {
     return;
   }
 
+  let matchdaysToLoad = [activeMatchday.id];
+
+if (activeMatchday.id === 7) {
+  matchdaysToLoad = [4, 7];
+}
+
+if (activeMatchday.id === 8) {
+  matchdaysToLoad = [5, 8];
+}
+
   setMatchdayName(
     activeMatchday.nome || ""
   );
@@ -162,7 +172,7 @@ useEffect(() => {
         proprietario
       )
     `)
-    .eq("matchday_id", activeMatchday.id)
+    .in("matchday_id", matchdaysToLoad)
     .order("id");
 
   const live: any = {};
