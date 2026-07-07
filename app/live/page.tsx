@@ -165,6 +165,26 @@ useEffect(() => {
     .eq("matchday_id", activeMatchday.id)
     .order("id");
 
+    let andataMatches: any[] = [];
+
+if (activeMatchday.id === 7) {
+  const { data: qf } = await supabase
+    .from("matches")
+    .select("*")
+    .eq("matchday_id", 4);
+
+  andataMatches = qf || [];
+}
+
+if (activeMatchday.id === 8) {
+  const { data: sf } = await supabase
+    .from("matches")
+    .select("*")
+    .eq("matchday_id", 5);
+
+  andataMatches = sf || [];
+}
+
   const live: any = {};
 
 for (const match of data || []) {
@@ -514,7 +534,7 @@ let aggFPAway = liveData[match.id]?.awayFP ?? 0;
 
 if (matchdayName === "Quarti Ritorno") {
 
-  const andata = matches.find(
+  const andata = andataMatches.find(
     (m) =>
       m.matchday_id === 4 &&
       m.team_home_id === match.team_away_id &&
@@ -542,29 +562,25 @@ if (matchdayName === "Quarti Ritorno") {
 
 if (matchdayName === "Semifinali Ritorno") {
 
-  const andata = matches.find(
+  const andata = andataMatches.find(
     (m) =>
       m.matchday_id === 5 &&
       m.team_home_id === match.team_away_id &&
       m.team_away_id === match.team_home_id
   );
 
-  if (andata && liveData[andata.id]) {
+  if (andata) {
     aggGoalsHome =
-      liveData[andata.id].awayGoals +
-      liveData[match.id].homeGoals;
+  andata.gol_away + liveData[match.id].homeGoals;
 
-    aggGoalsAway =
-      liveData[andata.id].homeGoals +
-      liveData[match.id].awayGoals;
+aggGoalsAway =
+  andata.gol_home + liveData[match.id].awayGoals;
 
-    aggFPHome =
-      liveData[andata.id].awayFP +
-      liveData[match.id].homeFP;
+aggFPHome =
+  (andata.fp_away || 0) + liveData[match.id].homeFP;
 
-    aggFPAway =
-      liveData[andata.id].homeFP +
-      liveData[match.id].awayFP;
+aggFPAway =
+  (andata.fp_home || 0) + liveData[match.id].awayFP;
   }
 }
   return (
