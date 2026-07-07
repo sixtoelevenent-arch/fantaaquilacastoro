@@ -177,14 +177,14 @@ let player = exactMap.get(key);
 
 if (valori.length < 10) continue;
 
-const votoRaw = valori[1].trim();
+const votoRaw = (valori[1] ?? "").trim();
 
 const votoParsed = parseFloat(
   votoRaw.replace(",", ".")
 );
 
 const isSv =
-  valori[1].trim().toUpperCase() === "SV";
+  votoRaw.toUpperCase() === "SV";
 
 const voto =
   isSv || Number.isNaN(votoParsed)
