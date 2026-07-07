@@ -45,7 +45,7 @@ export async function importVotes() {
   const { data: activeMatchday, error: matchdayError } =
   await supabase
     .from("matchdays")
-    .select("id,nome")
+    .select("id,nome,fantapiu_giornata")
     .eq("attiva", true)
     .single();
 
@@ -56,7 +56,7 @@ export async function importVotes() {
 }
 
 const URL =
-  `${BASE_URL}${activeMatchday.id}`;
+  `${BASE_URL}${activeMatchday.fantapiu_giornata}`;
 
   const { data } = await axios.get(URL, {
     headers: {
@@ -146,14 +146,14 @@ const player = exactMap.get(key);
 )   
 if (valori.length < 10) continue;
 
-const votoRaw = valori[1].trim();
+const votoRaw = (valori[1] ?? "").trim();
 
 const votoParsed = parseFloat(
   votoRaw.replace(",", ".")
 );
 
 const isSv =
-  valori[1].trim().toUpperCase() === "SV";
+  votoRaw.toUpperCase() === "SV";
 
 const voto =
   isSv || Number.isNaN(votoParsed)
