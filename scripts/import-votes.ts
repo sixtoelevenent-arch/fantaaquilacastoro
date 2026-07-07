@@ -86,6 +86,10 @@ console.log(
   "Pagina caricata correttamente"
 );
 
+console.log("STATUS:", response.status);
+console.log("PRIMI 500 CARATTERI:");
+console.log(response.data.substring(0, 500));
+
 const $ = cheerio.load(response.data);
 
   const { data: players, error: playersError } = await supabase
@@ -114,6 +118,10 @@ console.log("EXACT MAP:", exactMap.size);
   const rows = $(".table-row");
 
   console.log("Righe trovate:", rows.length);
+
+  if (rows.length === 0) {
+  console.log("NESSUNA RIGA TROVATA");
+}
 
   for (let i = 0; i < rows.length; i++) {
     const row = rows.eq(i);
@@ -174,6 +182,9 @@ let player = exactMap.get(key);
   .find(".table-text.bold")
   .map((_, el) => $(el).text().trim())
   .get();
+
+  console.log("PLAYER:", nome);
+console.log("VALORI:", valori);
 
 if (valori.length < 10) continue;
 
@@ -316,6 +327,12 @@ const assist = assistValue;
 });
     importati++;
   }
+
+  console.log("RIGHE DA SALVARE:", rowsToUpsert.length);
+
+if (rowsToUpsert.length > 0) {
+  console.log(rowsToUpsert[0]);
+}
 const { error: upsertError } =
   await supabase
     .from("player_votes")
