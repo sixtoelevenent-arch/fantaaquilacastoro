@@ -1,188 +1,177 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-
 import BackHome from "@/components/BackHome";
 import Card from "@/components/Card";
-
 import { supabase } from "@/lib/supabase";
 
-type Player = {
+type FreeAgent = {
   id: number;
-  nome: string;
-  ruolo: string;
+  player_name: string;
+  display_name?: string | null;
   nazionale: string;
-  prezzo: number;
-  team_id: number;
+  ruolo: string;
+  quotazione: number;
+  disponibile: boolean;
+  team_id?: number;
 };
 
 export default function SvincolatiPage() {
   const [loading, setLoading] = useState(true);
-
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<FreeAgent[]>([]);
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("Tutti");
   const [nationFilter, setNationFilter] = useState("Tutte");
-const [sortField, setSortField] = useState<
-  "giocatore" | "nazionale" | "ruolo" | "quotazione"
->("giocatore");
 
-const [sortDirection, setSortDirection] = useState<
+  const [sortField, setSortField] = useState<
+    "giocatore" | "nazionale" | "ruolo" | "quotazione"
+  >("giocatore");
+
+  const [sortDirection, setSortDirection] = useState<
   "asc" | "desc"
 >("asc");
 
   useEffect(() => {
-  loadData();
-}, []);
+    loadData();
+  }, []);
 
-function handleSort(
-  field:
-    | "giocatore"
-    | "nazionale"
-    | "ruolo"
-    | "quotazione"
-) {
-  if (sortField === field) {
-    setSortDirection((prev) =>
-      prev === "asc" ? "desc" : "asc"
-    );
-  } else {
-    setSortField(field);
-    setSortDirection("asc");
+  function handleSort(
+    field:
+      | "giocatore"
+      | "nazionale"
+      | "ruolo"
+      | "quotazione"
+  ) {
+    if (sortField === field) {
+      setSortDirection((p) => (p === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
   }
-}
 
   async function loadData() {
-  setLoading(true);
+    setLoading(true);
 
-  const { data } = await supabase
-    .from("players_backup_momento2")
-    .select("*")
-    .order("team_id")
-    .order("ruolo")
-    .order("prezzo", { ascending: false });
+    const { data } = await supabase
+      .from("market_available_players")
+      .select("*")
+      .order("display_name");
 
-  setPlayers((data || []) as Player[]);
+    const unique = Array.from(
+      new Map(
+        ((data || []) as FreeAgent[]).map((p) => [
+          `${p.id}-${p.nazionale}`,
+          p,
+        ])
+      ).values()
+    );
 
-  setLoading(false);
-}
-  const roles = [
-    "Tutti",
-    "P",
-    "D",
-    "C",
-    "A",
-  ];
+    const activeTeamIds = [1,2,3,4,5,9,11,12];
 
-  const nations = [
+    setPlayers(
+      unique.filter(
+        (p:any)=>
+          !activeTeamIds.includes(Number(p.team_id))
+      )
+    );
+
+    setLoading(false);
+  }
+
+  const roles=["Tutti","P","D","C","A"];
+
+  const nations=[
     "Tutte",
     ...Array.from(
-      new Set(
-        players.map((p) => p.nazionale)
-      )
-    ).sort(),
+      new Set(players.map(p=>p.nazionale))
+    ).sort()
   ];
 
-  const filteredPlayers = useMemo(() => {
-    let rows = [...players];
+  const filteredPlayers=useMemo(()=>{
+    let rows=[...players];
 
-    rows = rows.filter((p) => {
-  const displayName = p.nome;
+    rows=rows.filter((p)=>{
+      const name=(p.display_name ?? p.player_name).toLowerCase();
+      return name.includes(search.toLowerCase());
+    });
 
-  return displayName
-    .toLowerCase()
-    .includes(search.toLowerCase());
-});
-
-    if (roleFilter !== "Tutti") {
-      rows = rows.filter(
-        (p) => p.ruolo === roleFilter
-      );
+    if(roleFilter!=="Tutti"){
+      rows=rows.filter(p=>p.ruolo===roleFilter);
     }
 
-    if (nationFilter !== "Tutte") {
-      rows = rows.filter(
-        (p) => p.nazionale === nationFilter
-      );
+    if(nationFilter!=="Tutte"){
+      rows=rows.filter(p=>p.nazionale===nationFilter);
     }
 
-rows.sort((a, b) => {
-  let valueA: string | number = "";
-  let valueB: string | number = "";
+    rows.sort((a,b)=>{
 
-  switch (sortField) {
-    case "giocatore":
-     valueA = a.nome;
-valueB = b.nome;
-      break;
+      let va:any;
+      let vb:any;
 
-    case "nazionale":
-      valueA = a.nazionale;
-      valueB = b.nazionale;
-      break;
+      switch(sortField){
 
-    case "ruolo":
-  const order = {
-    P: 1,
-    D: 2,
-    C: 3,
-    A: 4,
-  };
+        case "giocatore":
+          va=a.display_name ?? a.player_name;
+          vb=b.display_name ?? b.player_name;
+          break;
 
-  valueA =
-    order[a.ruolo as keyof typeof order];
+        case "nazionale":
+          va=a.nazionale;
+          vb=b.nazionale;
+          break;
 
-  valueB =
-    order[b.ruolo as keyof typeof order];
+        case "ruolo":
 
-  break;
+          const order={
+            P:1,
+            D:2,
+            C:3,
+            A:4
+          };
 
-    case "quotazione":
-      valueA = a.prezzo;
-valueB = b.prezzo;
-      break;
-  }
+          va=order[a.ruolo as keyof typeof order];
+          vb=order[b.ruolo as keyof typeof order];
+          break;
 
-  if (
-    typeof valueA === "number" &&
-    typeof valueB === "number"
-  ) {
-    return sortDirection === "asc"
-      ? valueA - valueB
-      : valueB - valueA;
-  }
+        case "quotazione":
+          va=a.quotazione;
+          vb=b.quotazione;
+          break;
+      }
 
-  return sortDirection === "asc"
-    ? String(valueA).localeCompare(
-        String(valueB),
-        "it"
-      )
-    : String(valueB).localeCompare(
-        String(valueA),
-        "it"
-      );
-});
+      if(typeof va==="number"){
+        return sortDirection==="asc"
+          ? va-vb
+          : vb-va;
+      }
 
-return rows;
-}, [
-  players,
-  search,
-  roleFilter,
-  nationFilter,
-  sortField,
-  sortDirection,
-]);
+      return sortDirection==="asc"
+        ? String(va).localeCompare(String(vb),"it")
+        : String(vb).localeCompare(String(va),"it");
 
-  if (loading) {
-    return (
+    });
+
+    return rows;
+
+  },[
+    players,
+    search,
+    roleFilter,
+    nationFilter,
+    sortField,
+    sortDirection
+  ]);
+
+  if(loading){
+    return(
       <main
         style={{
-          minHeight: "100vh",
-          background:
-            "linear-gradient(to bottom,#1f2937,#0f172a)",
-          color: "white",
-          padding: 20,
+          minHeight:"100vh",
+          background:"linear-gradient(to bottom,#1f2937,#0f172a)",
+          color:"white",
+          padding:20
         }}
       >
         Caricamento...
@@ -190,160 +179,181 @@ return rows;
     );
   }
 
-  const teams = [
-  {
-    id: 4,
-    nome: "🇨🇴 Colombia",
-    budget: 35,
-  },
-  {
-    id: 2,
-    nome: "🇬🇭 Ghana",
-    budget: 14,
-  },
-  {
-    id: 5,
-    nome: "🇵🇹 Portogallo",
-    budget: 9,
-  },
-  {
-    id: 12,
-    nome: "🇹🇷 Turchia",
-    budget: 0,
-  },
-];
-
-const roleOrder = ["P", "D", "C", "A"];
-
-  return (
+  return(
     <main
       style={{
-        minHeight: "100vh",
-        background:
-          "linear-gradient(to bottom,#1f2937,#0f172a)",
-        color: "white",
-        padding: "20px",
+        minHeight:"100vh",
+        background:"linear-gradient(to bottom,#1f2937,#0f172a)",
+        color:"white",
+        padding:"20px"
       }}
     >
       <div
         style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
+          maxWidth:"1200px",
+          margin:"0 auto"
         }}
       >
-        <BackHome />
+        <BackHome/>
 
         <h1
           style={{
-            textAlign: "center",
-            fontSize: "clamp(2rem,6vw,3.5rem)",
-            fontWeight: 800,
-            marginBottom: 10,
+            textAlign:"center",
+            fontSize:"clamp(2rem,6vw,3.5rem)",
+            fontWeight:800,
+            marginBottom:10
           }}
         >
-          📋 Rose Ufficiali
+          📑 Listone Svincolati
         </h1>
 
         <p
           style={{
-            textAlign: "center",
-            color: "#cbd5e1",
-            marginBottom: 20,
+            textAlign:"center",
+            color:"#cbd5e1",
+            marginBottom:20
           }}
         >
-          Rose ufficiali aggiornate al Momento 2 del mercato.
+          Elenco ufficiale dei calciatori disponibili sul mercato.
         </p>
 
-        {teams.map((team) => {
-  const squadra = players.filter(
-    (p) => p.team_id === team.id
-  );
+        <Card title="📋 Svincolati">
 
-  return (
-    <Card
-      key={team.id}
-      title={`${team.nome} • Budget ${team.budget}`}
-    >
-      {roleOrder.map((ruolo) => (
-        <div key={ruolo} style={{ marginBottom: 20 }}>
-          <h3
+          <div
             style={{
-              color: "#facc15",
-              marginBottom: 8,
+              textAlign:"center",
+              color:"#facc15",
+              fontWeight:800,
+              fontSize:"1.15rem",
+              marginBottom:16
             }}
           >
-            {ruolo}
-          </h3>
+            📑 Svincolati disponibili: {players.length}
+          </div>
+                    <input
+            value={search}
+            onChange={(e)=>setSearch(e.target.value)}
+            placeholder="Cerca giocatore..."
+            style={{
+              width:"100%",
+              padding:10,
+              borderRadius:10,
+              border:"none",
+              marginBottom:12
+            }}
+          />
 
-          {squadra
-            .filter((p) => p.ruolo === ruolo)
-            .sort((a, b) => b.prezzo - a.prezzo)
-            .map((p) => (
-              <div
-                key={p.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  padding: "6px 0",
-                  borderBottom:
-                    "1px solid rgba(255,255,255,.08)",
-                }}
-              >
-                <span>
-                  {p.nome}
-                  <span
-                    style={{
-                      color: "#94a3b8",
-                      marginLeft: 6,
-                    }}
-                  >
-                    {p.nazionale}
-                  </span>
-                </span>
+          <div
+            style={{
+              display:"flex",
+              gap:10,
+              flexWrap:"wrap",
+              marginBottom:15
+            }}
+          >
+            <select
+              value={roleFilter}
+              onChange={(e)=>setRoleFilter(e.target.value)}
+              style={{padding:8,borderRadius:8}}
+            >
+              {roles.map(r=>(
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
 
-                <b>{p.prezzo}</b>
-              </div>
-            ))}
-        </div>
-      ))}
-    </Card>
-  );
-})}
+            <select
+              value={nationFilter}
+              onChange={(e)=>setNationFilter(e.target.value)}
+              style={{padding:8,borderRadius:8}}
+            >
+              {nations.map(n=>(
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{overflowX:"auto"}}>
+            <table
+              style={{
+                width:"100%",
+                borderCollapse:"collapse"
+              }}
+            >
+              <thead>
+  <tr>
+    <th style={thClickable} onClick={() => handleSort("giocatore")}>
+      Giocatore
+      {sortField === "giocatore" &&
+        (sortDirection === "asc" ? " ▲" : " ▼")}
+    </th>
+
+    <th style={thClickable} onClick={() => handleSort("nazionale")}>
+      Nazionale
+      {sortField === "nazionale" &&
+        (sortDirection === "asc" ? " ▲" : " ▼")}
+    </th>
+
+    <th style={thClickable} onClick={() => handleSort("ruolo")}>
+      Ruolo
+      {sortField === "ruolo" &&
+        (sortDirection === "asc" ? " ▲" : " ▼")}
+    </th>
+
+    <th style={thClickable} onClick={() => handleSort("quotazione")}>
+      Q.
+      {sortField === "quotazione" &&
+        (sortDirection === "asc" ? " ▲" : " ▼")}
+    </th>
+  </tr>
+</thead>
+
+              <tbody>
+                {filteredPlayers.map((p)=>(
+                  <tr key={`${p.id}-${p.nazionale}`}>
+                    <td style={tdStyle}>{p.display_name ?? p.player_name}</td>
+                    <td style={tdStyle}>{p.nazionale}</td>
+                    <td style={tdStyle}>{p.ruolo}</td>
+                    <td style={tdStyle}>{p.quotazione}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+        </Card>
 
         <div
           style={{
-            marginTop: 50,
-            paddingTop: 20,
-            borderTop:
-              "1px solid rgba(255,255,255,0.1)",
-            textAlign: "center",
-            color: "#94a3b8",
-            fontSize: 14,
+            marginTop:50,
+            paddingTop:20,
+            borderTop:"1px solid rgba(255,255,255,.1)",
+            textAlign:"center",
+            color:"#94a3b8",
+            fontSize:14
           }}
         >
           FantAquilaCastoro 2026 • Road to New York 🗽
         </div>
+
       </div>
     </main>
   );
 }
 
 const thStyle: React.CSSProperties = {
-  padding: "10px",
-  borderBottom:
-    "1px solid rgba(255,255,255,0.15)",
-  color: "#facc15",
-  textAlign: "left",
+  padding:"10px",
+  borderBottom:"1px solid rgba(255,255,255,.15)",
+  color:"#facc15",
+  textAlign:"left",
 };
 
 const thClickable: React.CSSProperties = {
   ...thStyle,
-  cursor: "pointer",
-  userSelect: "none",
+  cursor:"pointer",
+  userSelect:"none",
 };
 
 const tdStyle: React.CSSProperties = {
-  padding: "10px",
-  borderBottom:
-    "1px solid rgba(255,255,255,0.08)",
+  padding:"10px",
+  borderBottom:"1px solid rgba(255,255,255,.08)",
 };
