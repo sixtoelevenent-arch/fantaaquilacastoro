@@ -317,7 +317,7 @@ const toggleMusic = () => {
         </a>
 
         <a
-          href="/rose-ufficiali.html"
+          href="/rose-ufficiali"
           style={{
             ...buttonStyle,
             background: "#0ea5e9",
