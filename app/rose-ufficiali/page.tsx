@@ -51,16 +51,19 @@ export default function RoseUfficialiPage() {
   }, []);
 
   async function loadData() {
-    setLoading(true);
+  setLoading(true);
 
-    const { data } = await supabase
-      .from("players_backup_momento2")
-      .select("*");
+  const { data } = await supabase
+    .from("players_backup_momento2")
+    .select("*")
+    .order("team_id")
+    .order("ruolo")
+    .order("prezzo", { ascending: false });
 
-    setPlayers((data || []) as Player[]);
+  setPlayers((data || []) as Player[]);
 
-    setLoading(false);
-  }
+  setLoading(false);
+}
 
   if (loading) {
     return (
@@ -121,7 +124,9 @@ export default function RoseUfficialiPage() {
             (p) => p.team_id === team.id
           );
 
-          return (
+          console.log(team.nome, squadra.length);
+
+                   return (
             <Card
               key={team.id}
               title={`${team.nome} • Budget residuo: ${team.budget} mln`}
@@ -149,7 +154,7 @@ export default function RoseUfficialiPage() {
                     .sort((a, b) => b.prezzo - a.prezzo)
                     .map((p) => (
                       <div
-                        key={p.id}
+                        key={`${team.id}-${p.id}-${p.ruolo}`}
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
@@ -219,7 +224,7 @@ export default function RoseUfficialiPage() {
                     .sort((a, b) => b.prezzo - a.prezzo)
                     .map((p) => (
                       <div
-                        key={p.id}
+                        key={`${team.id}-${p.id}-${p.ruolo}`}
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
